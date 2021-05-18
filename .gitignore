@@ -61,3 +61,5 @@ docs/source/api/
 
 # VSCode
 /.vscode
+tests/functional/api-cache.sqlite
+api-cache.sqlite

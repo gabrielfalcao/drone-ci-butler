@@ -1,0 +1,336 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds
+  response:
+    body:
+      string: "[{\"id\":1114846,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137383,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13618\",\"timestamp\":0,\"title\":\"Coverage
+        Briefing - config\",\"message\":\"## Description\\r\\n\\r\\nThis PR introduces
+        configuration changes for the upcoming coverage briefing live asset type.\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\nVerify that existing assets look normal:\\r\\n\\r\\n*
+        [Live Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/17/world/israel-gaza-updates)\\r\\n*
+        [Live Blog](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/20/us/derek-chauvin-verdict-george-floyd)\\r\\n*
+        [Fact Check](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/28/us/biden-speech)\\r\\n\\r\\nAs
+        well as the posts in the Coverage Briefing:\\r\\n\\r\\n* [Coverage Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/12/admin/urvashi-coverage-briefing-test?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com)\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"785a0cd25998fdae6802df4422546ea8d77390c6\",\"ref\":\"refs/pull/13618/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"main\",\"author_login\":\"jonahsmith\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293876,\"finished\":1621294318,\"created\":1621293876,\"updated\":1621293876,\"version\":3},{\"id\":1114845,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137382,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/f78bb4d5b9d0...785a0cd25998\",\"timestamp\":0,\"message\":\"contains
+        to includes\",\"before\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"after\":\"785a0cd25998fdae6802df4422546ea8d77390c6\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293876,\"finished\":1621294143,\"created\":1621293875,\"updated\":1621293876,\"version\":3},{\"id\":1114835,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137381,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"opened\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13618\",\"timestamp\":0,\"title\":\"Coverage
+        Briefing - config\",\"message\":\"## Description\\r\\n\\r\\nThis PR introduces
+        configuration changes for the upcoming coverage briefing live asset type.\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\nVerify that existing assets look normal:\\r\\n\\r\\n*
+        [Live Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/17/world/israel-gaza-updates)\\r\\n*
+        [Live Blog](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/20/us/derek-chauvin-verdict-george-floyd)\\r\\n*
+        [Fact Check](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/28/us/biden-speech)\\r\\n\\r\\nAs
+        well as the posts in the Coverage Briefing:\\r\\n\\r\\n* [Coverage Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/12/admin/urvashi-coverage-briefing-test?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com)\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"ref\":\"refs/pull/13618/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"main\",\"author_login\":\"jonahsmith\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293337,\"finished\":1621293762,\"created\":1621293336,\"updated\":1621293337,\"version\":3},{\"id\":1114834,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137380,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/cc2cbb76af66...f78bb4d5b9d0\",\"timestamp\":0,\"message\":\"use
+        label tokens\",\"before\":\"cc2cbb76af66f52f913061dbcc442f1f2e151d5d\",\"after\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293319,\"finished\":1621293587,\"created\":1621293319,\"updated\":1621293319,\"version\":3},{\"id\":1114828,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137379,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/bd1163208bda...cc2cbb76af66\",\"timestamp\":0,\"message\":\"bump
+        nyt/components\",\"before\":\"bd1163208bda674a08fc1308cfea52c78489ce39\",\"after\":\"cc2cbb76af66f52f913061dbcc442f1f2e151d5d\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621292857,\"finished\":1621293537,\"created\":1621292856,\"updated\":1621292857,\"version\":3},{\"id\":1114795,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137378,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/bd041b3d770b\",\"timestamp\":0,\"message\":\"added
+        kicker to vi and magnolia versions of regibundle\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"bd041b3d770b4251261804baad3023a600d8a568\",\"ref\":\"refs/heads/preview-hd-1052-regibundle-login-test\",\"source_repo\":\"\",\"source\":\"preview-hd-1052-regibundle-login-test\",\"target\":\"preview-hd-1052-regibundle-login-test\",\"author_login\":\"dennishan9\",\"author_name\":\"dennishan9\",\"author_email\":\"dennishan9@gmail.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/18151076?v=4\",\"sender\":\"dennishan9\",\"started\":1621291261,\"finished\":1621292086,\"created\":1621291260,\"updated\":1621291261,\"version\":3},{\"id\":1114792,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137377,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/bd1163208bda\",\"timestamp\":0,\"message\":\"modernize
+        theme generator and add coverage briefing logic\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"bd1163208bda674a08fc1308cfea52c78489ce39\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621291183,\"finished\":1621291482,\"created\":1621291183,\"updated\":1621291183,\"version\":3},{\"id\":1114717,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137376,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13355\",\"timestamp\":0,\"title\":\"Jest
+        + Puppeteer PoC: Revamping E2E tests\",\"message\":\"## TL;DR\\r\\n- **We
+        are replatforming e2e tests.** And calling them acceptance tests.\\r\\n- **We
+        are using Jest as a test runner, and Puppeteer as the browser controller.**\\r\\n-
+        **We created  `puppet-theater \U0001F3AD` under `tools/puppet-theater` to
+        stitch Jest and Puppeteer together.**\\r\\n- **We created custom matchers
+        with good error messages and developer experience.**\\r\\n- **We are co-locating
+        all acceptance tests along with the \\\"system under test\\\".** Same as we
+        do for unit tests. That means no more `e2e/` folder.\\r\\n- **Acceptance tests
+        feels native to VI**. No additional `yarn install`, no additional `package.json`.\\r\\n\\r\\n##
+        Problem\\r\\n\\r\\nOur e2e tests have been flaky and hard to debug, mostly
+        due to:\\r\\n\\r\\n- **Complexity of the previous stack.**\\r\\n- **Tests
+        used to live on the suburbs of VI on the `e2e/` folder**, instead of having
+        the tests co-located with the source code, reducing ownership and visibility
+        for that kind of test.\\r\\n- **A different set of technologies, instead of
+        using the tooling engineers are already familiar with.**\\r\\n- **Different
+        pipelines local and on CI, creating platform-specific bugs that were hard
+        to debug.**\\r\\n\\r\\n## Solution\\r\\n\\r\\nOur approach for tackling the
+        problem was to have an acceptance test that:\\r\\n- **Uses tools engineers
+        are already familiar with.** \\r\\n- **Uses the same pipeline locally and
+        on CI.** In order to reduce complexity and to improve reliability.\\r\\n-
+        **No additional installation step.** Less friction for developers.\\r\\n-
+        **Has a great developer experience.** \\r\\n\\r\\n## API\\r\\n\\r\\nWe are
+        exposing on the global scope the [`browser`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-browser)
+        and [`page`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-page)
+        Puppeteer's object, and also adding some helpers methods to facilitate testing
+        within our use case.\\r\\n\\r\\n### Additional globals\\r\\n\\r\\n#### `global.page`\\r\\n\\r\\n-
+        `global.page.debug()`\\r\\n- `global.page.goToNytUrl()`\\r\\n- `global.page.emulateDevice(deviceType)`\\r\\n-
+        `global.page.scrollToSelect\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"970fb4829add30b72527c1649d0595ac1507ba15\",\"ref\":\"refs/pull/13355/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/54914?v=4\",\"sender\":\"caiogondim\",\"started\":1621288728,\"finished\":1621289698,\"created\":1621288727,\"updated\":1621288728,\"version\":3},{\"id\":1114716,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137375,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/1ae407a23e11...970fb4829add\",\"timestamp\":0,\"message\":\"Fix
+        and skip tests\",\"before\":\"1ae407a23e11a8b69c5e6ee7397d3b0135aa9bb0\",\"after\":\"970fb4829add30b72527c1649d0595ac1507ba15\",\"ref\":\"refs/heads/deprecate-e2e-and-introduce-acceptance-tests\",\"source_repo\":\"\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"author_login\":\"caiogondim\",\"author_name\":\"Caio
+        Gondim\",\"author_email\":\"me@caiogondim.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/33044?v=4\",\"sender\":\"caiogondim\",\"started\":1621288724,\"finished\":1621289222,\"created\":1621288723,\"updated\":1621288724,\"version\":3},{\"id\":1114666,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137374,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/16ac129ff2ce\",\"timestamp\":0,\"message\":\"wip\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"16ac129ff2ce84792addf151f9dff72ef38deb83\",\"ref\":\"refs/heads/preview-stl-2482\",\"source_repo\":\"\",\"source\":\"preview-stl-2482\",\"target\":\"preview-stl-2482\",\"author_login\":\"\",\"author_name\":\"uuberoy\",\"author_email\":\"uuberoy@princeton.edu\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/37817791?v=4\",\"sender\":\"uuberoy\",\"started\":1621287091,\"finished\":1621287937,\"created\":1621287090,\"updated\":1621287091,\"version\":3},{\"id\":1114664,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137373,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/bc1c3854480f...5b9a8e32590d\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-dynamic-nav-locations-tests' into preview-i18n-sections\",\"before\":\"bc1c3854480f598f20bb32fa343bf787695dc903\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/heads/preview-i18n-yo\",\"source_repo\":\"\",\"source\":\"preview-i18n-yo\",\"target\":\"preview-i18n-yo\",\"author_login\":\"justinph\",\"author_name\":\"Justin
+        Heideman\",\"author_email\":\"justin.heideman@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286988,\"finished\":1621287756,\"created\":1621286988,\"updated\":1621286988,\"version\":3},{\"id\":1114661,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137372,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13469\",\"timestamp\":0,\"title\":\"International
+        Section Fronts\",\"message\":\"## Pre-requisite reading\\r\\n[International
+        Section Fronts Memo](https://docs.google.com/document/d/1vHpIQ6PsGk3ZFAQJoF-YWY8JKX_ARskoqGyqY24itXU/edit)\\r\\n\\r\\n##
+        Description\\r\\nModifies the collection logic to generate additional `/international/`
+        and `/ca/` URLs for all section fronts. Some of these URLs use personalization
+        to replace the highlights from scoop (Previously 4 sections did this, now
+        many more). \\r\\n\\r\\nMost of the logic for this is contained within `intlConfig.js`
+        and utilized where necessary towards the begining of the logic on the route.
+        This logic should only apply on `/section` urls, not any other collection
+        type. Specifically, the main `collection` object is modified to update the
+        url, section, and subsection attributes, and an `intlConfig` attribute with
+        information about the i18n is added. \\r\\n\\r\\nChanges have also been made
+        in various helmets for modifying the `\\u003chead\\u003e` of the page to include
+        the necessary `rel=hrefLang` tags so that google can correctly understand
+        these new pages. The hrefLang tags purposefully show up on all versions of
+        a page (`/`, `/ca/`, and `international/`).\\r\\n\\r\\nNavigation on the site
+        is also modified. The navs for the masthead, submasthead, hamburger, and SiteIndex
+        load differently based on `location.pathname` or the `NYT-Edition` cookie.
+        When visiting a `/ca/` or `/international/` route, a user will load localized
+        versions of those navigations. The same will happen if a user has set the
+        `/ca/` or `/international/` homepages as their default, and thus the NYT-Edition
+        cookie. This makes use of `dynamic()` and bundle splitting to make sure we're
+        not loading duplicate sets of navigational data. \\r\\n\\r\\nThe PR also updates
+        the homepage to modify the URLs that are generated in the Well. \\r\\n\\r\\n-
+        Jira ticket: https://jira.nyt.net/browse/SEO-1451\\r\\n- Launch date: May
+        19, 2021\\r\\n- Review by date: May 19, 2021\\r\\n\\r\\n## PR Checklist\\r\\n\\u003c!--
+        Please validate your changes with the checklist below before marking for code
+        review. --\\u003e\\r\\n- [x] New features and routes ha\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/pull/13469/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-i18n-sections\",\"target\":\"main\",\"author_login\":\"justinph\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286953,\"finished\":1621287935,\"created\":1621286953,\"updated\":1621286953,\"version\":3},{\"id\":1114660,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137371,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/b62032f50ae6...5b9a8e32590d\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-dynamic-nav-locations-tests' into preview-i18n-sections\",\"before\":\"b62032f50ae68195dcaccda58b6d844ca0488124\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/heads/preview-i18n-sections\",\"source_repo\":\"\",\"source\":\"preview-i18n-sections\",\"target\":\"preview-i18n-sections\",\"author_login\":\"justinph\",\"author_name\":\"Justin
+        Heideman\",\"author_email\":\"justin.heideman@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286952,\"finished\":1621287776,\"created\":1621286951,\"updated\":1621286952,\"version\":3},{\"id\":1114655,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137370,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"opened\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13617\",\"timestamp\":0,\"title\":\"Split
+        Most Popular and Play blocks\",\"message\":\"\\u003c!-- How can we improve
+        this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\n\\u003c!-- Describe your changes here --\\u003e\\r\\n\\u003c!--
+        See https://vi.tech.nyt.net/processes/feature-lifecycle/#pr-checklist --\\u003e\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\n\\u003c!-- Provide instructions for code reviewer on
+        how to test/validate the changes --\\u003e\\r\\n\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"438ffcef2c652cff37e9085e2da538a852be3959\",\"ref\":\"refs/pull/13617/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-mostpopplay\",\"target\":\"main\",\"author_login\":\"lpierfelice\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/3246972?v=4\",\"sender\":\"lpierfelice\",\"started\":1621286765,\"finished\":1621287708,\"created\":1621286764,\"updated\":1621286765,\"version\":3},{\"id\":1114637,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137369,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/27812f7a9ab5...438ffcef2c65\",\"timestamp\":0,\"message\":\"cleanup,
+        some css\",\"before\":\"27812f7a9ab549d54a57f4a59d8361909efc27ee\",\"after\":\"438ffcef2c652cff37e9085e2da538a852be3959\",\"ref\":\"refs/heads/preview-mostpopplay\",\"source_repo\":\"\",\"source\":\"preview-mostpopplay\",\"target\":\"preview-mostpopplay\",\"author_login\":\"lpierfelice\",\"author_name\":\"lpierfelice\",\"author_email\":\"lorenzo.pierfelice@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/3246972?v=4\",\"sender\":\"lpierfelice\",\"started\":1621286385,\"finished\":1621287059,\"created\":1621286384,\"updated\":1621286385,\"version\":3},{\"id\":1114628,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137368,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/fbe92792581f...c182f4fee4e9\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-stl-2478' of github.com:nytm/wf-project-vi into preview-stl-2478\",\"before\":\"fbe92792581fc73feb338f5357d5519fe4cb788e\",\"after\":\"c182f4fee4e966aae6cf9d1f9d80a57fe93ec825\",\"ref\":\"refs/heads/preview-stl-2478\",\"source_repo\":\"\",\"source\":\"preview-stl-2478\",\"target\":\"preview-stl-2478\",\"author_login\":\"\",\"author_name\":\"uuberoy\",\"author_email\":\"uuberoy@princeton.edu\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/37817791?v=4\",\"sender\":\"uuberoy\",\"started\":1621286112,\"finished\":1621286891,\"created\":1621286111,\"updated\":1621286112,\"version\":3},{\"id\":1114605,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137367,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13598\",\"timestamp\":0,\"title\":\"Preview
+        dynamic nav locations tests\",\"message\":\"\\u003c!-- How can we improve
+        this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\n\\u003c!-- Describe your changes here --\\u003e\\r\\n\\u003c!--
+        See https://vi.tech.nyt.net/processes/feature-lifecycle/#pr-checklist --\\u003e\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\n\\u003c!-- Provide instructions for code reviewer on
+        how to test/validate the changes --\\u003e\\r\\n\",\"before\":\"1c4cb64ae3fc154d7bb7da0bc64db034d843d7f0\",\"after\":\"30e22d947201f6258cce1da2c0eca8005d5424ba\",\"ref\":\"refs/pull/13598/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-dynamic-nav-locations-tests\",\"target\":\"main\",\"author_login\":\"skumar225\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6520588?v=4\",\"sender\":\"skumar225\",\"started\":1621285697,\"finished\":1621286335,\"created\":1621285697,\"updated\":1621285697,\"version\":3},{\"id\":1114604,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137366,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/82dbbd2dee3d...30e22d947201\",\"timestamp\":0,\"message\":\"corrected
+        more links\",\"before\":\"82dbbd2dee3d200b8274d0c8e9a0932f5401a9f4\",\"after\":\"30e22d947201f6258cce1da2c0eca8005d5424ba\",\"ref\":\"refs/heads/preview-dynamic-nav-locations-tests\",\"source_repo\":\"\",\"source\":\"preview-dynamic-nav-locations-tests\",\"target\":\"preview-dynamic-nav-locations-tests\",\"author_login\":\"skumar225\",\"author_name\":\"skumar225\",\"author_email\":\"shilpa.kumar@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6520588?v=4\",\"sender\":\"skumar225\",\"started\":1621285696,\"finished\":1621285860,\"created\":1621285696,\"updated\":1621285696,\"version\":3},{\"id\":1114601,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137365,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13602\",\"timestamp\":0,\"title\":\"Home:
+        support containers and programmingNode\",\"message\":\"\\u003c!-- How can
+        we improve this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\nAdds support for containers and new programmingNode
+        data structure.\\r\\n\\r\\nhttps://jira.nyt.net/browse/UXF-647\\r\\nhttps://jira.nyt.net/browse/UXF-650\\r\\nhttps://jira.nyt.net/browse/UXF-651\\r\\n\\r\\nmonorepo
+        PR: https://github.com/nytimes/news/pull/919\\r\\n\\r\\n## How to Test\\r\\n\\r\\n[vi
+        preview](https://preview-programming-node-rendering.sbx.nytimes.com/?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com\\u0026editorspicks=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzu\\u0026topstories=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezza\\u0026spotlight=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzb\\u0026features=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzs)\\r\\n\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"7e78fcbe73a5e897680592087a271aa7c108dc28\",\"ref\":\"refs/pull/13602/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-programming-node-rendering\",\"target\":\"main\",\"author_login\":\"acreighton\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621285655,\"finished\":1621286609,\"created\":1621285654,\"updated\":1621285655,\"version\":3},{\"id\":1114600,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137364,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/c1746dae8c8a...7e78fcbe73a5\",\"timestamp\":0,\"message\":\"Merge
+        branch 'main' into preview-programming-node-rendering\",\"before\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"after\":\"7e78fcbe73a5e897680592087a271aa7c108dc28\",\"ref\":\"refs/heads/preview-programming-node-rendering\",\"source_repo\":\"\",\"source\":\"preview-programming-node-rendering\",\"target\":\"preview-programming-node-rendering\",\"author_login\":\"acreighton\",\"author_name\":\"Andy
+        Creighton\",\"author_email\":\"andy.creighton@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621285653,\"finished\":1621285920,\"created\":1621285652,\"updated\":1621285653,\"version\":3},{\"id\":1114555,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137363,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/4908cbff9ac1^...dddff8a90371\",\"timestamp\":0,\"message\":\"Merge
+        branch 'main' of github.com:nytm/wf-project-vi into preview-update-tooltip\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"dddff8a903719119e90a94d2f9b1b4a7043eff8f\",\"ref\":\"refs/heads/preview-update-tooltip\",\"source_repo\":\"\",\"source\":\"preview-update-tooltip\",\"target\":\"preview-update-tooltip\",\"author_login\":\"shellyser\",\"author_name\":\"Shelly
+        Seroussi\",\"author_email\":\"shelly.seroussi@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/5897702?v=4\",\"sender\":\"shellyser\",\"started\":1621284960,\"finished\":1621285756,\"created\":1621284959,\"updated\":1621284960,\"version\":3},{\"id\":1114554,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137362,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/b6fb842a9b18\",\"timestamp\":0,\"message\":\"AdSlot
+        auto build branch - adreq-2376; commit 97186832a38c5c21b4c92027ed43c39e4c80db89;\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"b6fb842a9b18f3621d46b1e8e3edf785ebc97aeb\",\"ref\":\"refs/heads/preview-adex-adreq-2376\",\"source_repo\":\"\",\"source\":\"preview-adex-adreq-2376\",\"target\":\"preview-adex-adreq-2376\",\"author_login\":\"\",\"author_name\":\"drone\",\"author_email\":\"noreply@drone\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/4340261?v=4\",\"sender\":\"maxrbaldwin\",\"started\":1621284903,\"finished\":1621285510,\"created\":1621284902,\"updated\":1621284903,\"version\":3},{\"id\":1114529,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137361,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13602\",\"timestamp\":0,\"title\":\"Home:
+        support containers and programmingNode\",\"message\":\"\\u003c!-- How can
+        we improve this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\nAdds support for containers and new programmingNode
+        data structure.\\r\\n\\r\\nhttps://jira.nyt.net/browse/UXF-647\\r\\nhttps://jira.nyt.net/browse/UXF-650\\r\\nhttps://jira.nyt.net/browse/UXF-651\\r\\n\\r\\nmonorepo
+        PR: https://github.com/nytimes/news/pull/919\\r\\n\\r\\n## How to Test\\r\\n\\r\\n[vi
+        preview](https://preview-programming-node-rendering.sbx.nytimes.com/?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com\\u0026editorspicks=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzu\\u0026topstories=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezza\\u0026spotlight=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzb\\u0026features=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzs)\\r\\n\",\"before\":\"773efda10aeaab40ee29a8a16b9cdf3d14ad53c7\",\"after\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"ref\":\"refs/pull/13602/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-programming-node-rendering\",\"target\":\"main\",\"author_login\":\"acreighton\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621284578,\"finished\":1621284633,\"created\":1621284577,\"updated\":1621284578,\"version\":3},{\"id\":1114528,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137360,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/7727a9d9ba29...c1746dae8c8a\",\"timestamp\":0,\"message\":\"bump:
+        optional chaining / null check child nodes\",\"before\":\"7727a9d9ba2935793fa57b618545ba66994d6a2b\",\"after\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"ref\":\"refs/heads/preview-programming-node-rendering\",\"source_repo\":\"\",\"source\":\"preview-programming-node-rendering\",\"target\":\"preview-programming-node-rendering\",\"author_login\":\"acreighton\",\"author_name\":\"Andy
+        Creighton\",\"author_email\":\"andy.creighton@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621284577,\"finished\":1621284763,\"created\":1621284576,\"updated\":1621284577,\"version\":3},{\"id\":1114481,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137359,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13355\",\"timestamp\":0,\"title\":\"Jest
+        + Puppeteer PoC: Revamping E2E tests\",\"message\":\"## TL;DR\\r\\n- **We
+        are replatforming e2e tests.** And calling them acceptance tests.\\r\\n- **We
+        are using Jest as a test runner, and Puppeteer as the browser controller.**\\r\\n-
+        **We created  `puppet-theater \U0001F3AD` under `tools/puppet-theater` to
+        stitch Jest and Puppeteer together.**\\r\\n- **We created custom matchers
+        with good error messages and developer experience.**\\r\\n- **We are co-locating
+        all acceptance tests along with the \\\"system under test\\\".** Same as we
+        do for unit tests. That means no more `e2e/` folder.\\r\\n- **Acceptance tests
+        feels native to VI**. No additional `yarn install`, no additional `package.json`.\\r\\n\\r\\n##
+        Problem\\r\\n\\r\\nOur e2e tests have been flaky and hard to debug, mostly
+        due to:\\r\\n\\r\\n- **Complexity of the previous stack.**\\r\\n- **Tests
+        used to live on the suburbs of VI on the `e2e/` folder**, instead of having
+        the tests co-located with the source code, reducing ownership and visibility
+        for that kind of test.\\r\\n- **A different set of technologies, instead of
+        using the tooling engineers are already familiar with.**\\r\\n- **Different
+        pipelines local and on CI, creating platform-specific bugs that were hard
+        to debug.**\\r\\n\\r\\n## Solution\\r\\n\\r\\nOur approach for tackling the
+        problem was to have an acceptance test that:\\r\\n- **Uses tools engineers
+        are already familiar with.** \\r\\n- **Uses the same pipeline locally and
+        on CI.** In order to reduce complexity and to improve reliability.\\r\\n-
+        **No additional installation step.** Less friction for developers.\\r\\n-
+        **Has a great developer experience.** \\r\\n\\r\\n## API\\r\\n\\r\\nWe are
+        exposing on the global scope the [`browser`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-browser)
+        and [`page`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-page)
+        Puppeteer's object, and also adding some helpers methods to facilitate testing
+        within our use case.\\r\\n\\r\\n### Additional globals\\r\\n\\r\\n#### `global.page`\\r\\n\\r\\n-
+        `global.page.debug()`\\r\\n- `global.page.goToNytUrl()`\\r\\n- `global.page.emulateDevice(deviceType)`\\r\\n-
+        `global.page.scrollToSelect\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"1ae407a23e11a8b69c5e6ee7397d3b0135aa9bb0\",\"ref\":\"refs/pull/13355/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/54914?v=4\",\"sender\":\"caiogondim\",\"started\":1621283912,\"finished\":1621284657,\"created\":1621283912,\"updated\":1621283912,\"version\":3}]\n"
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 17 May 2021 23:40:48 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds
+  response:
+    body:
+      string: "[{\"id\":1114857,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137384,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/785a0cd25998...ae702205b8c7\",\"timestamp\":0,\"message\":\"bump
+        paidpost bundle again\",\"before\":\"785a0cd25998fdae6802df4422546ea8d77390c6\",\"after\":\"ae702205b8c7462eba6bdcd5378ec73e3fb7bd48\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621294881,\"finished\":1621295057,\"created\":1621294880,\"updated\":1621294881,\"version\":3},{\"id\":1114846,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137383,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13618\",\"timestamp\":0,\"title\":\"Coverage
+        Briefing - config\",\"message\":\"## Description\\r\\n\\r\\nThis PR introduces
+        configuration changes for the upcoming coverage briefing live asset type.\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\nVerify that existing assets look normal:\\r\\n\\r\\n*
+        [Live Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/17/world/israel-gaza-updates)\\r\\n*
+        [Live Blog](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/20/us/derek-chauvin-verdict-george-floyd)\\r\\n*
+        [Fact Check](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/28/us/biden-speech)\\r\\n\\r\\nAs
+        well as the posts in the Coverage Briefing:\\r\\n\\r\\n* [Coverage Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/12/admin/urvashi-coverage-briefing-test?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com)\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"785a0cd25998fdae6802df4422546ea8d77390c6\",\"ref\":\"refs/pull/13618/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"main\",\"author_login\":\"jonahsmith\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293876,\"finished\":1621294318,\"created\":1621293876,\"updated\":1621293876,\"version\":3},{\"id\":1114845,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137382,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/f78bb4d5b9d0...785a0cd25998\",\"timestamp\":0,\"message\":\"contains
+        to includes\",\"before\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"after\":\"785a0cd25998fdae6802df4422546ea8d77390c6\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293876,\"finished\":1621294143,\"created\":1621293875,\"updated\":1621293876,\"version\":3},{\"id\":1114835,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137381,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"opened\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13618\",\"timestamp\":0,\"title\":\"Coverage
+        Briefing - config\",\"message\":\"## Description\\r\\n\\r\\nThis PR introduces
+        configuration changes for the upcoming coverage briefing live asset type.\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\nVerify that existing assets look normal:\\r\\n\\r\\n*
+        [Live Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/17/world/israel-gaza-updates)\\r\\n*
+        [Live Blog](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/20/us/derek-chauvin-verdict-george-floyd)\\r\\n*
+        [Fact Check](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/04/28/us/biden-speech)\\r\\n\\r\\nAs
+        well as the posts in the Coverage Briefing:\\r\\n\\r\\n* [Coverage Briefing](https://preview-coverage-briefing-config.sbx.nytimes.com/live/2021/05/12/admin/urvashi-coverage-briefing-test?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com)\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"ref\":\"refs/pull/13618/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"main\",\"author_login\":\"jonahsmith\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293337,\"finished\":1621293762,\"created\":1621293336,\"updated\":1621293337,\"version\":3},{\"id\":1114834,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137380,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/cc2cbb76af66...f78bb4d5b9d0\",\"timestamp\":0,\"message\":\"use
+        label tokens\",\"before\":\"cc2cbb76af66f52f913061dbcc442f1f2e151d5d\",\"after\":\"f78bb4d5b9d09bdfea6df5f8b506445f3dbc06c8\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621293319,\"finished\":1621293587,\"created\":1621293319,\"updated\":1621293319,\"version\":3},{\"id\":1114828,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137379,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/bd1163208bda...cc2cbb76af66\",\"timestamp\":0,\"message\":\"bump
+        nyt/components\",\"before\":\"bd1163208bda674a08fc1308cfea52c78489ce39\",\"after\":\"cc2cbb76af66f52f913061dbcc442f1f2e151d5d\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621292857,\"finished\":1621293537,\"created\":1621292856,\"updated\":1621292857,\"version\":3},{\"id\":1114795,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137378,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/bd041b3d770b\",\"timestamp\":0,\"message\":\"added
+        kicker to vi and magnolia versions of regibundle\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"bd041b3d770b4251261804baad3023a600d8a568\",\"ref\":\"refs/heads/preview-hd-1052-regibundle-login-test\",\"source_repo\":\"\",\"source\":\"preview-hd-1052-regibundle-login-test\",\"target\":\"preview-hd-1052-regibundle-login-test\",\"author_login\":\"dennishan9\",\"author_name\":\"dennishan9\",\"author_email\":\"dennishan9@gmail.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/18151076?v=4\",\"sender\":\"dennishan9\",\"started\":1621291261,\"finished\":1621292086,\"created\":1621291260,\"updated\":1621291261,\"version\":3},{\"id\":1114792,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137377,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/bd1163208bda\",\"timestamp\":0,\"message\":\"modernize
+        theme generator and add coverage briefing logic\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"bd1163208bda674a08fc1308cfea52c78489ce39\",\"ref\":\"refs/heads/preview-coverage-briefing-config\",\"source_repo\":\"\",\"source\":\"preview-coverage-briefing-config\",\"target\":\"preview-coverage-briefing-config\",\"author_login\":\"jonahsmith\",\"author_name\":\"Jonah
+        Smith\",\"author_email\":\"jonah.smith@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6675396?v=4\",\"sender\":\"jonahsmith\",\"started\":1621291183,\"finished\":1621291482,\"created\":1621291183,\"updated\":1621291183,\"version\":3},{\"id\":1114717,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137376,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13355\",\"timestamp\":0,\"title\":\"Jest
+        + Puppeteer PoC: Revamping E2E tests\",\"message\":\"## TL;DR\\r\\n- **We
+        are replatforming e2e tests.** And calling them acceptance tests.\\r\\n- **We
+        are using Jest as a test runner, and Puppeteer as the browser controller.**\\r\\n-
+        **We created  `puppet-theater \U0001F3AD` under `tools/puppet-theater` to
+        stitch Jest and Puppeteer together.**\\r\\n- **We created custom matchers
+        with good error messages and developer experience.**\\r\\n- **We are co-locating
+        all acceptance tests along with the \\\"system under test\\\".** Same as we
+        do for unit tests. That means no more `e2e/` folder.\\r\\n- **Acceptance tests
+        feels native to VI**. No additional `yarn install`, no additional `package.json`.\\r\\n\\r\\n##
+        Problem\\r\\n\\r\\nOur e2e tests have been flaky and hard to debug, mostly
+        due to:\\r\\n\\r\\n- **Complexity of the previous stack.**\\r\\n- **Tests
+        used to live on the suburbs of VI on the `e2e/` folder**, instead of having
+        the tests co-located with the source code, reducing ownership and visibility
+        for that kind of test.\\r\\n- **A different set of technologies, instead of
+        using the tooling engineers are already familiar with.**\\r\\n- **Different
+        pipelines local and on CI, creating platform-specific bugs that were hard
+        to debug.**\\r\\n\\r\\n## Solution\\r\\n\\r\\nOur approach for tackling the
+        problem was to have an acceptance test that:\\r\\n- **Uses tools engineers
+        are already familiar with.** \\r\\n- **Uses the same pipeline locally and
+        on CI.** In order to reduce complexity and to improve reliability.\\r\\n-
+        **No additional installation step.** Less friction for developers.\\r\\n-
+        **Has a great developer experience.** \\r\\n\\r\\n## API\\r\\n\\r\\nWe are
+        exposing on the global scope the [`browser`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-browser)
+        and [`page`](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#class-page)
+        Puppeteer's object, and also adding some helpers methods to facilitate testing
+        within our use case.\\r\\n\\r\\n### Additional globals\\r\\n\\r\\n#### `global.page`\\r\\n\\r\\n-
+        `global.page.debug()`\\r\\n- `global.page.goToNytUrl()`\\r\\n- `global.page.emulateDevice(deviceType)`\\r\\n-
+        `global.page.scrollToSelect\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"970fb4829add30b72527c1649d0595ac1507ba15\",\"ref\":\"refs/pull/13355/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/54914?v=4\",\"sender\":\"caiogondim\",\"started\":1621288728,\"finished\":1621289698,\"created\":1621288727,\"updated\":1621288728,\"version\":3},{\"id\":1114716,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137375,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/1ae407a23e11...970fb4829add\",\"timestamp\":0,\"message\":\"Fix
+        and skip tests\",\"before\":\"1ae407a23e11a8b69c5e6ee7397d3b0135aa9bb0\",\"after\":\"970fb4829add30b72527c1649d0595ac1507ba15\",\"ref\":\"refs/heads/deprecate-e2e-and-introduce-acceptance-tests\",\"source_repo\":\"\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"author_login\":\"caiogondim\",\"author_name\":\"Caio
+        Gondim\",\"author_email\":\"me@caiogondim.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/33044?v=4\",\"sender\":\"caiogondim\",\"started\":1621288724,\"finished\":1621289222,\"created\":1621288723,\"updated\":1621288724,\"version\":3},{\"id\":1114666,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137374,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/16ac129ff2ce\",\"timestamp\":0,\"message\":\"wip\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"16ac129ff2ce84792addf151f9dff72ef38deb83\",\"ref\":\"refs/heads/preview-stl-2482\",\"source_repo\":\"\",\"source\":\"preview-stl-2482\",\"target\":\"preview-stl-2482\",\"author_login\":\"\",\"author_name\":\"uuberoy\",\"author_email\":\"uuberoy@princeton.edu\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/37817791?v=4\",\"sender\":\"uuberoy\",\"started\":1621287091,\"finished\":1621287937,\"created\":1621287090,\"updated\":1621287091,\"version\":3},{\"id\":1114664,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137373,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/bc1c3854480f...5b9a8e32590d\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-dynamic-nav-locations-tests' into preview-i18n-sections\",\"before\":\"bc1c3854480f598f20bb32fa343bf787695dc903\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/heads/preview-i18n-yo\",\"source_repo\":\"\",\"source\":\"preview-i18n-yo\",\"target\":\"preview-i18n-yo\",\"author_login\":\"justinph\",\"author_name\":\"Justin
+        Heideman\",\"author_email\":\"justin.heideman@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286988,\"finished\":1621287756,\"created\":1621286988,\"updated\":1621286988,\"version\":3},{\"id\":1114661,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137372,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13469\",\"timestamp\":0,\"title\":\"International
+        Section Fronts\",\"message\":\"## Pre-requisite reading\\r\\n[International
+        Section Fronts Memo](https://docs.google.com/document/d/1vHpIQ6PsGk3ZFAQJoF-YWY8JKX_ARskoqGyqY24itXU/edit)\\r\\n\\r\\n##
+        Description\\r\\nModifies the collection logic to generate additional `/international/`
+        and `/ca/` URLs for all section fronts. Some of these URLs use personalization
+        to replace the highlights from scoop (Previously 4 sections did this, now
+        many more). \\r\\n\\r\\nMost of the logic for this is contained within `intlConfig.js`
+        and utilized where necessary towards the begining of the logic on the route.
+        This logic should only apply on `/section` urls, not any other collection
+        type. Specifically, the main `collection` object is modified to update the
+        url, section, and subsection attributes, and an `intlConfig` attribute with
+        information about the i18n is added. \\r\\n\\r\\nChanges have also been made
+        in various helmets for modifying the `\\u003chead\\u003e` of the page to include
+        the necessary `rel=hrefLang` tags so that google can correctly understand
+        these new pages. The hrefLang tags purposefully show up on all versions of
+        a page (`/`, `/ca/`, and `international/`).\\r\\n\\r\\nNavigation on the site
+        is also modified. The navs for the masthead, submasthead, hamburger, and SiteIndex
+        load differently based on `location.pathname` or the `NYT-Edition` cookie.
+        When visiting a `/ca/` or `/international/` route, a user will load localized
+        versions of those navigations. The same will happen if a user has set the
+        `/ca/` or `/international/` homepages as their default, and thus the NYT-Edition
+        cookie. This makes use of `dynamic()` and bundle splitting to make sure we're
+        not loading duplicate sets of navigational data. \\r\\n\\r\\nThe PR also updates
+        the homepage to modify the URLs that are generated in the Well. \\r\\n\\r\\n-
+        Jira ticket: https://jira.nyt.net/browse/SEO-1451\\r\\n- Launch date: May
+        19, 2021\\r\\n- Review by date: May 19, 2021\\r\\n\\r\\n## PR Checklist\\r\\n\\u003c!--
+        Please validate your changes with the checklist below before marking for code
+        review. --\\u003e\\r\\n- [x] New features and routes ha\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/pull/13469/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-i18n-sections\",\"target\":\"main\",\"author_login\":\"justinph\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286953,\"finished\":1621287935,\"created\":1621286953,\"updated\":1621286953,\"version\":3},{\"id\":1114660,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137371,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/b62032f50ae6...5b9a8e32590d\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-dynamic-nav-locations-tests' into preview-i18n-sections\",\"before\":\"b62032f50ae68195dcaccda58b6d844ca0488124\",\"after\":\"5b9a8e32590d958f0e89943f3abf2a868fe7276c\",\"ref\":\"refs/heads/preview-i18n-sections\",\"source_repo\":\"\",\"source\":\"preview-i18n-sections\",\"target\":\"preview-i18n-sections\",\"author_login\":\"justinph\",\"author_name\":\"Justin
+        Heideman\",\"author_email\":\"justin.heideman@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/634842?v=4\",\"sender\":\"justinph\",\"started\":1621286952,\"finished\":1621287776,\"created\":1621286951,\"updated\":1621286952,\"version\":3},{\"id\":1114655,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137370,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"opened\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13617\",\"timestamp\":0,\"title\":\"Split
+        Most Popular and Play blocks\",\"message\":\"\\u003c!-- How can we improve
+        this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\n\\u003c!-- Describe your changes here --\\u003e\\r\\n\\u003c!--
+        See https://vi.tech.nyt.net/processes/feature-lifecycle/#pr-checklist --\\u003e\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\n\\u003c!-- Provide instructions for code reviewer on
+        how to test/validate the changes --\\u003e\\r\\n\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"438ffcef2c652cff37e9085e2da538a852be3959\",\"ref\":\"refs/pull/13617/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-mostpopplay\",\"target\":\"main\",\"author_login\":\"lpierfelice\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/3246972?v=4\",\"sender\":\"lpierfelice\",\"started\":1621286765,\"finished\":1621287708,\"created\":1621286764,\"updated\":1621286765,\"version\":3},{\"id\":1114637,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137369,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/27812f7a9ab5...438ffcef2c65\",\"timestamp\":0,\"message\":\"cleanup,
+        some css\",\"before\":\"27812f7a9ab549d54a57f4a59d8361909efc27ee\",\"after\":\"438ffcef2c652cff37e9085e2da538a852be3959\",\"ref\":\"refs/heads/preview-mostpopplay\",\"source_repo\":\"\",\"source\":\"preview-mostpopplay\",\"target\":\"preview-mostpopplay\",\"author_login\":\"lpierfelice\",\"author_name\":\"lpierfelice\",\"author_email\":\"lorenzo.pierfelice@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/3246972?v=4\",\"sender\":\"lpierfelice\",\"started\":1621286385,\"finished\":1621287059,\"created\":1621286384,\"updated\":1621286385,\"version\":3},{\"id\":1114628,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137368,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/fbe92792581f...c182f4fee4e9\",\"timestamp\":0,\"message\":\"Merge
+        branch 'preview-stl-2478' of github.com:nytm/wf-project-vi into preview-stl-2478\",\"before\":\"fbe92792581fc73feb338f5357d5519fe4cb788e\",\"after\":\"c182f4fee4e966aae6cf9d1f9d80a57fe93ec825\",\"ref\":\"refs/heads/preview-stl-2478\",\"source_repo\":\"\",\"source\":\"preview-stl-2478\",\"target\":\"preview-stl-2478\",\"author_login\":\"\",\"author_name\":\"uuberoy\",\"author_email\":\"uuberoy@princeton.edu\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/37817791?v=4\",\"sender\":\"uuberoy\",\"started\":1621286112,\"finished\":1621286891,\"created\":1621286111,\"updated\":1621286112,\"version\":3},{\"id\":1114605,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137367,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13598\",\"timestamp\":0,\"title\":\"Preview
+        dynamic nav locations tests\",\"message\":\"\\u003c!-- How can we improve
+        this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\n\\u003c!-- Describe your changes here --\\u003e\\r\\n\\u003c!--
+        See https://vi.tech.nyt.net/processes/feature-lifecycle/#pr-checklist --\\u003e\\r\\n\\r\\n##
+        How to Test\\r\\n\\r\\n\\u003c!-- Provide instructions for code reviewer on
+        how to test/validate the changes --\\u003e\\r\\n\",\"before\":\"1c4cb64ae3fc154d7bb7da0bc64db034d843d7f0\",\"after\":\"30e22d947201f6258cce1da2c0eca8005d5424ba\",\"ref\":\"refs/pull/13598/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-dynamic-nav-locations-tests\",\"target\":\"main\",\"author_login\":\"skumar225\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6520588?v=4\",\"sender\":\"skumar225\",\"started\":1621285697,\"finished\":1621286335,\"created\":1621285697,\"updated\":1621285697,\"version\":3},{\"id\":1114604,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137366,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/82dbbd2dee3d...30e22d947201\",\"timestamp\":0,\"message\":\"corrected
+        more links\",\"before\":\"82dbbd2dee3d200b8274d0c8e9a0932f5401a9f4\",\"after\":\"30e22d947201f6258cce1da2c0eca8005d5424ba\",\"ref\":\"refs/heads/preview-dynamic-nav-locations-tests\",\"source_repo\":\"\",\"source\":\"preview-dynamic-nav-locations-tests\",\"target\":\"preview-dynamic-nav-locations-tests\",\"author_login\":\"skumar225\",\"author_name\":\"skumar225\",\"author_email\":\"shilpa.kumar@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/6520588?v=4\",\"sender\":\"skumar225\",\"started\":1621285696,\"finished\":1621285860,\"created\":1621285696,\"updated\":1621285696,\"version\":3},{\"id\":1114601,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137365,\"status\":\"success\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13602\",\"timestamp\":0,\"title\":\"Home:
+        support containers and programmingNode\",\"message\":\"\\u003c!-- How can
+        we improve this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\nAdds support for containers and new programmingNode
+        data structure.\\r\\n\\r\\nhttps://jira.nyt.net/browse/UXF-647\\r\\nhttps://jira.nyt.net/browse/UXF-650\\r\\nhttps://jira.nyt.net/browse/UXF-651\\r\\n\\r\\nmonorepo
+        PR: https://github.com/nytimes/news/pull/919\\r\\n\\r\\n## How to Test\\r\\n\\r\\n[vi
+        preview](https://preview-programming-node-rendering.sbx.nytimes.com/?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com\\u0026editorspicks=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzu\\u0026topstories=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezza\\u0026spotlight=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzb\\u0026features=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzs)\\r\\n\",\"before\":\"f8d937c92e255f080af2ff6e9a84e371e7f96d10\",\"after\":\"7e78fcbe73a5e897680592087a271aa7c108dc28\",\"ref\":\"refs/pull/13602/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-programming-node-rendering\",\"target\":\"main\",\"author_login\":\"acreighton\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621285655,\"finished\":1621286609,\"created\":1621285654,\"updated\":1621285655,\"version\":3},{\"id\":1114600,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137364,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/c1746dae8c8a...7e78fcbe73a5\",\"timestamp\":0,\"message\":\"Merge
+        branch 'main' into preview-programming-node-rendering\",\"before\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"after\":\"7e78fcbe73a5e897680592087a271aa7c108dc28\",\"ref\":\"refs/heads/preview-programming-node-rendering\",\"source_repo\":\"\",\"source\":\"preview-programming-node-rendering\",\"target\":\"preview-programming-node-rendering\",\"author_login\":\"acreighton\",\"author_name\":\"Andy
+        Creighton\",\"author_email\":\"andy.creighton@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621285653,\"finished\":1621285920,\"created\":1621285652,\"updated\":1621285653,\"version\":3},{\"id\":1114555,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137363,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/4908cbff9ac1^...dddff8a90371\",\"timestamp\":0,\"message\":\"Merge
+        branch 'main' of github.com:nytm/wf-project-vi into preview-update-tooltip\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"dddff8a903719119e90a94d2f9b1b4a7043eff8f\",\"ref\":\"refs/heads/preview-update-tooltip\",\"source_repo\":\"\",\"source\":\"preview-update-tooltip\",\"target\":\"preview-update-tooltip\",\"author_login\":\"shellyser\",\"author_name\":\"Shelly
+        Seroussi\",\"author_email\":\"shelly.seroussi@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/5897702?v=4\",\"sender\":\"shellyser\",\"started\":1621284960,\"finished\":1621285756,\"created\":1621284959,\"updated\":1621284960,\"version\":3},{\"id\":1114554,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137362,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/commit/b6fb842a9b18\",\"timestamp\":0,\"message\":\"AdSlot
+        auto build branch - adreq-2376; commit 97186832a38c5c21b4c92027ed43c39e4c80db89;\",\"before\":\"0000000000000000000000000000000000000000\",\"after\":\"b6fb842a9b18f3621d46b1e8e3edf785ebc97aeb\",\"ref\":\"refs/heads/preview-adex-adreq-2376\",\"source_repo\":\"\",\"source\":\"preview-adex-adreq-2376\",\"target\":\"preview-adex-adreq-2376\",\"author_login\":\"\",\"author_name\":\"drone\",\"author_email\":\"noreply@drone\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/4340261?v=4\",\"sender\":\"maxrbaldwin\",\"started\":1621284903,\"finished\":1621285510,\"created\":1621284902,\"updated\":1621284903,\"version\":3},{\"id\":1114529,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137361,\"status\":\"failure\",\"event\":\"pull_request\",\"action\":\"synchronized\",\"link\":\"https://github.com/nytm/wf-project-vi/pull/13602\",\"timestamp\":0,\"title\":\"Home:
+        support containers and programmingNode\",\"message\":\"\\u003c!-- How can
+        we improve this template? Ideas welcome in the #vi Slack channel! --\\u003e\\r\\n\\r\\n##
+        Description\\r\\n\\r\\nAdds support for containers and new programmingNode
+        data structure.\\r\\n\\r\\nhttps://jira.nyt.net/browse/UXF-647\\r\\nhttps://jira.nyt.net/browse/UXF-650\\r\\nhttps://jira.nyt.net/browse/UXF-651\\r\\n\\r\\nmonorepo
+        PR: https://github.com/nytimes/news/pull/919\\r\\n\\r\\n## How to Test\\r\\n\\r\\n[vi
+        preview](https://preview-programming-node-rendering.sbx.nytimes.com/?GQL_HOST=https://samizdat-graphql-test.stg.nytimes.com\\u0026editorspicks=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzu\\u0026topstories=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezza\\u0026spotlight=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzb\\u0026features=nyt://legacycollection/0da70577-858d-5e55-ae61-6a6da2bdezzs)\\r\\n\",\"before\":\"773efda10aeaab40ee29a8a16b9cdf3d14ad53c7\",\"after\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"ref\":\"refs/pull/13602/head\",\"source_repo\":\"nytm/wf-project-vi\",\"source\":\"preview-programming-node-rendering\",\"target\":\"main\",\"author_login\":\"acreighton\",\"author_name\":\"\",\"author_email\":\"\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621284578,\"finished\":1621284633,\"created\":1621284577,\"updated\":1621284578,\"version\":3},{\"id\":1114528,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":137360,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/7727a9d9ba29...c1746dae8c8a\",\"timestamp\":0,\"message\":\"bump:
+        optional chaining / null check child nodes\",\"before\":\"7727a9d9ba2935793fa57b618545ba66994d6a2b\",\"after\":\"c1746dae8c8af24da6d69d4abb0f921ad2cb8577\",\"ref\":\"refs/heads/preview-programming-node-rendering\",\"source_repo\":\"\",\"source\":\"preview-programming-node-rendering\",\"target\":\"preview-programming-node-rendering\",\"author_login\":\"acreighton\",\"author_name\":\"Andy
+        Creighton\",\"author_email\":\"andy.creighton@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/1289730?v=4\",\"sender\":\"acreighton\",\"started\":1621284577,\"finished\":1621284763,\"created\":1621284576,\"updated\":1621284577,\"version\":3}]\n"
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 17 May 2021 23:49:39 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,89 @@
+[user]
+name = Gabriel Falcão
+email = gabriel@nacaolivre.org
+signingkey = 408C6807417462D54A4F97C9CEDDFAF1B72ECF92
+
+[color]
+ui = true
+
+[diff]
+
+colorMoved = plain
+
+[alias]
+make = !exec make
+git = !exec git
+
+ci = commit
+br = branch
+co = checkout
+df = diff
+dc = diff --cached
+lg = log -p
+who = !git shortlog -s -- | sort -r
+graph = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+contributors = !git shortlog -s -- | sort -r
+sync = !git-pull && git-push
+undo = !git reset HEAD
+shallow = clone --depth 1
+clone-shallow = shallow
+ignore = !bash $HOME/usr/bin/git-ignore
+readme = !bash $HOME/usr/bin/git-readme
+virtualenv = !bash $HOME/usr/bin/git-virtualenv
+purge-sensitive = !bash $HOME/usr/bin/git-purge-sensitive
+permission-reset = !bash $HOME/usr/bin/git-reset-unstaged-permissions
+backup = !bash $HOME/usr/bin/git-backup
+dirty-quickie = !git-commit -am 'dirty quickie bkp' && git-push
+bkp-dirty = !git-commit -am 'dirty bkp' && git-push
+vr = !gource --camera-mode track
+s = status .
+st = status
+t = status .
+ts = status
+here = status .
+cm = commit -m
+fixup = commit --amend -C HEAD
+recommit-latest = !git-recommit-latest
+# tal :)
+praise = blame
+branches = branch --sort=-committerdate  # DESC
+
+
+[push]
+default = current
+
+[rerere]
+enabled = true
+autoupdate = true
+
+[url "git@github.com:"]
+insteadOf = https://github.com/
+
+[filter "lfs"]
+required = true
+clean = git-lfs clean -- %f
+smudge = git-lfs smudge -- %f
+process = git-lfs filter-process
+
+[commit]
+gpgsign = false
+template = ~/.gitmessage
+
+[color "diff"]
+old = red bold
+new = green bold
+
+[core]
+
+excludesfile = /Users/gabrielfalcao/.gitignoreglobal
+quotepath = false
+
+# [branch "master"]
+#     mergeoptions = --no-ff -X octopus
+
+# pager = delta --plus-color="#e81c52" --minus-color="#06623b"
+
+[interactive]
+# diffFilter = delta --color-only
+[pull]
+	rebase = false

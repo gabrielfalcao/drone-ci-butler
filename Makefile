@@ -6,16 +6,17 @@ REQUIREMENTS_FILE	:= development.txt
 GIT_ROOT		:= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 VENV_ROOT		:= $(GIT_ROOT)/.venv
 MAIN_CLI_PATH		:= $(VENV_ROOT)/$(MAIN_CLI_NAME)
+PIP_INSTALL		:= $(VENV_ROOT)/bin/pip install --use-deprecated=legacy-resolver
 export VENV		?= $(VENV_ROOT)
 all: dependencies tests
 
 venv $(VENV):  # creates $(VENV) folder if does not exist
 	python3 -mvenv $(VENV)
-	$(VENV)/bin/pip install -U pip setuptools
+	$(PIP_INSTALL) -U pip setuptools
 
 develop $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(VENV)/bin/pip: # installs latest pip
 	test -e $(VENV)/bin/pip || $(MAKE) $(VENV)
-	$(VENV)/bin/pip install --force-reinstall -r $(REQUIREMENTS_FILE)
+	$(PIP_INSTALL) --force-reinstall -r $(REQUIREMENTS_FILE)
 	$(VENV)/bin/python setup.py develop
 
 # Runs the unit and functional tests
@@ -24,7 +25,7 @@ tests: unit functional  # runs all tests
 
 # Install dependencies
 dependencies: | $(VENV)/bin/nosetests
-	$(VENV)/bin/pip install -r $(REQUIREMENTS_FILE)
+	$(PIP_INSTALL) -r $(REQUIREMENTS_FILE)
 	$(VENV)/bin/python setup.py develop
 
 
