@@ -2,7 +2,6 @@ import logging
 from urllib.parse import urljoin
 from pathlib import Path
 from requests import Response, Session
-from requests_cache import CachedSession
 from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
 
@@ -12,13 +11,10 @@ logger = logging.getLogger(__name__)
 
 
 class DroneAPIClient(object):
-    def __init__(self, url: str, access_token: str, sqlite_cache_file: Path = None):
+    def __init__(self, url: str, access_token: str):
         self.api_url = url
         self.access_token = access_token
-        if sqlite_cache_file:
-            self.http = CachedSession(sqlite_cache_file, backend="sqlite")
-        else:
-            self.http = Session()
+        self.http = Session()
         self.http.headers = {
             "Authorization": f"Bearer {access_token}",
             "User-Agent": f"DroneCI Butler v{version}",

@@ -56,6 +56,15 @@ class Step(Model):
 
     output: Output
 
+    def __ui_attributes__(self):
+        return {
+            "number": self.id,
+            "name": self.name,
+            "started": self.started,
+            "stopped": self.stopped,
+            "exit_code": self.exit_code,
+        }
+
     def to_string(self, *args, **kw) -> str:
         if self.output:
             return self.output.to_string(*args, **kw)
@@ -105,6 +114,18 @@ class Stage(Model):
         steps = Step.List(self.steps or [])
         return steps.filter(lambda step: step.exit_code != 0)
 
+    def succeeded_steps(self) -> Step.List:
+        steps = Step.List(self.steps or [])
+        return steps.filter(lambda step: step.exit_code == 0)
+
+    def __ui_attributes__(self):
+        return {
+            "number": self.id,
+            "name": self.name,
+            "started": self.started,
+            "stopped": self.stopped,
+        }
+
 
 class Build(Model):
     __id_attributes__ = ["id", "repo_id", "number"]
@@ -138,6 +159,15 @@ class Build(Model):
     headers: Property[dict]
 
     __visible_attributes__ = ["name", "status", "number"]
+
+    def __ui_attributes__(self):
+        return {
+            "number": self.id,
+            "link": self.link,
+            "message": self.message,
+            "started": self.started,
+            "finished": self.finished,
+        }
 
     def with_headers(self, headers: dict) -> Model:
         self.headers = headers

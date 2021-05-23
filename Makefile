@@ -1,20 +1,23 @@
-.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black
+.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black db-migrate
 
-PACKAGE_PATH		:= ./drone_ci_butler
+PACKAGE_NAME		:= drone_ci_butler
 MAIN_CLI_NAME		:= drone-ci-butler
 REQUIREMENTS_FILE	:= development.txt
 GIT_ROOT		:= $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+PACKAGE_PATH		:= $(GIT_ROOT)/$(PACKAGE_NAME)
 VENV_ROOT		:= $(GIT_ROOT)/.venv
 MAIN_CLI_PATH		:= $(VENV_ROOT)/$(MAIN_CLI_NAME)
 PIP_INSTALL		:= $(VENV_ROOT)/bin/pip install --use-deprecated=legacy-resolver
+export ALEMBIC_CONFIG	?= $(PACKAGE_PATH)/alembic.ini
 export VENV		?= $(VENV_ROOT)
+
 all: dependencies tests
 
 venv $(VENV):  # creates $(VENV) folder if does not exist
 	python3 -mvenv $(VENV)
 	$(PIP_INSTALL) -U pip setuptools
 
-develop $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(VENV)/bin/pip: # installs latest pip
+$(VENV)/bin/alembic $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(VENV)/bin/pip develop: # installs latest pip
 	test -e $(VENV)/bin/pip || $(MAKE) $(VENV)
 	$(PIP_INSTALL) --force-reinstall -r $(REQUIREMENTS_FILE)
 	$(VENV)/bin/python setup.py develop
@@ -22,6 +25,8 @@ develop $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(VENV)/bin/pi
 # Runs the unit and functional tests
 tests: unit functional  # runs all tests
 
+db-migrate:
+	(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
 
 # Install dependencies
 dependencies: | $(VENV)/bin/nosetests
