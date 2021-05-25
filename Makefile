@@ -1,4 +1,4 @@
-.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black db-migrate
+.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black db-migrate db-create
 
 PACKAGE_NAME		:= drone_ci_butler
 MAIN_CLI_NAME		:= drone-ci-butler
@@ -25,7 +25,13 @@ $(VENV)/bin/alembic $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(
 # Runs the unit and functional tests
 tests: unit functional  # runs all tests
 
-db-migrate:
+db-create:
+	-@dropdb drone_ci_butler
+	-@dropuser drone_ci_butler
+	-@createuser drone_ci_butler
+	-@createdb --owner=drone_ci_butler drone_ci_butler
+
+db-migrate: db-create
 	(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
 
 # Install dependencies

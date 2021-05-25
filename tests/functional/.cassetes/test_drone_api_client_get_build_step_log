@@ -1,0 +1,67 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/137019/logs/3/9
+  response:
+    body:
+      string: "[{\"pos\":0,\"out\":\"+ yarn test:acceptance smartphone --color\\n\",\"time\":0},{\"pos\":1,\"out\":\"\\u001b[2K\\u001b[1G\\u001b[1myarn
+        run v1.22.4\\u001b[22m\\n\",\"time\":1},{\"pos\":2,\"out\":\"\\u001b[2K\\u001b[1G\\u001b[2m$
+        BABEL_ENV=test ./tools/puppet-theater/conf/print \\u0026\\u0026 jest --runInBand
+        --forceExit --config=test/jest.acceptance.config.js smartphone --color\\u001b[22m\\n\",\"time\":1},{\"pos\":3,\"out\":\"\\n\",\"time\":1},{\"pos\":4,\"out\":\"Starting
+        puppet-theater \U0001F3AD with configuration:\\n\",\"time\":1},{\"pos\":5,\"out\":\"-
+        \\u001b[1mbaseUrl\\u001b[22m\\u001b[0m: \\u001b[1;33m\\\"http://vi.nytimes.com:3000\\\"\\u001b[0m\\n\",\"time\":1},{\"pos\":6,\"out\":\"-
+        \\u001b[1mheadless\\u001b[22m\\u001b[0m: \\u001b[1;33mtrue\\u001b[0m\\n\",\"time\":1},{\"pos\":7,\"out\":\"-
+        \\u001b[1mdebug\\u001b[22m\\u001b[0m: \\u001b[1;33mfalse\\u001b[0m\\n\",\"time\":1},{\"pos\":8,\"out\":\"-
+        \\u001b[1mdumpio\\u001b[22m\\u001b[0m: \\u001b[1;33mfalse\\u001b[0m\\n\",\"time\":1},{\"pos\":9,\"out\":\"-
+        \\u001b[1mbail\\u001b[22m\\u001b[0m: \\u001b[1;33mtrue\\u001b[0m\\n\",\"time\":1},{\"pos\":10,\"out\":\"-
+        \\u001b[1mverbose\\u001b[22m\\u001b[0m: \\u001b[1;33mfalse\\u001b[0m\\n\",\"time\":1},{\"pos\":11,\"out\":\"-
+        \\u001b[1mexecutablePath\\u001b[22m\\u001b[0m: \\u001b[1;33m\\\"/usr/bin/google-chrome-stable\\\"\\u001b[0m\\n\",\"time\":1},{\"pos\":12,\"out\":\"-
+        \\u001b[1mprintConf\\u001b[22m\\u001b[0m: \\u001b[1;33mtrue\\u001b[0m\\n\",\"time\":1},{\"pos\":13,\"out\":\"-
+        \\u001b[1mwindowWidth\\u001b[22m\\u001b[0m: \\u001b[1;33m1920\\u001b[0m\\n\",\"time\":1},{\"pos\":14,\"out\":\"-
+        \\u001b[1mwindowHeight\\u001b[22m\\u001b[0m: \\u001b[1;33m1080\\u001b[0m\\n\",\"time\":1},{\"pos\":15,\"out\":\"\\n\",\"time\":1},{\"pos\":16,\"out\":\"\\u001b[1mNo
+        tests found, exiting with code 1\\u001b[22m\\n\",\"time\":2},{\"pos\":17,\"out\":\"Run
+        with `--passWithNoTests` to exit with code 0\\n\",\"time\":2},{\"pos\":18,\"out\":\"In
+        \\u001b[1m/drone/src\\u001b[22m\\n\",\"time\":2},{\"pos\":19,\"out\":\"  3923
+        files checked.\\n\",\"time\":2},{\"pos\":20,\"out\":\"  roots: \\u001b[33m/drone/src/src,
+        /drone/src/tools/webpack, /drone/src/tools/eslint, /drone/src/tools/puppet-theater,
+        /drone/src/tools/wait-for-service\\u001b[39m - 3923 matches\\n\",\"time\":2},{\"pos\":21,\"out\":\"
+        \ testMatch: \\u001b[33m**/*desktop.acceptance.js, **/*tablet.acceptance.js,
+        **/*smartphone.acceptance.js\\u001b[39m - 1 match\\n\",\"time\":2},{\"pos\":22,\"out\":\"
+        \ testPathIgnorePatterns: \\u001b[33m.*/testing/.*, .*fixture.*, /[.]caches/,
+        /build/, /lib/, /docs/, /docs_build/, /node_modules/, /perf/, /schema[.]json,
+        /src/network/finagle-utils/__tests__/finagle-utils[.]fixtures[.]js, /src/public/,
+        /src/server/__tests__/setup.fixtures.*, /src/shared/Iframe/polyfill/, .*ab-test.js\\u001b[39m
+        - 3726 matches\\n\",\"time\":2},{\"pos\":23,\"out\":\"  testRegex:  - 0 matches\\n\",\"time\":2},{\"pos\":24,\"out\":\"Pattern:
+        \\u001b[33msmartphone\\u001b[39m - 0 matches\\n\",\"time\":2},{\"pos\":25,\"out\":\"\\u001b[2K\\u001b[1G\\u001b[31merror\\u001b[39m
+        Command failed with exit code 1.\\n\",\"time\":2},{\"pos\":26,\"out\":\"\\u001b[2K\\u001b[1G\\u001b[34minfo\\u001b[39m
+        Visit \\u001b[1mhttps://yarnpkg.com/en/docs/cli/run\\u001b[22m for documentation
+        about this command.\\n\",\"time\":2}]\n"
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 25 May 2021 01:55:18 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

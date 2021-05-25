@@ -3,6 +3,7 @@ from pathlib import Path
 from vcr import VCR
 from sure import scenario
 from drone_ci_butler.drone_api import DroneAPIClient
+from drone_ci_butler import sql
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 
 functional_tests_path = Path(__file__).parent.absolute()
@@ -13,6 +14,7 @@ vcr = VCR(
 
 
 def prepare_client(context):
+    sql.context.set_default_uri('postgresql://drone_ci_butler@localhost/drone_ci_butler')
     context.client = DroneAPIClient(
         url="https://drone.dv.nyt.net/api/user",
         access_token="VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy",

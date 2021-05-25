@@ -4,6 +4,7 @@ from pathlib import Path
 from requests import Response, Session
 from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
+from drone_ci_butler.drone_api.cache import HttpCache
 
 from drone_ci_butler.drone_api.exceptions import invalid_response, ClientError
 
@@ -19,6 +20,7 @@ class DroneAPIClient(object):
             "Authorization": f"Bearer {access_token}",
             "User-Agent": f"DroneCI Butler v{version}",
         }
+        self.cache = HttpCache()
 
     def make_url(self, path) -> str:
         return urljoin(self.api_url, path)
@@ -26,10 +28,18 @@ class DroneAPIClient(object):
     def request(self, method: str, path: str, data=None, headers=None, **kwargs):
         url = self.make_url(path)
         headers = headers or {}
+        interaction = self.cache.get_by_url_and_method(method=method, url=url)
+        if interaction and interaction.response:
+            # print(f'\033[1;34mcache hit \033[2m{method} {path}\033[0m')
+            return interaction.response()
+
         response = self.http.request(method, url, data=data, headers=headers, **kwargs)
         if response.status_code != 200:
             raise invalid_response(response)
-        return response
+
+        interaction = self.cache.set(response.request, response)
+        # print(f'\033[1;31mcache miss \033[2m{method} {path}\033[0m')
+        return interaction.response()
 
     def get_builds(self, owner: str, repo: str, limit=10000, page=1) -> Build.List:
         result = self.request(
@@ -107,4 +117,4 @@ class DroneAPIClient(object):
         self.http.close()
 
     def __del__(self):
-        self.http.close()
+        self.close()
