@@ -1,4 +1,5 @@
 import time
+import logging
 import gevent
 from gevent.pool import Pool
 import zmq.green as zmq
@@ -10,33 +11,32 @@ from drone_ci_butler.drone_api import DroneAPIClient
 from .base import context
 
 
-
 class QueueClient(object):
     def __init__(
         self,
         rep_connect_address: str,
-        rep_high_watermark: int = 10,
+        rep_high_watermark: int = 1,
     ):
-        self.logger = get_logger('drone_ci_butler.QueueClient')
+        self.logger = get_logger("drone_ci_butler.QueueClient")
         self.rep_connect_address = rep_connect_address
         self.socket = context.socket(zmq.REQ)
         self.socket.set_hwm(rep_high_watermark)
         self.__connected__ = False
 
     def connect(self):
-        self.logger.info(f'connecting to {self.rep_connect_address}')
+        self.logger.info(f"connecting to {self.rep_connect_address}")
         self.socket.connect(self.rep_connect_address)
         self.__connected__ = True
 
     def send(self, job: dict):
         if not self.__connected__:
-            raise RuntimeError(f'{self} is not connected')
+            raise RuntimeError(f"{self} is not connected")
 
-        self.logger.info(f'sending job')
+        self.logger.info(f"sending job")
         self.socket.send_json(job)
-        self.logger.info(f'waiting for response')
+        self.logger.info(f"waiting for response")
         response = self.socket.recv_json()
-        self.logger.info(f'sent receipt {response}')
+        self.logger.info(f"sent receipt {response}")
 
 
 class QueueServer(object):
@@ -44,10 +44,12 @@ class QueueServer(object):
         self,
         rep_bind_address: str,
         push_bind_address: str,
-        rep_high_watermark: int = 10,
+        rep_high_watermark: int = 1,
         sleep_timeout: float = 0.1,
+        log_level: int = logging.WARNING,
     ):
-        self.logger = get_logger('queue-server')
+        self.logger = get_logger("queue-server")
+        self.log_level = log_level
         self.rep_bind_address = rep_bind_address
         self.push_bind_address = push_bind_address
         self.should_run = True
@@ -69,6 +71,7 @@ class QueueServer(object):
         self.rep.bind(self.rep_bind_address)
         self.logger.info(f"Listening on PUSH address: {self.push_bind_address}")
         self.push.bind(self.push_bind_address)
+        self.logger.setLevel(self.log_level)
 
     def run(self):
         self.listen()
@@ -80,6 +83,7 @@ class QueueServer(object):
             except Exception as e:
                 self.handle_exception(e)
                 break
+
     def loop_once(self):
         self.process_queue()
 
@@ -95,11 +99,8 @@ class QueueServer(object):
             data = self.rep.recv_json()
             if data:
                 self.logger.info(f"processing request")
-                self.rep.send_json({
-                    "reply": time.time(), "data": data
-                })
+                self.rep.send_json({"reply": time.time(), "data": data})
                 return data
-
 
     def process_queue(self):
         data = self.handle_request()

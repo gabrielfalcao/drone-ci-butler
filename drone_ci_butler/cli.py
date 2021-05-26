@@ -17,8 +17,9 @@ from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Out
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
 
-DEFAULT_QUEUE_ADDRESS = 'tcp://127.0.0.1:5000'
-DEFAULT_PUSH_ADDRESS = 'tcp://127.0.0.1:6000'
+DEFAULT_QUEUE_ADDRESS = "tcp://127.0.0.1:5000"
+DEFAULT_PUSH_ADDRESS = "tcp://127.0.0.1:6000"
+
 
 class Context(Model):
 
@@ -28,32 +29,35 @@ class Context(Model):
 
 
 @click.group()
-@click.option('-o', '--owner', default='nytm')
-@click.option('-r', '--repo', default='wf-project-vi')
+@click.option("-t", "--drone-access-token", default="VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy")
+@click.option("-u", "--drone-url", default="https://drone.dv.nyt.net/")
+@click.option("-o", "--owner", default="nytm")
+@click.option("-r", "--repo", default="wf-project-vi")
 @click.pass_context
-def main(ctx, owner, repo):
+def main(ctx, drone_access_token, drone_url, owner, repo):
     print("DroneCI Butler")
-    ctx.obj = Context()
-    sql.context.set_default_uri('postgresql://drone_ci_butler@localhost/drone_ci_butler')
-    ctx.obj.client=DroneAPIClient(
-        url="https://drone.dv.nyt.net/api/user",
-        access_token="VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy",
+    sql.context.set_default_uri(
+        "postgresql://drone_ci_butler@localhost/drone_ci_butler"
     )
+    ctx.obj = {
+        "drone_url": drone_url,
+        "access_token": drone_access_token,
+        "github_owner": owner,
+        "github_repo": repo,
+    }
 
-    ctx.obj.owner=owner
-    ctx.obj.repo=repo
 
-
-@main.command('workers')
-@click.option('-s', '--queue-address', default=DEFAULT_QUEUE_ADDRESS)
+@main.command("workers")
+@click.option("-s", "--queue-address", default=DEFAULT_QUEUE_ADDRESS)
 @click.pass_context
 def workers(ctx, queue_address):
-    pool = Pool(2)
-    build_info_worker = GetBuildInfoWorker('inproc://build-info')
-    queue_server = QueueServer(queue_address, 'inproc://build-info')
+    pool = Pool()
+    queue_server = QueueServer(queue_address, "inproc://build-info")
 
     pool.spawn(queue_server.run)
-    pool.spawn(build_info_worker.run)
+    for worker_id in range(2):
+        build_info_worker = GetBuildInfoWorker("inproc://build-info", worker_id, **ctx.obj)
+        pool.spawn(build_info_worker.run)
 
     while True:
         try:
@@ -62,54 +66,65 @@ def workers(ctx, queue_address):
             pool.kill()
             raise SystemExit(1)
 
-@main.command('worker:get_build_info')
-@click.option('-c', '--pull-connect-address', default=DEFAULT_PUSH_ADDRESS)
+
+@main.command("worker:get_build_info")
+@click.option("-c", "--pull-connect-address", default=DEFAULT_PUSH_ADDRESS)
 @click.pass_context
 def worker_get_build_info(ctx, pull_connect_address):
     worker = GetBuildInfoWorker(pull_connect_address)
     worker.run()
 
 
-@main.command('worker:queue')
-@click.option('-s', '--rep-bind-address', default=DEFAULT_QUEUE_ADDRESS)
-@click.option('-p', '--push-bind-address', default=DEFAULT_PUSH_ADDRESS)
+@main.command("worker:queue")
+@click.option("-s", "--rep-bind-address", default=DEFAULT_QUEUE_ADDRESS)
+@click.option("-p", "--push-bind-address", default=DEFAULT_PUSH_ADDRESS)
 @click.pass_context
 def worker_queue(ctx, rep_bind_address, push_bind_address):
     worker.run()
 
-@main.command('job')
-@click.option('-c', '--rep-connect-address', default=DEFAULT_QUEUE_ADDRESS)
+
+@main.command("builds")
+@click.option("-c", "--rep-connect-address", default=DEFAULT_QUEUE_ADDRESS)
 @click.pass_context
-def enqueue_job(ctx, rep_connect_address):
+def get_builds(ctx, rep_connect_address):
+    client = DroneAPIClient(
+        url=ctx.obj["drone_url"],
+        access_token=ctx.obj["access_token"],
+    )
+    builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
     worker = QueueClient(rep_connect_address)
     worker.connect()
-    for x in range(100):
+    for build in builds:
         worker.send({
-            "number": f"job-{x}",
+            "build_id": build.number
         })
+    return
 
 
-@main.command('builds')
-@click.option('-f', '--filter-status', default='failure')
-@click.pass_context
-def get_builds(ctx, filter_status):
-    builds = ctx.obj.client.get_builds(ctx.obj.owner, ctx.obj.repo)
-
+@click.option("-f", "--filter-status", default="failure")
+def filter_builds(builds):
     if filter_status:
-        builds = builds.filter(lambda build: build.status != filter_status and build.sender)
+        builds = builds.filter(
+            lambda build: build.status != filter_status and build.sender
+        )
 
     for build in builds:
-        build = ctx.obj.client.get_build_with_logs(ctx.obj.owner, ctx.obj.repo, build.number)
+        build = ctx.obj.client.get_build_with_logs(
+            ctx.obj.owner, ctx.obj.repo, build.number
+        )
         failed_steps = build.failed_steps()
         finished = datetime.fromtimestamp(build.finished)
-        status_color = build.status == 'success' and '\033[1;32m' or '\033[1;31m'
+        status_color = build.status == "success" and "\033[1;32m" or "\033[1;31m"
         if len(failed_steps) == 0:
             continue
-        print(f'Build {status_color}{build.number}\033[0m by \033[1;37m{build.author_name or build.sender} <{build.author_email or build.sender}> {status_color}{build.status}\033[1;37m at {finished}\033[0m')
+        print(
+            f"Build {status_color}{build.number}\033[0m by \033[1;37m{build.author_name or build.sender} <{build.author_email or build.sender}> {status_color}{build.status}\033[1;37m at {finished}\033[0m"
+        )
         for step in failed_steps:
-            output = step.to_string(prefix='             ')
-
+            output = step.to_string(prefix="             ")
 
             if output:
-                print(f'         In Step: \033[1;33m{step.name} ({step.number}) failed with code {step.exit_code}\033[0m')
-                print(f'\033[1;31m{output}\033[0m')
+                print(
+                    f"         In Step: \033[1;33m{step.name} ({step.number}) failed with code {step.exit_code}\033[0m"
+                )
+                print(f"\033[1;31m{output}\033[0m")

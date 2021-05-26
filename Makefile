@@ -19,6 +19,18 @@ export VENV		?= $(VENV_ROOT)
 # default target when running `make` without arguments
 all: | $(MAIN_CLI_PATH)
 
+db-create:
+	@2>/dev/null dropdb drone_ci_butler > /dev/null || echo "database does not exist yet"
+	@2>/dev/null dropuser drone_ci_butler > /dev/null || echo "user does not exist yet"
+	@echo "creating postgresql user and database from scratch"
+	-@createuser drone_ci_butler
+	-@createdb --owner=drone_ci_butler drone_ci_butler
+
+db-migrate:
+	@echo "running migrations"
+	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
+
+db: db-create db-migrate
 # creates virtualenv
 venv: | $(VENV)
 
