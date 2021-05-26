@@ -1,9 +1,10 @@
 alembic==1.6.3
 blinker==1.4
+chemist==1.6.4
 click==7.1.2
-flask==2.0.0
+colorlog==5.0.1
 gevent==21.1.2
+psycopg2==2.8.6
+pyzmq==22.1.0
 requests==2.25.1
 uiclasses==2.3.2
-requests-cache==0.6.3
-agentzero==0.4.4

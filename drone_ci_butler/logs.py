@@ -1,15 +1,17 @@
 import logging
 import colorlog
 
+fmt = "%(asctime)s %(log_color)s%(levelname)s%(reset)s %(name)s %(message)s"
+handler = logging.StreamHandler()
+handler.setFormatter(colorlog.ColoredFormatter(fmt))  #, "%Y-%m-%d %H:%M:%S"))
 
-def get_logger(name=None, level=logging.INFO, fmt='%(log_color)s%(levelname)s:%(name)s:%(message)s'):
-    logger = colorlog.getLogger(name)
-    logger.setLevel(level)
-    handler = colorlog.StreamHandler()
-    handler.setFormatter(colorlog.ColoredFormatter(fmt))
-    logger.addHandler(handler)
-    return logger
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logger.handlers = [handler]
 
 
-get_logger()
-logger = get_logger('drone_ci_butler')
+def get_logger(name=None):
+    return logging.getLogger(name)
+
+
+logger = get_logger("drone_ci_butler")

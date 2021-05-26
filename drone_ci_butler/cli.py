@@ -2,7 +2,9 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
+import time
 import click
+from gevent.pool import Pool
 from typing import Optional
 from uiclasses import Model
 from pathlib import Path
@@ -12,7 +14,11 @@ from drone_ci_butler import sql
 from drone_ci_butler.logs import logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 
+from drone_ci_butler.workers import GetBuildInfoWorker
+from drone_ci_butler.workers import QueueServer, QueueClient
 
+DEFAULT_QUEUE_ADDRESS = 'tcp://127.0.0.1:5000'
+DEFAULT_PUSH_ADDRESS = 'tcp://127.0.0.1:6000'
 
 class Context(Model):
 
@@ -37,6 +43,50 @@ def main(ctx, owner, repo):
     ctx.obj.owner=owner
     ctx.obj.repo=repo
 
+
+@main.command('workers')
+@click.option('-s', '--queue-address', default=DEFAULT_QUEUE_ADDRESS)
+@click.pass_context
+def workers(ctx, queue_address):
+    pool = Pool(2)
+    build_info_worker = GetBuildInfoWorker('inproc://build-info')
+    queue_server = QueueServer(queue_address, 'inproc://build-info')
+
+    pool.spawn(queue_server.run)
+    pool.spawn(build_info_worker.run)
+
+    while True:
+        try:
+            pool.join(1)
+        except KeyboardInterrupt:
+            pool.kill()
+            raise SystemExit(1)
+
+@main.command('worker:get_build_info')
+@click.option('-c', '--pull-connect-address', default=DEFAULT_PUSH_ADDRESS)
+@click.pass_context
+def worker_get_build_info(ctx, pull_connect_address):
+    worker = GetBuildInfoWorker(pull_connect_address)
+    worker.run()
+
+
+@main.command('worker:queue')
+@click.option('-s', '--rep-bind-address', default=DEFAULT_QUEUE_ADDRESS)
+@click.option('-p', '--push-bind-address', default=DEFAULT_PUSH_ADDRESS)
+@click.pass_context
+def worker_queue(ctx, rep_bind_address, push_bind_address):
+    worker.run()
+
+@main.command('job')
+@click.option('-c', '--rep-connect-address', default=DEFAULT_QUEUE_ADDRESS)
+@click.pass_context
+def enqueue_job(ctx, rep_connect_address):
+    worker = QueueClient(rep_connect_address)
+    worker.connect()
+    for x in range(100):
+        worker.send({
+            "number": f"job-{x}",
+        })
 
 
 @main.command('builds')

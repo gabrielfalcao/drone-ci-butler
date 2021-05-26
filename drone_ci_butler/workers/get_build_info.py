@@ -1,60 +1,63 @@
+import gevent
 import zmq.green as zmq
 from collections import defaultdict
-from drone_ci_butler.logs import logger
+
+from drone_ci_butler.logs import get_logger
 from drone_ci_butler.drone_api import DroneAPIClient
 
-context = zmq.Context()
+from .base import context
 
 
-class BaseWorker(object):
-    def __init__(self, **options):
-        self.options = options
+logger = get_logger('build-info-retriever')
+
+
+class GetBuildInfoWorker(object):
+    def __init__(
+        self,
+        pull_connect_address: str,
+        high_watermark: int = 1,
+        sleep_timeout: int = 10,
+    ):
+        self.pull_connect_address = pull_connect_address
         self.should_run = True
-        self.sockets = SocketManager(zmq, context, serialization_backend=JSON())
-        self.sockets.get_or_create("queue", zmq.PULL, zmq.POLLIN)
-        self.sockets.get_or_create("pub", zmq.PUB, zmq.POLLOUT)
-        self.sockets.set_socket_option("queue", zmq.HWM, 1)
-        self.initialize()
-
-    def initialize(self):
-        self.sleep_timeout = self.options.get("sleep_timeout")
+        self.sleep_timeout = sleep_timeout
+        self.poller = zmq.Poller()
+        self.queue = context.socket(zmq.PULL)
+        self.queue.set_hwm(high_watermark)
+        self.poller.register(self.queue, zmq.POLLIN)
 
     def handle_exception(self, e):
         logger.exception(f"{self.__class__.__name__} interrupted by error")
 
-    def publish(self, topic: str, data: dict):
-        self.sockets.publish_safe(
-            "pub",
-            topic,
-            data,
-        )
-
-    def connect_and_bind(self):
-        pull_address = self.options["pull_address"]
-        pub_address = self.options["pub_address"]
-        self.sockets.connect("queue", pull_address)
-        self.sockets.connect("pub", pub_address)
+    def connect(self):
+        logger.info(f"Connecting to pull address: {self.pull_connect_address}")
+        self.queue.connect(self.pull_connect_address)
 
     def run(self):
-        self.connect_and_bind()
+        self.connect()
+        logger.info(f"Starting {self.__class__.__name__}")
         while self.should_run:
             try:
                 self.loop_once()
-            except KeyboardInterrupt:
-                return 0
             except Exception as e:
                 self.handle_exception(e)
-                return 1
+                break
 
     def loop_once(self):
-        raise NotImplementedError
+        self.process_queue()
 
-    def loop_once(self):
-        info = self.sockets.recv_safe(
-            "queue",
-            timeout=self.sleep_timeout,
-            polling_timeout=self.sleep_timeout * 1000,
-        )
+    def pull_queue(self):
+        logger.info(f"Waiting for job")
+        socks = dict(self.poller.poll())
+        if self.queue in socks and socks[self.queue] == zmq.POLLIN:
+            return self.queue.recv_json()
+
+    def process_queue(self):
+        info = self.pull_queue()
+        logger.info(f"received payload {info}")
+        return
+
+    def process_job(self, info: dict):
         url = info.get("url")
         repo = info.get("repo")
         owner = info.get("owner")
@@ -80,9 +83,9 @@ class BaseWorker(object):
             url=url,
             access_token=access_token,
         )
-        gevent.sleep()
+        # gevent.sleep()
         self.fetch_data(api, repo, owner)
-        gevent.sleep(self.sleep_timeout)
+        # gevent.sleep(self.sleep_timeout)
 
     def fetch_data(self, api: DroneAPIClient, repo: str, owner: str, build_id: int):
         build = api.get_build_info(repo, owner, build_id)
