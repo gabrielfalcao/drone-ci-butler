@@ -2,6 +2,7 @@ import logging
 from urllib.parse import urljoin
 from pathlib import Path
 from requests import Response, Session
+from drone_ci_butler import events
 from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
 from drone_ci_butler.drone_api.cache import HttpCache
@@ -47,17 +48,25 @@ class DroneAPIClient(object):
             f"/api/repos/{owner}/{repo}/builds",
             params={"page": page, "limit": limit},
         )
-        return Build.List(
+        builds = Build.List(
             map(
                 lambda build: build.with_headers(result.headers),
                 Build.List(result.json()),
             )
         )
+        events.get_builds.send(
+            self, owner=owner, repo=repo, limit=limit, page=page, builds=builds
+        )
+
+        return builds
 
     def get_build_info(self, owner: str, repo: str, build_id: str) -> Build:
         result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_id}")
-        build = Build(result.json())
-        return build.with_headers(result.headers)
+        build = Build(result.json()).with_headers(result.headers)
+        events.get_build_info.send(
+            self, owner=owner, repo=repo, build_id=build_id, build=build
+        )
+        return build
 
     def get_build_step_output(
         self, owner: str, repo: str, build_id: int, stage: int, step: int
@@ -66,15 +75,27 @@ class DroneAPIClient(object):
             "GET", f"/api/repos/{owner}/{repo}/builds/{build_id}/logs/{stage}/{step}"
         )
         data = result.json()
+
         if isinstance(data, dict):
-            return Output(items).with_headers(result.headers)
+            output = Output(items).with_headers(result.headers)
 
         elif isinstance(data, list):
-            return Output({"lines": data}).with_headers(result.headers)
+            output = Output({"lines": data}).with_headers(result.headers)
         else:
             raise ClientError(
                 response, f"unexpected step log output type: {type(data)} {step}"
             )
+
+        events.get_build_step_output.send(
+            self,
+            owner=owner,
+            repo=repo,
+            build_id=build_id,
+            stage=stage,
+            step=step,
+            output=output,
+        )
+        return output
 
     def get_latest_build(self, owner: str, repo: str, branch: str):
         result = self.request(

@@ -2,6 +2,7 @@ import json
 import requests
 import hashlib
 from drone_ci_butler.sql import HttpInteraction
+from drone_ci_butler import events
 
 
 def hash_dict(data: dict, algo: callable) -> str:
@@ -46,7 +47,11 @@ def generate_cache_key(
 
 class HttpCache(object):
     def get(self, request: requests.Request) -> HttpInteraction:
-        return HttpInteraction.get_by_requests_request(request)
+        found = HttpInteraction.get_by_requests_request(request)
+        if found:
+            events.http_cache_hit.send(self, request=found.request(), response=found.response())
+
+        return found
 
     def get_by_url_and_method(self, url: str, method: str):
         return HttpInteraction.get_by_url_and_method(url=url, method=method)
@@ -56,5 +61,6 @@ class HttpCache(object):
             return
 
         interaction = HttpInteraction.upsert(request, response)
+        events.http_cache_miss.send(self, request=interaction.request(), response=interaction.response())
 
         return interaction

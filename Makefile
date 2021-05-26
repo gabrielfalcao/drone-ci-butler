@@ -1,4 +1,4 @@
-.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black db-migrate db-create
+.PHONY: all develop tests dependencies unit functional tdd-functional tdd-unit run clean black db-migrate db-create db
 
 PACKAGE_NAME		:= drone_ci_butler
 MAIN_CLI_NAME		:= drone-ci-butler
@@ -26,13 +26,17 @@ $(VENV)/bin/alembic $(MAIN_CLI_PATH) $(VENV)/bin/nosetests $(VENV)/bin/python $(
 tests: unit functional  # runs all tests
 
 db-create:
-	-@dropdb drone_ci_butler
-	-@dropuser drone_ci_butler
+	@2>/dev/null dropdb drone_ci_butler > /dev/null || echo "database does not exist yet"
+	@2>/dev/null dropuser drone_ci_butler > /dev/null || echo "user does not exist yet"
+	@echo "creating postgresql user and database from scratch"
 	-@createuser drone_ci_butler
 	-@createdb --owner=drone_ci_butler drone_ci_butler
 
-db-migrate: db-create
-	(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
+db-migrate:
+	@echo "running migrations"
+	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
+
+db: db-create db-migrate
 
 # Install dependencies
 dependencies: | $(VENV)/bin/nosetests

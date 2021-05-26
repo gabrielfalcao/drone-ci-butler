@@ -3,6 +3,7 @@ from itertools import chain
 from uiclasses import Model
 from uiclasses.typing import Property
 from datetime import datetime
+from drone_ci_butler import events
 
 
 class OutputLine(Model):
@@ -112,7 +113,8 @@ class Stage(Model):
 
     def failed_steps(self) -> Step.List:
         steps = Step.List(self.steps or [])
-        return steps.filter(lambda step: step.exit_code != 0)
+        failed_steps = steps.filter(lambda step: step.exit_code != 0)
+        return failed_steps
 
     def succeeded_steps(self) -> Step.List:
         steps = Step.List(self.steps or [])

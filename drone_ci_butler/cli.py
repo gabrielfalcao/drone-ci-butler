@@ -1,9 +1,18 @@
+import gevent.monkey
+
+gevent.monkey.patch_all()
+
 import click
 from typing import Optional
 from uiclasses import Model
 from pathlib import Path
 from datetime import datetime
 from drone_ci_butler.drone_api import DroneAPIClient
+from drone_ci_butler import sql
+from drone_ci_butler.logs import logger
+from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
+
+
 
 class Context(Model):
 
@@ -13,18 +22,18 @@ class Context(Model):
 
 
 @click.group()
-@click.option('-C', '--cache-name')
 @click.option('-o', '--owner', default='nytm')
 @click.option('-r', '--repo', default='wf-project-vi')
 @click.pass_context
-def main(ctx, cache_name, owner, repo):
+def main(ctx, owner, repo):
     print("DroneCI Butler")
     ctx.obj = Context()
+    sql.context.set_default_uri('postgresql://drone_ci_butler@localhost/drone_ci_butler')
     ctx.obj.client=DroneAPIClient(
         url="https://drone.dv.nyt.net/api/user",
         access_token="VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy",
-        sqlite_cache_file=Path(".").absolute().joinpath("api-cache.sqlite"),
     )
+
     ctx.obj.owner=owner
     ctx.obj.repo=repo
 
