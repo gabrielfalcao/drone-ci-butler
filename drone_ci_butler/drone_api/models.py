@@ -130,7 +130,8 @@ class Stage(Model):
 
 
 class Build(Model):
-    __id_attributes__ = ["id", "repo_id", "number"]
+    __id_attributes__ = ["number", "link"]
+
     id: int
     repo_id: int
     number: int
