@@ -89,15 +89,18 @@ class QueueServer(object):
         self.logger.info(f"Waiting for socket to become available to push job")
         socks = dict(self.poller.poll())
         if self.push in socks and socks[self.push] == zmq.POLLOUT:
-            return self.push.send_json(data)
+            self.push.send_json(data)
+            return True
 
     def handle_request(self):
         socks = dict(self.poller.poll())
         if self.rep in socks and socks[self.rep] == zmq.POLLIN:
             data = self.rep.recv_json()
             if data:
-                self.logger.info(f"processing request")
-                self.rep.send_json({"sent": data})
+                self.logger.info(f"processing job {data}")
+                while not self.push_job(data):
+                    gevent.sleep(self.sleep_timeout)
+                self.rep.send_json(data)
                 return data
 
     def process_queue(self):
@@ -105,8 +108,6 @@ class QueueServer(object):
         if not data:
             gevent.sleep()
             return
-        self.logger.info(f"processing job {data}")
-        self.push_job(data)
 
     def process_job(self, info: dict):
         url = info.get("url")
