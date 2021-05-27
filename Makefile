@@ -26,7 +26,7 @@ db-create:
 	-@createuser drone_ci_butler
 	-@createdb --owner=drone_ci_butler drone_ci_butler
 
-db-migrate:
+db-migrate: | $(VENV)/bin/alembic
 	@echo "running migrations"
 	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
 
@@ -47,7 +47,7 @@ dependencies:
 	$(MAKE) develop setup
 
 # Run all tests, separately
-tests: unit functional  # runs all tests
+tests: unit functional | $(MAIN_CLI_PATH)  # runs all tests
 
 # -> unit tests
 unit: | $(VENV)/bin/nosetests  # runs only unit tests
@@ -106,7 +106,7 @@ $(VENV)/bin/black: | $(VENV)/bin/pip
 	$(VENV)/bin/pip install -U black
 
 # installs this package in "edit" mode after ensuring its requirements are installed
-$(VENV)/bin/nosetests $(MAIN_CLI_PATH): | $(VENV) $(VENV)/bin/pip $(VENV)/bin/python $(REQUIREMENTS_PATH)
+$(VENV)/bin/alembic $(VENV)/bin/nosetests $(MAIN_CLI_PATH): | $(VENV) $(VENV)/bin/pip $(VENV)/bin/python $(REQUIREMENTS_PATH)
 	$(VENV)/bin/pip install --force-reinstall -r $(REQUIREMENTS_PATH)
 	$(VENV)/bin/pip install -e .
 
