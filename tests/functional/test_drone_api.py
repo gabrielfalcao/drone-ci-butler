@@ -177,4 +177,4 @@ def test_drone_api_client_get_latest_build_with_log(context):
     failed_steps.should.have.length_of(1)
     names = [s.name for s in failed_steps]
 
-    names.should.equal(['validate_docs_prettified'])
+    names.should.equal(["validate_docs_prettified"])

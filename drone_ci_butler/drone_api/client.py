@@ -110,7 +110,9 @@ class DroneAPIClient(object):
             if next_page:
                 builds.extend(next_page)
 
-        return Build.List(builds.sorted(key=lambda b: b.updated, reverse=True)[:self.max_builds])
+        return Build.List(
+            builds.sorted(key=lambda b: b.updated, reverse=True)[: self.max_builds]
+        )
 
     def get_build_info(self, owner: str, repo: str, build_id: str) -> Build:
         result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_id}")

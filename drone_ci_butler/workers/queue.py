@@ -16,6 +16,7 @@ from .base import context
 # this way it can block clients from enqueueing more jobs that can be
 # processed.
 
+
 class QueueClient(object):
     def __init__(
         self,
