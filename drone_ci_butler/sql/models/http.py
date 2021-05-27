@@ -1,9 +1,7 @@
 import json
 import io
 import requests
-from chemist import (
-    Model, db
-)
+from chemist import Model, db
 from datetime import datetime
 from .base import metadata
 
@@ -16,27 +14,26 @@ def load_json(what, default=None) -> str:
 
 
 class HttpInteraction(Model):
-    table = db.Table('http_interaction',metadata,
-        db.Column('id', db.Integer, primary_key=True),
-
-        db.Column('request_url', db.String(255), nullable=False, unique=True),
-        db.Column('request_method', db.String(10), nullable=False),
-        db.Column('request_headers', db.UnicodeText()),
-        db.Column('request_params', db.UnicodeText()),
-        db.Column('request_body', db.UnicodeText()),
-
-        db.Column('response_status', db.Integer),
-        db.Column('response_headers', db.UnicodeText()),
-        db.Column('response_body', db.UnicodeText()),
-
-        db.Column('created_at', db.DateTime, default=datetime.utcnow),
-        db.Column('updated_at', db.DateTime, default=datetime.utcnow)
+    table = db.Table(
+        "http_interaction",
+        metadata,
+        db.Column("id", db.Integer, primary_key=True),
+        db.Column("request_url", db.String(255), nullable=False, unique=True),
+        db.Column("request_method", db.String(10), nullable=False),
+        db.Column("request_headers", db.UnicodeText()),
+        db.Column("request_params", db.UnicodeText()),
+        db.Column("request_body", db.UnicodeText()),
+        db.Column("response_status", db.Integer),
+        db.Column("response_headers", db.UnicodeText()),
+        db.Column("response_body", db.UnicodeText()),
+        db.Column("created_at", db.DateTime, default=datetime.utcnow),
+        db.Column("updated_at", db.DateTime, default=datetime.utcnow),
     )
 
     def response(self) -> requests.Response:
         response = requests.Response()
         response.status_code = self.response_status
-        response.raw = io.BytesIO(bytes(self.response_body, 'utf-8'))
+        response.raw = io.BytesIO(bytes(self.response_body, "utf-8"))
         response.headers = load_json(self.response_headers, {})
         return response
 
@@ -68,7 +65,6 @@ class HttpInteraction(Model):
             request_method=method,
         )
 
-
     @classmethod
     def upsert(cls, request: requests.Request, response: requests.Response):
         interaction = cls.get_or_create(
@@ -81,5 +77,5 @@ class HttpInteraction(Model):
             request_body=request.body,
             response_headers=json.dumps(dict(response.headers)),
             response_status=response.status_code,
-            response_body=response.text
+            response_body=response.text,
         )

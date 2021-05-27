@@ -1,7 +1,6 @@
 import time
 import logging
 import gevent
-from gevent.pool import Pool
 import zmq.green as zmq
 from collections import defaultdict
 
@@ -32,11 +31,9 @@ class QueueClient(object):
         if not self.__connected__:
             raise RuntimeError(f"{self} is not connected")
 
-        self.logger.info(f"sending job")
         self.socket.send_json(job)
-        self.logger.info(f"waiting for response")
         response = self.socket.recv_json()
-        self.logger.info(f"sent receipt {response}")
+        self.logger.info(f"{response}")
 
 
 class QueueServer(object):
@@ -45,6 +42,7 @@ class QueueServer(object):
         rep_bind_address: str,
         push_bind_address: str,
         rep_high_watermark: int = 1,
+        push_high_watermark: int = 1,
         sleep_timeout: float = 0.1,
         log_level: int = logging.WARNING,
     ):
@@ -60,8 +58,8 @@ class QueueServer(object):
         self.poller.register(self.push, zmq.POLLOUT)
         self.poller.register(self.rep, zmq.POLLIN | zmq.POLLOUT)
 
-        # self.rep.set_hwm(rep_high_watermark)
-        self.pool = Pool(1)
+        self.rep.set_hwm(rep_high_watermark)
+        self.push.set_hwm(push_high_watermark)
 
     def handle_exception(self, e):
         self.logger.exception(f"{self.__class__.__name__} interrupted by error")
@@ -99,7 +97,7 @@ class QueueServer(object):
             data = self.rep.recv_json()
             if data:
                 self.logger.info(f"processing request")
-                self.rep.send_json({"reply": time.time(), "data": data})
+                self.rep.send_json({"sent": data})
                 return data
 
     def process_queue(self):

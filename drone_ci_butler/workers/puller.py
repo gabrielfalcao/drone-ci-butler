@@ -49,7 +49,7 @@ class PullerWorker(object):
 
     def run(self):
         self.connect()
-        self.logger.info(f"Starting {self.__class__.__name__}")
+        self.logger.info(f"Starting worker")
         while self.should_run:
             try:
                 self.loop_once()
@@ -61,12 +61,12 @@ class PullerWorker(object):
         self.process_queue()
 
     def pull_queue(self):
-        self.logger.info(f"Waiting for job")
+        self.logger.debug(f"Waiting for job")
         socks = dict(self.poller.poll())
         if self.queue in socks and socks[self.queue] == zmq.POLLIN:
             return self.queue.recv_json()
 
     def process_queue(self):
         info = self.pull_queue()
-        self.logger.info(f"processing job")
+        self.logger.debug(f"processing job")
         self.process_job(info)

@@ -49,14 +49,17 @@ def main(ctx, drone_access_token, drone_url, owner, repo):
 
 @main.command("workers")
 @click.option("-s", "--queue-address", default=DEFAULT_QUEUE_ADDRESS)
+@click.option("-m", "--max-workers", default=2, type=int)
 @click.pass_context
-def workers(ctx, queue_address):
+def workers(ctx, queue_address, max_workers):
     pool = Pool()
     queue_server = QueueServer(queue_address, "inproc://build-info")
 
     pool.spawn(queue_server.run)
-    for worker_id in range(2):
-        build_info_worker = GetBuildInfoWorker("inproc://build-info", worker_id, **ctx.obj)
+    for worker_id in range(max_workers):
+        build_info_worker = GetBuildInfoWorker(
+            "inproc://build-info", worker_id, **ctx.obj
+        )
         pool.spawn(build_info_worker.run)
 
     while True:
@@ -92,12 +95,12 @@ def get_builds(ctx, rep_connect_address):
         access_token=ctx.obj["access_token"],
     )
     builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
+
     worker = QueueClient(rep_connect_address)
     worker.connect()
+
     for build in builds:
-        worker.send({
-            "build_id": build.number
-        })
+        worker.send({"build_id": build.number})
     return
 
 

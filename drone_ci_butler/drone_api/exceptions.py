@@ -5,7 +5,7 @@ class ClientError(Exception):
     def __init__(self, response: Response, message: str):
         self.response = response
         message = message or f"{response.status_code}: {response.text}"
-        super().__init__(f'{response.request.url} -> {message}')
+        super().__init__(f"{response.request.url} -> {message}")
 
 
 class APIException(ClientError):

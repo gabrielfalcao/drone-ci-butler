@@ -49,7 +49,9 @@ class HttpCache(object):
     def get(self, request: requests.Request) -> HttpInteraction:
         found = HttpInteraction.get_by_requests_request(request)
         if found:
-            events.http_cache_hit.send(self, request=found.request(), response=found.response())
+            events.http_cache_hit.send(
+                self, request=found.request(), response=found.response()
+            )
 
         return found
 
@@ -61,6 +63,8 @@ class HttpCache(object):
             return
 
         interaction = HttpInteraction.upsert(request, response)
-        events.http_cache_miss.send(self, request=interaction.request(), response=interaction.response())
+        events.http_cache_miss.send(
+            self, request=interaction.request(), response=interaction.response()
+        )
 
         return interaction
