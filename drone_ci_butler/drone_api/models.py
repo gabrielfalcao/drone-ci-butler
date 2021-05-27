@@ -162,6 +162,30 @@ class Build(Model):
 
     __visible_attributes__ = ["name", "status", "number"]
 
+    @property
+    def started_at(self):
+        if not self.started:
+            return
+        return datetime.fromtimestamp(self.started)
+
+    @property
+    def finished_at(self):
+        if not self.finished:
+            return
+        return datetime.fromtimestamp(self.finished)
+
+    @property
+    def created_at(self):
+        if not self.created:
+            return
+        return datetime.fromtimestamp(self.created)
+
+    @property
+    def updated_at(self):
+        if not self.updated:
+            return
+        return datetime.fromtimestamp(self.updated)
+
     def __ui_attributes__(self):
         return {
             "number": self.id,

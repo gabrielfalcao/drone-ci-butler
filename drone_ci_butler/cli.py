@@ -8,7 +8,7 @@ from gevent.pool import Pool
 from typing import Optional
 from uiclasses import Model
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
 from drone_ci_butler.logs import logger
@@ -87,20 +87,24 @@ def worker_queue(ctx, rep_bind_address, push_bind_address):
 
 
 @main.command("builds")
+@click.option("-d", "--days", default=5, type=int)
 @click.option("-c", "--rep-connect-address", default=DEFAULT_QUEUE_ADDRESS)
 @click.pass_context
-def get_builds(ctx, rep_connect_address):
+def get_builds(ctx, rep_connect_address, days):
     client = DroneAPIClient(
         url=ctx.obj["drone_url"],
         access_token=ctx.obj["access_token"],
     )
     builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
-
-    worker = QueueClient(rep_connect_address)
-    worker.connect()
-
-    for build in builds:
+    builds = builds.filter(lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days))
+    count = len(builds)
+    print(f'found {count} failed builds in the last {days} days')
+    for i, build in enumerate(builds, start=1):
+        worker = QueueClient(rep_connect_address)
+        worker.connect()
+        print(f' -> enqueing build {i} of {count} for output analysis (#{build.number} by {build.author_login})')
         worker.send({"build_id": build.number})
+        worker.close()
     return
 
 

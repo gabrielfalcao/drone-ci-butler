@@ -16,16 +16,20 @@ class QueueClient(object):
         rep_connect_address: str,
         rep_high_watermark: int = 1,
     ):
-        self.logger = get_logger("drone_ci_butler.QueueClient")
+        self.logger = get_logger("queue-client")
         self.rep_connect_address = rep_connect_address
         self.socket = context.socket(zmq.REQ)
         self.socket.set_hwm(rep_high_watermark)
         self.__connected__ = False
 
     def connect(self):
-        self.logger.info(f"connecting to {self.rep_connect_address}")
+        self.logger.debug(f"connecting to {self.rep_connect_address}")
         self.socket.connect(self.rep_connect_address)
         self.__connected__ = True
+
+    def close(self):
+        self.__connected__ = False
+        self.socket.disconnect(self.rep_connect_address)
 
     def send(self, job: dict):
         if not self.__connected__:
@@ -33,8 +37,12 @@ class QueueClient(object):
 
         self.socket.send_json(job)
         response = self.socket.recv_json()
-        self.logger.info(f"{response}")
+        self.logger.debug(f"{response}")
+        return response
 
+    def __del__(self):
+        if self.__connected__:
+            self.close()
 
 class QueueServer(object):
     def __init__(
@@ -71,6 +79,10 @@ class QueueServer(object):
         self.push.bind(self.push_bind_address)
         self.logger.setLevel(self.log_level)
 
+    def disconnect(self):
+        self.rep.disconnect(self.rep_bind_address)
+        self.push.disconnect(self.push_bind_address)
+
     def run(self):
         self.listen()
         self.logger.info(f"Starting {self.__class__.__name__}")
@@ -81,6 +93,7 @@ class QueueServer(object):
             except Exception as e:
                 self.handle_exception(e)
                 break
+        self.disconnect()
 
     def loop_once(self):
         self.process_queue()
