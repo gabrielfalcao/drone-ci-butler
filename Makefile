@@ -58,7 +58,7 @@ functional:| $(VENV)/bin/nosetests  # runs functional tests
 	@$(VENV)/bin/nosetests tests/functional
 
 # run main command-line tool
-run: | $(VENV)/bin/python
+run: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) --help
 
 # Pushes release of this package to pypi
