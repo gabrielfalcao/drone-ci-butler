@@ -61,6 +61,10 @@ functional:| $(VENV)/bin/nosetests  # runs functional tests
 run: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) --help
 
+# run webapp
+web: | $(MAIN_CLI_PATH)
+	@$(MAIN_CLI_PATH) web -H 127.0.0.1 -P 4000 --debug
+
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version
 	$(VENV)/bin/twine upload dist/*.tar.gz
@@ -138,4 +142,5 @@ $(REQUIREMENTS_PATH):
 	run \
 	tests \
 	unit \
-	functional
+	functional \
+	web

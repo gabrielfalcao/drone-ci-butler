@@ -13,6 +13,7 @@ from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
 from drone_ci_butler.logs import logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
+from drone_ci_butler.web import webapp
 
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
@@ -45,6 +46,15 @@ def main(ctx, drone_access_token, drone_url, owner, repo):
         "github_owner": owner,
         "github_repo": repo,
     }
+
+
+@main.command("web")
+@click.option("-H", "--host", default="0.0.0.0")
+@click.option("-P", "--port", default=4000, type=int)
+@click.option("-D", "--debug", is_flag=True)
+@click.pass_context
+def workers(ctx, host, port, debug):
+    webapp.run(debug=debug, port=port, host=host)
 
 
 @main.command("workers")

@@ -57,6 +57,18 @@ class Step(Model):
 
     output: Output
 
+    @property
+    def started_at(self):
+        if not self.started:
+            return
+        return datetime.fromtimestamp(self.started)
+
+    @property
+    def stopped_at(self):
+        if not self.stopped:
+            return
+        return datetime.fromtimestamp(self.stopped)
+
     def __ui_attributes__(self):
         return {
             "number": self.id,
@@ -106,6 +118,30 @@ class Stage(Model):
     on_failure: bool
 
     steps: Step.List
+
+    @property
+    def started_at(self):
+        if not self.started:
+            return
+        return datetime.fromtimestamp(self.started)
+
+    @property
+    def finished_at(self):
+        if not self.finished:
+            return
+        return datetime.fromtimestamp(self.finished)
+
+    @property
+    def created_at(self):
+        if not self.created:
+            return
+        return datetime.fromtimestamp(self.created)
+
+    @property
+    def updated_at(self):
+        if not self.updated:
+            return
+        return datetime.fromtimestamp(self.updated)
 
     def with_build(self, build) -> Model:
         self.build = build
@@ -211,3 +247,9 @@ class Build(Model):
             steps.extend(stage.failed_steps())
 
         return Step.List(steps)
+
+    def get_step_by_number(self, step_number: int) -> Optional[Step]:
+        for stage in self.stages:
+            for step in stage.steps:
+                if step.number == step_number:
+                    return step

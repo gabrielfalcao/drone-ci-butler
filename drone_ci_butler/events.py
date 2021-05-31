@@ -3,6 +3,7 @@ from requests import Request, Response
 from humanfriendly.text import pluralize
 
 from drone_ci_butler.logs import get_logger
+from drone_ci_butler.sql.models import DroneBuild, DroneStep
 from drone_ci_butler.drone_api.models import Build, Stage, Step, Output
 
 http_cache_hit = signal("http-cache-hit")
@@ -37,11 +38,31 @@ def log_get_builds(
 
 @get_build_info.connect
 def log_get_build_info(client, owner: str, repo: str, build_id: int, build: Build):
-    logger.debug(f"retrieved build {build_id} {build.link}")
+    stored_build = DroneBuild.get_or_create_from_drone_api(owner, repo, build)
+    logger.debug(
+        f"stored updated build information for build {build_id} {build.link}: {stored_build}"
+    )
 
 
 @get_build_step_output.connect
 def log_get_build_step_output(
-    client, owner: str, repo: str, build_id: int, stage: int, step: int, output: Output
+    client,
+    owner: str,
+    repo: str,
+    build_number: int,
+    stage_number: int,
+    step_number: int,
+    output: Output,
 ):
-    logger.debug(f"step output for {build_id}/{stage}/{step} {output}")
+
+    stored_step = DroneStep.get_or_create_from_drone_api(
+        owner,
+        repo,
+        build_number=build_number,
+        stage_number=stage_number,
+        step_number=step_number,
+        output=output,
+    )
+    logger.debug(
+        f"stored updated step output {stage_number}/{step_number}: {stored_step}"
+    )

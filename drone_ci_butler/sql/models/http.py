@@ -3,14 +3,8 @@ import io
 import requests
 from chemist import Model, db
 from datetime import datetime
+from drone_ci_butler.util import load_json
 from .base import metadata
-
-
-def load_json(what, default=None) -> str:
-    try:
-        return json.loads(what or "{}")
-    except (json.JSONDecodeError):
-        return default
 
 
 class HttpInteraction(Model):

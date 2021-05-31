@@ -123,10 +123,16 @@ class DroneAPIClient(object):
         return build
 
     def get_build_step_output(
-        self, owner: str, repo: str, build_id: int, stage: int, step: int
+        self,
+        owner: str,
+        repo: str,
+        build_number: int,
+        stage_number: int,
+        step_number: int,
     ) -> OutputLine.List:
         result = self.request(
-            "GET", f"/api/repos/{owner}/{repo}/builds/{build_id}/logs/{stage}/{step}"
+            "GET",
+            f"/api/repos/{owner}/{repo}/builds/{build_number}/logs/{stage_number}/{step_number}",
         )
         data = result.json()
 
@@ -144,9 +150,9 @@ class DroneAPIClient(object):
             self,
             owner=owner,
             repo=repo,
-            build_id=build_id,
-            stage=stage,
-            step=step,
+            build_number=build_number,
+            stage_number=stage_number,
+            step_number=step_number,
             output=output,
         )
         return output
@@ -168,9 +174,9 @@ class DroneAPIClient(object):
                         output = self.get_build_step_output(
                             owner=owner,
                             repo=repo,
-                            build_id=build.number,
-                            stage=stage.number,
-                            step=step.number,
+                            build_number=build.number,
+                            stage_number=stage.number,
+                            step_number=step.number,
                         )
                     except ClientError as e:
                         logger.debug(
