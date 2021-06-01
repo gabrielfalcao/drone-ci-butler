@@ -22,7 +22,7 @@ class Output(Model):
     headers: Property[dict]
 
     def with_headers(self, headers: dict) -> Model:
-        self.headers = headers
+        self.headers = dict(headers)
         return self
 
     def to_dict(self, *args, **kwargs) -> dict:
@@ -233,7 +233,7 @@ class Build(Model):
         }
 
     def with_headers(self, headers: dict) -> Model:
-        self.headers = headers
+        self.headers = dict(headers)
         return self
 
     def failed_stages(self) -> Stage.List:

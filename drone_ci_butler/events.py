@@ -35,12 +35,22 @@ def log_get_builds(
         f'found {pluralize(count, "build")} for {owner}/{repo} page={page} limit={limit}'
     )
 
+    for build in builds:
+        stored_build = DroneBuild.get_or_create_from_drone_api(
+            owner, repo, build_number=build.number, build=build
+        )
+        logger.debug(
+            f"stored updated build information for build {build.number} {build.link}: {stored_build}"
+        )
+
 
 @get_build_info.connect
-def log_get_build_info(client, owner: str, repo: str, build_id: int, build: Build):
-    stored_build = DroneBuild.get_or_create_from_drone_api(owner, repo, build)
+def log_get_build_info(client, owner: str, repo: str, build_number: int, build: Build):
+    stored_build = DroneBuild.get_or_create_from_drone_api(
+        owner, repo, build_number=build_number, build=build
+    )
     logger.debug(
-        f"stored updated build information for build {build_id} {build.link}: {stored_build}"
+        f"stored updated build information for build {build_number} {build.link}: {stored_build}"
     )
 
 

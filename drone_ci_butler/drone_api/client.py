@@ -86,10 +86,16 @@ class DroneAPIClient(object):
             params={"page": page, "limit": limit},
             skip_cache=True,
         )
+        all_builds = Build.List(result.json())
+        for build in all_builds:
+            events.get_build_info.send(
+                self, owner=owner, repo=repo, build_number=build.number, build=build
+            )
+
         builds = Build.List(
             map(
                 lambda build: build.with_headers(result.headers),
-                Build.List(result.json()),
+                all_builds,
             )
             # running and failed pull-requests only
         ).filter(
@@ -114,11 +120,11 @@ class DroneAPIClient(object):
             builds.sorted(key=lambda b: b.updated, reverse=True)[: self.max_builds]
         )
 
-    def get_build_info(self, owner: str, repo: str, build_id: str) -> Build:
-        result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_id}")
+    def get_build_info(self, owner: str, repo: str, build_number: str) -> Build:
+        result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_number}")
         build = Build(result.json()).with_headers(result.headers)
         events.get_build_info.send(
-            self, owner=owner, repo=repo, build_id=build_id, build=build
+            self, owner=owner, repo=repo, build_number=build_number, build=build
         )
         return build
 
@@ -162,7 +168,11 @@ class DroneAPIClient(object):
             "GET", f"/api/repos/{owner}/{repo}/builds/latest", params={"branch": branch}
         )
         build = Build(result.json()).with_headers(result.headers)
-        return self.inject_logs_into_build(owner, repo, build)
+        events.get_build_info.send(
+            self, owner=owner, repo=repo, build_number=build.number, build=build
+        )
+        build = self.inject_logs_into_build(owner, repo, build)
+        return build
 
     def inject_logs_into_build(self, owner: str, repo: str, build: Build):
         def inject_logs(build):

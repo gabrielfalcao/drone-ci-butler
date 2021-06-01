@@ -13,7 +13,6 @@ class DroneBuild(Model):
         "drone_build",
         metadata,
         db.Column("id", db.Integer, primary_key=True),
-        db.Column("build_id", db.Integer, nullable=False),
         db.Column("number", db.Integer, nullable=False),
         db.Column("status", db.String(255), nullable=False),
         db.Column("link", db.UnicodeText, nullable=False, index=True),
@@ -22,15 +21,15 @@ class DroneBuild(Model):
         db.Column("author_login", db.Unicode(255), nullable=False),
         db.Column("author_name", db.Unicode(255)),
         db.Column("author_email", db.Unicode(255)),
-        db.Column("json_data", db.UnicodeText),
+        db.Column("drone_api_data", db.UnicodeText),
         db.Column("created_at", db.DateTime),
         db.Column("started_at", db.DateTime),
         db.Column("finished_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
     )
 
-    def json_data_to_dict(self):
-        return json.loads(self.json_data)
+    def drone_api_data_to_dict(self):
+        return json.loads(self.drone_api_data)
 
     def extract_data_from_drone_api(self, owner: str, repo: str, build: Build):
         data = {}
@@ -55,7 +54,7 @@ class DroneBuild(Model):
         if build.updated:
             data["updated_at"] = datetime.fromtimestamp(build.updated)
 
-        data["json_data"] = json.dumps(build.to_dict())
+        data["drone_api_data"] = json.dumps(build.to_dict())
         return data
 
     def update_from_drone_api(self, owner: str, repo: str, build: Build):
@@ -64,15 +63,14 @@ class DroneBuild(Model):
 
     @classmethod
     def get_or_create_from_drone_api(
-        cls, owner: str, repo: str, build: Build, update=True
+        cls, owner: str, repo: str, build_number: int, build: Build, update=True
     ):
         stored_build = cls.get_or_create(
             owner=owner,
             repo=repo,
-            build_id=build.id,
             link=build.link,
             author_login=build.author_login,
-            number=build.number,
+            number=build_number,
             status=build.status,
         )
         if update:
@@ -80,7 +78,7 @@ class DroneBuild(Model):
         return stored_build
 
     def to_drone_api_model(self) -> Build:
-        return Build(**self.json_data_to_dict())
+        return Build(**self.drone_api_data_to_dict())
 
 
 class DroneStep(Model):
@@ -88,13 +86,13 @@ class DroneStep(Model):
         "drone_step",
         metadata,
         db.Column("id", db.Integer, primary_key=True),
-        db.Column("stored_build_id", db.ForeignKey("drone_step.id")),
+        db.Column("stored_build_id", db.Integer, index=True),
         db.Column("build_number", db.Integer, nullable=False),
         db.Column("stage_number", db.Integer, nullable=False),
         db.Column("number", db.Integer, nullable=False),
         db.Column("status", db.String(255)),
         db.Column("exit_code", db.Integer),
-        db.Column("output_json_data", db.UnicodeText),
+        db.Column("output_drone_api_data", db.UnicodeText),
         db.Column("started_at", db.DateTime),
         db.Column("stopped_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
@@ -116,19 +114,22 @@ class DroneStep(Model):
             number=build_number,
         )
         if not stored_build:
-            # import ipdb;ipdb.set_trace()  # fmt: skip
             raise BuildNotFound(
-                f"Build not found for owner={owner}, repo={repo}, build_id={build_id}"
+                f"Build not found for owner={owner}, repo={repo}, build_number={build_number}"
             )
-        stored_step = cls.get_or_create(
-            stored_build_id=stored_build.id,
-            build_number=build_number,
-            stage_number=stage_number,
-            number=step_number,
-        )
 
+        try:
+            stored_step = cls.get_or_create(
+                stored_build_id=stored_build.id,
+                build_number=build_number,
+                stage_number=stage_number,
+                number=step_number,
+            )
+        except Exception as e:
+            err = e
+            import ipdb;ipdb.set_trace()  # fmt: skip
         data = {
-            "output_json_data": json.dumps(output.to_dict()),
+            "output_drone_api_data": json.dumps(output.to_dict()),
         }
         build = stored_build.to_drone_api_model()
         step = build.get_step_by_number(step_number)
