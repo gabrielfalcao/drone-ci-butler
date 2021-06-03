@@ -11,6 +11,8 @@ REQUIREMENTS_PATH	:= $(GIT_ROOT)/$(REQUIREMENTS_FILE)
 MAIN_CLI_PATH		:= $(VENV_ROOT)/bin/$(MAIN_CLI_NAME)
 export VENV		?= $(VENV_ROOT)
 
+WEB_PORT		:= 4000
+
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent
 #                real paths as Makefile expects)
@@ -29,6 +31,9 @@ db-create:
 db-migrate: | $(VENV)/bin/alembic
 	@echo "running migrations"
 	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
+
+tunnel:
+	ngrok tls --subdomain drone-ci-butler $(WEB_PORT)
 
 db: db-create db-migrate
 # creates virtualenv
@@ -58,12 +63,12 @@ functional:| $(VENV)/bin/nosetests  # runs functional tests
 	@$(VENV)/bin/nosetests tests/functional
 
 # run main command-line tool
-run: | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) --help
+builds workers: | $(MAIN_CLI_PATH)
+	@$(MAIN_CLI_PATH) $@
 
 # run webapp
 web: | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) web -H 127.0.0.1 -P 4000 --debug
+	@$(MAIN_CLI_PATH) web -H 127.0.0.1 -P $(WEB_PORT) --debug
 
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version
@@ -143,4 +148,7 @@ $(REQUIREMENTS_PATH):
 	tests \
 	unit \
 	functional \
+	workers \
+	builds \
+	tunnel \
 	web

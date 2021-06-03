@@ -1,4 +1,9 @@
+from ansi2html import Ansi2HTMLConverter
+from drone_ci_butler.slack import SlackClient
 from .puller import PullerWorker
+
+
+ansi2html = Ansi2HTMLConverter()
 
 
 class GetBuildInfoWorker(PullerWorker):
@@ -40,6 +45,45 @@ class GetBuildInfoWorker(PullerWorker):
 
         build = self.api.inject_logs_into_build(owner, repo, build)
 
+        def notify(message, stage, step, output):
+            print(message)
+            if build.author_login != "gabrielfalcao":
+                return
+            blocks = [
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": f"🔴 Build failed for the PR {pr_number} {owner}/{repo}",
+                        "emoji": True,
+                    },
+                },
+                {"type": "divider"},
+                {
+                    "type": "section",
+                    "text": {"type": "mrkdwn", "text": f"**Stage:** stage.name"},
+                },
+                {
+                    "type": "section",
+                    "text": {"type": "mrkdwn", "text": f"**Step:** step.name"},
+                },
+                {"type": "divider"},
+                {
+                    "type": "section",
+                    "text": {"type": "mrkdwn", "text": ansi2html.convert(message)},
+                },
+                {"type": "divider"},
+            ]
+
+            client = SlackClient().slack
+            channel = "C023Z62N59Q"
+            user_id = "W01BD07TYGP"
+            self.logger.info(f"posting message to slack user @falcao")
+            message_response = client.chat_postMessage(
+                channel=user_id,
+                blocks=blocks,
+            )
+
         for stage in build.failed_stages():
 
             for step in stage.failed_steps():
@@ -51,34 +95,49 @@ class GetBuildInfoWorker(PullerWorker):
                 )
                 output = step.to_string()
                 if "prettier:docs" in output:
-                    print(error_cause(f"Unformatted docs"))
+                    notify(error_cause(f"Unformatted docs"), stage, step, output)
                     continue
                 if "kubectl" in output:
-                    print(error_cause(f"kubernetes deployment"))
+                    notify(error_cause(f"kubernetes deployment"), stage, step, output)
                     continue
                 if (
                     "not something we can merge" in output
                     or "Automatic merge failed; fix conflicts" in output
                 ):
-                    print(error_cause(f"Merge conflict"))
+                    notify(error_cause(f"Merge conflict"), stage, step, output)
                     continue
                 if "a DNS-1123 label must consist of lower case" in output:
-                    print(error_cause(f"Invalid branch name"))
+                    notify(error_cause(f"Invalid branch name"), stage, step, output)
                     continue
                 if "yarn lint-ci" in output:
-                    print(error_cause(f"lint"))
+                    notify(error_cause(f"lint"), stage, step, output)
                     continue
                 if "bundlesize" in output:
-                    print(error_cause(f"bundlesize is too big"))
+                    notify(error_cause(f"bundlesize is too big"), stage, step, output)
                     continue
                 if "ECONNREFUSED" in output:
-                    print(error_cause(f"Network failure (connection refused)"))
+                    notify(
+                        error_cause(f"Network failure (connection refused)"),
+                        stage,
+                        step,
+                        output,
+                    )
                     continue
                 if "Couldn't find any versions for" in output:
-                    print(error_cause(f"yarn dependency could not be resolved"))
+                    notify(
+                        error_cause(f"yarn dependency could not be resolved"),
+                        stage,
+                        step,
+                        output,
+                    )
                     continue
                 if "slack server error" in output:
-                    print(error_cause(f"failed to connect to slack server"))
+                    notify(
+                        error_cause(f"failed to connect to slack server"),
+                        stage,
+                        step,
+                        output,
+                    )
                     continue
 
                 if "http-status-check" in output:
@@ -87,9 +146,12 @@ class GetBuildInfoWorker(PullerWorker):
                             print(real_failure(line.out))
                     continue
 
-                print(f"failed step: \033[1;31m{step.to_string()}\033[0m")
-                print(
-                    f"    failure in {stage.name}.{step.name} of build {build.number} on PR #{pr_number} by {build.author_login}"
+                # print(f"failed step: \033[1;31m{step.to_string()}\033[0m")
+                notify(
+                    f"failure in {stage.name}.{step.name} of build {build.number} on PR #{pr_number} by {build.author_login}",
+                    stage,
+                    step,
+                    output,
                 )
         # 1. Poll zmq for job with build_id
         # 2. Iterate over failed stages

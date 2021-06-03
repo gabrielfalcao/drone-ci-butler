@@ -9,17 +9,23 @@ from typing import Optional
 from uiclasses import Model
 from pathlib import Path
 from datetime import datetime, timedelta
+
+
+from slack.errors import SlackApiError
+
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
+from drone_ci_butler.slack import SlackClient
 from drone_ci_butler.logs import logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 from drone_ci_butler.web import webapp
+from drone_ci_butler.config import config
 
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
 
-DEFAULT_QUEUE_ADDRESS = "tcp://127.0.0.1:5000"
-DEFAULT_PUSH_ADDRESS = "tcp://127.0.0.1:6000"
+DEFAULT_QUEUE_ADDRESS = "tcp://127.0.0.1:5555"
+DEFAULT_PUSH_ADDRESS = "tcp://127.0.0.1:6666"
 
 
 class Context(Model):
@@ -46,6 +52,47 @@ def main(ctx, drone_access_token, drone_url, owner, repo):
         "github_owner": owner,
         "github_repo": repo,
     }
+
+
+@main.command("slack")
+def slack_test():
+    client = SlackClient()
+
+    # message_response = client.chat_postMessage(
+    #     channel="#drone-ci-monitor", text="Hello from your app! :tada:"
+    # )
+    # import ipdb;ipdb.set_trace()  # fmt: skip
+    # client.chat_delete(channel=channel, ts=message_response.data["ts"])
+
+    # channel_response = client.conversations_info(
+    #     channel=channel, include_num_members=True
+    # )
+    blocks = [
+        {
+            "type": "header",
+            "text": {
+                "type": "plain_text",
+                "text": "🔴 Build failed for the PR 13355 nytm/wf-project",
+                "emoji": True,
+            },
+        },
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": "something went wrong :oops:"},
+        },
+        {"type": "divider"},
+    ]
+
+    channel = "C023Z62N59Q"
+    user_id = "W01BD07TYGP"
+    # chat_response = client.slack.conversations_open(users=[user_id])
+
+    message_response = client.send_message(
+        channel=user_id,
+        blocks=blocks,
+        # mrkdwn=True,
+    )
+    client.chat_delete(channel=user_id, ts=message_response.data["ts"])
 
 
 @main.command("web")
@@ -97,7 +144,7 @@ def worker_queue(ctx, rep_bind_address, push_bind_address):
 
 
 @main.command("builds")
-@click.option("-d", "--days", default=5, type=int)
+@click.option("-d", "--days", default=30, type=int)
 @click.option("-c", "--rep-connect-address", default=DEFAULT_QUEUE_ADDRESS)
 @click.pass_context
 def get_builds(ctx, rep_connect_address, days):
@@ -108,6 +155,7 @@ def get_builds(ctx, rep_connect_address, days):
     builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
     builds = builds.filter(
         lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days)
+        and b.author_login == "gabrielfalcao"
     )
     count = len(builds)
     print(f"found {count} failed builds in the last {days} days")

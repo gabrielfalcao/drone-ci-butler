@@ -1,8 +1,11 @@
-from flask import Flask
+from flask import Flask, redirect
 from flask_restx import Api
 
-from drone_ci_butler.version import version
+from slack import WebClient
+from slack.errors import SlackApiError
 
+from drone_ci_butler.version import version
+from drone_ci_butler.config import config
 
 SERVER_NAME = f"DroneAPI Butler v{version}"
 
@@ -15,4 +18,24 @@ class Application(Flask):
 
 
 webapp = Flask(__name__)
+
+
+@webapp.route("/slack/hooks/auth")
+def slack_auth_hook():
+    # Verify the "state" parameter
+
+    # Retrieve the auth code from the request params
+    code_param = request.args["code"]
+
+    # An empty string is a valid token for this request
+    client = WebClient()
+
+    # Request the auth tokens from Slack
+    response = client.oauth_v2_access(
+        client_id=config.slack_client_id,
+        client_secret=config.slack_client_secret,
+        code=code_param,
+    )
+
+
 api = Api(webapp)
