@@ -1,0 +1,9 @@
+{
+  "name": "drone-ci-monitor",
+  "version": "1.0.0",
+  "description": "Proactively notifies PR authors of build failures and their causes",
+  "main": "index.js",
+  "author": "Gabriel Falcao",
+  "license": "MIT",
+  "private": true
+}
