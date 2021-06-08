@@ -54,7 +54,7 @@ function App() {
         <p className={cx(typography.head.lg)}>Drone CI Monitor</p>
         <div className={innerContent}>&nbsp;</div>
         <div className={cx(defaultStyle, innerContent, utility.boxShadow1)}>
-          <p>Hi, I’m @drone-ci-monitor 👋 </p>
+          <p>Hi, I’m @drone-ci-butler 👋 </p>
           <p>
             I let you know immediately when a Drone build step fails with a
             possible root-cause and maybe even a suggestion for fix. I can also

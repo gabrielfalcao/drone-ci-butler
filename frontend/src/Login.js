@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  Button,
+  /* Button, */
   UserIcon,
   breakpoints,
   colors,
@@ -37,7 +37,7 @@ const centeredBlock = css`
 function Login() {
   return (
     <>
-      <p>Hi, I’m @drone-ci-monitor 👋 </p>
+      <p>Hi, I’m @drone-ci-butler 👋 </p>
       <p>
         I let you know immediately when a Drone build step fails with a possible
         root-cause and maybe even a suggestion for fix. I can also send you the
@@ -47,13 +47,10 @@ function Login() {
       <div className={gridLayout}>
         <div className={cx(defaultStyle, innerContent, utility.boxShadowInset)}>
           <p className={centeredBlock}>
-            <Button
-              href="/oauth/login/github"
-              variant={Button.Variants.PRIMARY}
-            >
+            <a href="/oauth/login/github">
               <UserIcon className={verticalAlignBottom} role="presentation" />
               Login with Github
-            </Button>
+            </a>
           </p>
         </div>
       </div>

@@ -53,12 +53,12 @@ export default function App() {
               Drone CI Monitor
               <p className={rightedBlock}>
                 <Menu id="preview" placeholder="Menu" aria-label="Menu">
-                  <Menu.Item key="login" value="login">
-                    <a href="/oauth/login/github">Login</a>
-                  </Menu.Item>
-
                   <Menu.Item key="home" value="home">
                     <Link to="/">Home</Link>
+                  </Menu.Item>
+
+                  <Menu.Item key="login" value="login">
+                    <a href="/oauth/login/github">Login</a>
                   </Menu.Item>
 
                   <Menu.Item key="settings" value="settings">

@@ -50,43 +50,18 @@ function Settings() {
 
   return (
     <>
-      <Dialog isOpen={isOpen} onClose={closeDialog}>
-        <Dialog.Header>Settings</Dialog.Header>
-        Dialog Body
-        <Dialog.Footer>
-          <ButtonGroup>
-            <Button aria-label="Close Dialog" onClick={closeDialog}>
-              Close Dialog
-            </Button>
-            <Button variant={Button.Variants.PRIMARY}>Primary Action</Button>
-          </ButtonGroup>
-        </Dialog.Footer>
-      </Dialog>
       <div className={gridLayout}>
         <main className={cx(mainContent)}>
-          <p className={cx(typography.head.md)}>Drone CI Monitor</p>
+          <p className={cx(typography.head.md)}>Welcome, %user%</p>
           <div className={innerContent}>&nbsp;</div>
           <div className={cx(defaultStyle, innerContent, utility.boxShadow1)}>
-            <p className={cx(typography.head.md)}>
-              First, login with Github, then to Slack
-            </p>
+            <p className={cx(typography.head.md)}>Settings</p>
             <p className={centeredBlock}>
-              <Button variant={Button.Variants.PRIMARY}>
-                Login with Github
-              </Button>
-              <Button
-                type="button"
-                aria-label="Open Dialog"
-                onClick={openDialog}
-              >
-                Open Dialog
-              </Button>
+              <ul>
+                <li>foo</li>
+              </ul>
             </p>
           </div>
-          <p className={cx(centeredBlock, innerContent)}>
-            <Spinner />
-          </p>
-          <div className={innerContent}>&nbsp;</div>
         </main>
       </div>
     </>

@@ -1,5 +1,5 @@
 {
-  "name": "drone-ci-monitor",
+  "name": "drone-ci-butler",
   "version": "0.1.0",
   "description": "Proactively notifies PR authors of build failures and their causes",
   "author": "Gabriel Falcao",
