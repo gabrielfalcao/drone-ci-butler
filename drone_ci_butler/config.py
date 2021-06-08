@@ -52,8 +52,8 @@ class Config(DataBag):
         return self.auth.traverse("jwt_secret")
 
     @property
-    def secret_key(self) -> str:
-        return self.auth.traverse("flask_secret_key")
+    def SECRET_KEY(self) -> str:
+        return self.auth.traverse("flask_secret")
 
     @property
     def slack(self) -> DataBagChild:
@@ -93,7 +93,7 @@ class Config(DataBag):
 
     @property
     def SLACK_AUTHORIZE_PARAMS(self) -> dict:
-        params = {"scope": "chat:write:user"}
+        params = {}  # {"scope": "chat:write:user"}
         return params
 
     @property

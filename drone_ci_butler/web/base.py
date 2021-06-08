@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, jsonify, session
 from flask_restx import Api
 
 from slack import WebClient
@@ -13,4 +13,8 @@ webapp = Application()
 api = webapp.api
 oauth = webapp.oauth
 cors = webapp.cors
-session = webapp.session
+
+
+@webapp.route("/session")
+def show_session():
+    return jsonify(dict(session.items()))

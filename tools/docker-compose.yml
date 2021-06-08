@@ -18,3 +18,14 @@ services:
     restart: always
     env_file:
       - ./drone.env
+
+  runner1:
+    container_name: runner
+    image: drone/drone-runner-docker:1
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    env_file:
+      - ./drone.env

@@ -1,3 +1,4 @@
+from drone_ci_butler.config import config
 from authlib.integrations.flask_client import FlaskRemoteApp
 
 
@@ -75,7 +76,7 @@ def create_flask_blueprint(backends, oauth, handle_authorize):
 
         redirect_uri = url_for(".auth", name=name, _external=True, _scheme="https")
         conf_key = "{}_AUTHORIZE_PARAMS".format(name.upper())
-        params = current_app.config.get(conf_key, {})
+        params = config.get(conf_key, current_app.config.get(conf_key, {}))
         return remote.authorize_redirect(redirect_uri, **params)
 
     return bp

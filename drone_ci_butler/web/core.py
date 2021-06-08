@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from flask import Flask, redirect, send_from_directory, request
+from flask import Flask, redirect, request, render_template, session
 
 from flask_cors import CORS
 from flask_session import Session
@@ -13,9 +13,10 @@ from flask_restx import Api
 from drone_ci_butler.config import config
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.version import version
+from drone_ci_butler.sql.models import AccessToken, User
 from .oauth import create_flask_blueprint
 
-SERVER_NAME = f"drone-ci-butler.ngrok.io"
+SERVER_NAME = f"Drone CI Butler v{version}"
 
 
 static_path = Path(__file__).parent.joinpath("public")
@@ -55,7 +56,12 @@ class Application(Flask):
         self.route("/success")(self.serve_index)
 
     def serve_index(self, path=None):
-        return send_from_directory(static_path, "index.html")
+        return render_template(
+            "index.html",
+            user=session.get("user"),
+            token=session.get("token"),
+            meta={"title": SERVER_NAME, "description": "A Companion for Drone CI"},
+        )
 
     def setup_api(self):
         self.api = Api(
@@ -68,20 +74,43 @@ class Application(Flask):
         )
 
     def handle_oauth_authorization(self, remote, token, user_info):
-        if token:
-            self.save_oauth_token(remote.name, token)
-        if user_info:
-            self.save_oauth_user(user_info)
-        import ipdb;ipdb.set_trace()  # fmt: skip
+        self.save_oauth_token(remote.name, token, user_info)
         return redirect("/settings")
 
-    def save_oauth_token(self, provider_name: str, token: dict):
-        print("save oauth token")
-        import ipdb;ipdb.set_trace()  # fmt: skip
+    def save_oauth_token(self, provider_name: str, token: dict, user_info: dict):
+        logger.info("saving oauth token")
+        email = user_info.get("email")
+        username = user_info.get("preferred_username")
+        access_token = token.get("access_token")
 
-    def save_oauth_user(self, user_info: dict):
-        print("save oauth user")
-        import ipdb;ipdb.set_trace()  # fmt: skip
+        db_user = None
+        db_token = None
+
+        session[f"{provider_name}_user"] = user_info
+        session[f"{provider_name}_token"] = token
+
+        if email:
+            params = {
+                f"{provider_name}_username": username,
+                f"{provider_name}_email": email,
+                f"{provider_name}_token": access_token,
+                f"{provider_name}_json": json.dumps(user_info),
+            }
+
+            db_user = User.get_or_create(email=email).update_and_save(**params)
+
+        if db_user:
+            session["user"] = db_user.to_dict()
+
+        if token and db_user:
+            db_token = db_user.create_token(provider_name, **token)
+
+        if db_token:
+            session["token"] = db_token.to_dict()
+        else:
+            logger.warning(
+                f"failed to store token in db: token={token} db_user={db_user}"
+            )
 
     def setup_auth(self):
         if isinstance(getattr(self, "oauth", None), OAuth):

@@ -34,6 +34,7 @@ const rightedBlock = css`
   text-align: right;
   display: block;
   margin-top: -${spacing.lg};
+  padding: 0;
 `;
 
 export default function App() {
@@ -49,12 +50,20 @@ export default function App() {
           */}
         <div className={gridLayout}>
           <main className={cx(mainContent)}>
-            <p className={cx(typography.head.lg)}>
+            <div className={cx(typography.head.lg)}>
               Drone CI Monitor
-              <p className={rightedBlock}>
+              <div className={rightedBlock}>
                 <Menu id="preview" placeholder="Menu" aria-label="Menu">
                   <Menu.Item key="home" value="home">
                     <Link to="/">Home</Link>
+                  </Menu.Item>
+
+                  <Menu.Item key="github_login" value="github_login">
+                    <a href="/oauth/login/github">Github Login</a>
+                  </Menu.Item>
+
+                  <Menu.Item key="slack_login" value="slack_login">
+                    <a href="/oauth/login/slack">Slack Login</a>
                   </Menu.Item>
 
                   <Menu.Item key="login" value="login">
@@ -65,8 +74,8 @@ export default function App() {
                     <Link to="/settings">Settings</Link>
                   </Menu.Item>
                 </Menu>
-              </p>
-            </p>
+              </div>
+            </div>
 
             <div className={mainContent}>&nbsp;</div>
             <div className={cx(defaultStyle, mainContent)}>

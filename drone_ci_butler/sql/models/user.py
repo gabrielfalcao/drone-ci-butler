@@ -74,9 +74,12 @@ class User(Model):
         db.Column("email", db.String(100), nullable=False, unique=True),
         db.Column("password", db.Unicode(128)),
         db.Column("github_username", db.Unicode(255)),
-        db.Column("github_login", db.UnicodeText),
+        db.Column("github_email", db.Unicode(255)),
+        db.Column("github_token", db.UnicodeText),
         db.Column("github_json", db.UnicodeText),
         db.Column("slack_username", db.Unicode(255)),
+        db.Column("slack_email", db.Unicode(255)),
+        db.Column("slack_token", db.UnicodeText),
         db.Column("slack_json", db.UnicodeText),
         db.Column("settings_json", db.UnicodeText),
         db.Column("created_at", db.DateTime),
@@ -134,33 +137,34 @@ class User(Model):
         password = cls.secretify_password(password)
         return super(User, cls).create(email=email, password=password, **kw)
 
-    @property
     def token_secret(self):
         return bcrypt.kdf(
-            password=config.SECRET_KEY,
-            salt=self.password.encode("utf-8"),
+            password=config.SECRET_KEY.encode("utf-8"),
+            salt=self.email.encode("utf-8"),
             desired_key_bytes=32,
             rounds=100,
         )
 
-    def create_token(
-        self, scope: str = "manage:notes manage:terms", duration: int = 28800, **kw
-    ):
+    def create_token(self, provider_name: str, duration: int = 28800, **kw):
         """
         :param duration: in seconds - defaults to 28800 (8 hours)
         """
-        created_at = now().isoformat()
+        created_at = datetime.utcnow().isoformat()
+        data = {
+            "created_at": created_at,
+            "duration": duration,
+        }
+        scope = kw.get("scope", None)
+        data.update(kw)
+
         access_token = jwt.encode(
-            {
-                "created_at": created_at,
-                "duration": duration,
-                "scope": f"{scope} admin admin:user",
-            },
-            self.token_secret,
+            data,
+            self.token_secret(),
             algorithm="HS256",
         )
         return AccessToken.create(
-            content=access_token.decode("utf-8"),
+            identity_provider=provider_name,
+            content=access_token,
             scope=scope,
             user_id=self.id,
             created_at=created_at,

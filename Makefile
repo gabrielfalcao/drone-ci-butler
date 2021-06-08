@@ -30,7 +30,7 @@ export NODE_ENV		:= production
 all: | $(MAIN_CLI_PATH)
 
 db-create:
-	@./tools/recreate-db drone-ci-butler drone-ci-butler
+	@./tools/recreate-db drone_ci_butler
 
 drone-db-create:
 	@./tools/recreate-db drone-ci-server drone-ci-server

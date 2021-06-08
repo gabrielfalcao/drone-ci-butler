@@ -118,16 +118,12 @@ class DroneStep(Model):
                 f"Build not found for owner={owner}, repo={repo}, build_number={build_number}"
             )
 
-        try:
-            stored_step = cls.get_or_create(
-                stored_build_id=stored_build.id,
-                build_number=build_number,
-                stage_number=stage_number,
-                number=step_number,
-            )
-        except Exception as e:
-            err = e
-            import ipdb;ipdb.set_trace()  # fmt: skip
+        stored_step = cls.get_or_create(
+            stored_build_id=stored_build.id,
+            build_number=build_number,
+            stage_number=stage_number,
+            number=step_number,
+        )
         data = {
             "output_drone_api_data": json.dumps(output.to_dict()),
         }
