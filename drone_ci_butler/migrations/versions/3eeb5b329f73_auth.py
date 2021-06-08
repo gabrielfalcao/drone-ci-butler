@@ -22,7 +22,10 @@ def upgrade():
         db.Column("id", db.Integer, primary_key=True),
         db.Column("email", db.String(100), nullable=False, unique=True),
         db.Column("password", db.Unicode(128)),
+        db.Column("github_username", db.Unicode(255)),
+        db.Column("github_login", db.UnicodeText),
         db.Column("github_json", db.UnicodeText),
+        db.Column("slack_username", db.Unicode(255)),
         db.Column("slack_json", db.UnicodeText),
         db.Column("settings_json", db.UnicodeText),
         db.Column("created_at", db.DateTime),
@@ -33,6 +36,7 @@ def upgrade():
     op.create_table(
         "auth_access_token",
         db.Column("id", db.Integer, primary_key=True),
+        db.Column("identity_provider", db.Unicode(255)),
         db.Column("content", db.UnicodeText, nullable=False, unique=True),
         db.Column("scope", db.UnicodeText, nullable=True),
         db.Column(

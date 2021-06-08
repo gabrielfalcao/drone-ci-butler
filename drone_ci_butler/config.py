@@ -1,11 +1,27 @@
 import os
 import yaml
+import json
+import redis
+from typing import Optional
 from functools import lru_cache
 from pathlib import Path
+
 from uiclasses import DataBag, DataBagChild
 
 
 class Config(DataBag):
+    REDIS_HOST = os.getenv("REDIS_HOST")
+    if REDIS_HOST:
+        SESSION_TYPE = "redis"
+        SESSION_REDIS = redis.Redis(
+            host=REDIS_HOST or "localhost",
+            port=int(os.getenv("REDIS_PORT") or 6379),
+            db=0,
+        )
+    else:
+        SESSION_TYPE = "filesystem"
+        SESSION_FILE_DIR = "/tmp/flask-session"
+
     def __init__(
         self,
         path=None,
@@ -32,8 +48,12 @@ class Config(DataBag):
         return self.traverse("auth")
 
     @property
-    def auth_jwt_secret(self) -> DataBagChild:
+    def auth_jwt_secret(self) -> str:
         return self.auth.traverse("jwt_secret")
+
+    @property
+    def secret_key(self) -> str:
+        return self.auth.traverse("flask_secret_key")
 
     @property
     def slack(self) -> DataBagChild:
@@ -44,11 +64,11 @@ class Config(DataBag):
         return self.slack.traverse("oauth")
 
     @property
-    def slack_client_secret(self) -> Optional[str]:
+    def SLACK_CLIENT_SECRET(self) -> Optional[str]:
         return self.slack_oauth["client_secret"]
 
     @property
-    def slack_client_id(self) -> Optional[str]:
+    def SLACK_CLIENT_ID(self) -> Optional[str]:
         return self.slack_oauth["client_id"]
 
     @property
@@ -60,8 +80,34 @@ class Config(DataBag):
         return self.slack_oauth["verification_token"]
 
     @property
+    def GITHUB_AUTHORIZE_PARAMS(self) -> dict:
+        return {"scope": "repo user read:user user:email"}
+
+    @property
+    def GITHUB_CLIENT_ID(self) -> str:
+        return self.traverse("github", "oauth_client", "client_id")
+
+    @property
+    def GITHUB_CLIENT_SECRET(self) -> str:
+        return self.traverse("github", "oauth_client", "client_secret")
+
+    @property
+    def SLACK_AUTHORIZE_PARAMS(self) -> dict:
+        params = {"scope": "chat:write:user"}
+        return params
+
+    @property
     def slack_bot_token(self) -> Optional[str]:
         return self.slack_oauth["bot_token"]
+
+    def to_flask(self):
+        for name in dir(self):
+            if name == name.upper():
+                try:
+                    os.environ[name] = str(getattr(self, name) or "")
+                except Exception:
+                    pass
+        return self
 
 
 config = Config()

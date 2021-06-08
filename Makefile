@@ -12,12 +12,13 @@ REQUIREMENTS_PATH	:= $(GIT_ROOT)/$(REQUIREMENTS_FILE)
 MAIN_CLI_PATH		:= $(VENV_ROOT)/bin/$(MAIN_CLI_NAME)
 export VENV		?= $(VENV_ROOT)
 WEB_PORT		:= 4000
+WEB_HOST		:= 0.0.0.0
 STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.json favicon.ico index.html robots.txt static)
 
 ######################################################################
 # webpack env vars
 export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
-export PUBLIC_URL	:= http://localhost:4000/
+export PUBLIC_URL	:= https://drone-ci-butler.ngrok.io/
 export NODE_ENV		:= production
 
 ######################################################################
@@ -30,6 +31,8 @@ all: | $(MAIN_CLI_PATH)
 
 db-create:
 	@./tools/recreate-db drone-ci-butler drone-ci-butler
+
+drone-db-create:
 	@./tools/recreate-db drone-ci-server drone-ci-server
 
 db-migrate: | $(VENV)/bin/alembic
@@ -37,7 +40,7 @@ db-migrate: | $(VENV)/bin/alembic
 	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
 
 tunnel:
-	ngrok tls --subdomain drone-ci-monitor $(WEB_PORT)
+	ngrok http --subdomain drone-ci-butler $(WEB_PORT)
 
 ci-tunnel:
 	ngrok http --subdomain drone-ci-server 8000
@@ -75,8 +78,8 @@ builds workers: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 # run webapp
-web: react-app | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) web -H 127.0.0.1 -P $(WEB_PORT) --debug
+web: | $(MAIN_CLI_PATH)
+	@$(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT) --debug
 
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version

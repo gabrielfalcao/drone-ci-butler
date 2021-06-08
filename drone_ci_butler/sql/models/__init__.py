@@ -1,4 +1,4 @@
-from .auth import AccessToken, User
+from .user import AccessToken, User
 from .base import context, metadata
 from .drone import DroneBuild, DroneStep
 from .http import HttpInteraction

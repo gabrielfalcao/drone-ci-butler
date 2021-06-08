@@ -59,7 +59,7 @@ def slack_test():
     client = SlackClient()
 
     # message_response = client.chat_postMessage(
-    #     channel="#drone-ci-monitor", text="Hello from your app! :tada:"
+    #     channel="#drone-ci-butler", text="Hello from your app! :tada:"
     # )
     # import ipdb;ipdb.set_trace()  # fmt: skip
     # client.chat_delete(channel=channel, ts=message_response.data["ts"])

@@ -5,8 +5,6 @@ from uiclasses.typing import Property
 from datetime import datetime
 from drone_ci_butler import events
 
-conv = Ansi2HTMLConverter()
-
 
 class OutputLine(Model):
     time: int
@@ -34,7 +32,7 @@ class Output(Model):
 
     def to_html(self):
         ansi = "\n".join([l.out for l in self.lines])
-        return conv.convert(ansi)
+        return ansi
 
     def to_string(self, prefix: str = "") -> str:
         lines = []

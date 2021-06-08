@@ -5,8 +5,8 @@ import bcrypt
 
 from datetime import datetime, timedelta
 from dateutil.parser import parse as parse_datetime
-from cached_property import cached_property
 from typing import Optional, List, Dict
+from functools import lru_cache
 from sqlalchemy import desc
 from drone_ci_butler.logs import get_logger
 
@@ -22,6 +22,7 @@ class AccessToken(Model):
         "auth_access_token",
         metadata,
         db.Column("id", db.Integer, primary_key=True),
+        db.Column("identity_provider", db.Unicode(255)),
         db.Column("content", db.UnicodeText, nullable=False, unique=True),
         db.Column("scope", db.UnicodeText, nullable=True),
         db.Column(
@@ -36,7 +37,7 @@ class AccessToken(Model):
         ),
     )
 
-    @cached_property
+    @lru_cache()
     def scopes(self):
         return scope_string_to_set(self.scope)
 
@@ -72,7 +73,10 @@ class User(Model):
         db.Column("id", db.Integer, primary_key=True),
         db.Column("email", db.String(100), nullable=False, unique=True),
         db.Column("password", db.Unicode(128)),
+        db.Column("github_username", db.Unicode(255)),
+        db.Column("github_login", db.UnicodeText),
         db.Column("github_json", db.UnicodeText),
+        db.Column("slack_username", db.Unicode(255)),
         db.Column("slack_json", db.UnicodeText),
         db.Column("settings_json", db.UnicodeText),
         db.Column("created_at", db.DateTime),
