@@ -1,9 +1,45 @@
 {
   "name": "drone-ci-monitor",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Proactively notifies PR authors of build failures and their causes",
-  "main": "index.js",
   "author": "Gabriel Falcao",
-  "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@nyt-cms/ink": "^1.2.0",
+    "@testing-library/dom": ">=7.21.4",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "pretty-lights": ">= 0.0.14",
+    "prop-types": ">= 15.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.3.2",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
