@@ -47,6 +47,7 @@ const centeredBlock = css`
 `;
 
 function App() {
+  const { history } = this.props;
   return (
     <div className={gridLayout}>
       <main className={cx(mainContent)}>
@@ -60,7 +61,7 @@ function App() {
             send you the full build if you want to.
           </p>
           <p className={centeredBlock}>
-            <Button variant={Button.Variants.PRIMARY}>
+            <Button href="/github/connect" variant={Button.Variants.PRIMARY}>
               <UserIcon className={verticalAlignBottom} role="presentation" />
               Login with Github
             </Button>

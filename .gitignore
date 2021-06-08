@@ -63,3 +63,5 @@ docs/source/api/
 /.vscode
 tests/functional/api-cache.sqlite
 api-cache.sqlite
+drone_ci_butler/web/public/static/
+drone_ci_butler/web/public/

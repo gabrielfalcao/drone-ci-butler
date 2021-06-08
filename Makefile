@@ -6,12 +6,19 @@ PACKAGE_NAME		:= drone_ci_butler
 MAIN_CLI_NAME		:= drone-ci-butler
 REQUIREMENTS_FILE	:= development.txt
 
+NODE_MODULES		:= $(GIT_ROOT)/frontend/node_modules
 PACKAGE_PATH		:= $(GIT_ROOT)/$(PACKAGE_NAME)
 REQUIREMENTS_PATH	:= $(GIT_ROOT)/$(REQUIREMENTS_FILE)
 MAIN_CLI_PATH		:= $(VENV_ROOT)/bin/$(MAIN_CLI_NAME)
 export VENV		?= $(VENV_ROOT)
-
 WEB_PORT		:= 4000
+STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.json favicon.ico index.html robots.txt static)
+
+######################################################################
+# webpack env vars
+export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
+export PUBLIC_URL	:= http://localhost:4000/
+export NODE_ENV		:= production
 
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent
@@ -44,6 +51,7 @@ develop: | $(VENV)/bin/python $(VENV)/bin/pip
 
 # installs the requirements and the package dependencies
 setup: | $(MAIN_CLI_PATH)
+public: | $(STATIC_PATHS)
 
 # Convenience target to ensure that the venv exists and all
 # requirements are installed
@@ -67,7 +75,7 @@ builds workers: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 # run webapp
-web: | $(MAIN_CLI_PATH)
+web: react-app | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) web -H 127.0.0.1 -P $(WEB_PORT) --debug
 
 # Pushes release of this package to pypi
@@ -98,6 +106,13 @@ black: | $(VENV)/bin/black
 # Real targets (only run target if its file has been "made" by
 #               Makefile yet)
 ##############################################################
+
+$(NODE_MODULES):
+	cd frontend && yarn
+
+react-app $(STATIC_PATHS): | $(NODE_MODULES)
+	@cd frontend && yarn build
+	@rsync -putao $(GIT_ROOT)/frontend/build/ $(GIT_ROOT)/drone_ci_butler/web/public/
 
 # creates virtual env if necessary and installs pip and setuptools
 $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
@@ -150,5 +165,7 @@ $(REQUIREMENTS_PATH):
 	functional \
 	workers \
 	builds \
+	public \
+	react-app \
 	tunnel \
 	web
