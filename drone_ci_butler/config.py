@@ -2,16 +2,18 @@ import os
 import yaml
 from functools import lru_cache
 from pathlib import Path
+from uiclasses import DataBag, DataBagChild
 
 
-class Config(object):
-    def __init__(self, path=None):
+class Config(DataBag):
+    def __init__(
+        self,
+        path=None,
+        path_location_env_var="DRONE_CI_BUTLER_CONFIG_PATH",
+        default_path="~/.drone-ci-butler.yml",
+    ):
         self.path = (
-            Path(
-                path
-                or os.getenv("DRONE_CI_BUTLER_CONFIG_PATH")
-                or "~/.drone-ci-butler.yml"
-            )
+            Path(path or os.getenv(path_location_env_var) or default_path)
             .expanduser()
             .absolute()
         )
@@ -26,31 +28,39 @@ class Config(object):
         return self.load()
 
     @property
-    def slack(self):
-        return self.__data__.get("slack") or {}
+    def auth(self) -> DataBagChild:
+        return self.traverse("auth")
 
     @property
-    def slack_oauth(self):
-        return self.slack["oauth"]
+    def auth_jwt_secret(self) -> DataBagChild:
+        return self.auth.traverse("jwt_secret")
 
     @property
-    def slack_client_secret(self):
+    def slack(self) -> DataBagChild:
+        return self.traverse("slack")
+
+    @property
+    def slack_oauth(self) -> DataBagChild:
+        return self.slack.traverse("oauth")
+
+    @property
+    def slack_client_secret(self) -> Optional[str]:
         return self.slack_oauth["client_secret"]
 
     @property
-    def slack_client_id(self):
+    def slack_client_id(self) -> Optional[str]:
         return self.slack_oauth["client_id"]
 
     @property
-    def slack_signing_secret(self):
+    def slack_signing_secret(self) -> Optional[str]:
         return self.slack_oauth["signing_secret"]
 
     @property
-    def slack_verification_token(self):
+    def slack_verification_token(self) -> Optional[str]:
         return self.slack_oauth["verification_token"]
 
     @property
-    def slack_bot_token(self):
+    def slack_bot_token(self) -> Optional[str]:
         return self.slack_oauth["bot_token"]
 
 

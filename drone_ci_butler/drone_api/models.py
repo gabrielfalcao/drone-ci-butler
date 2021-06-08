@@ -4,7 +4,6 @@ from uiclasses import Model
 from uiclasses.typing import Property
 from datetime import datetime
 from drone_ci_butler import events
-from ansi2html import Ansi2HTMLConverter
 
 conv = Ansi2HTMLConverter()
 

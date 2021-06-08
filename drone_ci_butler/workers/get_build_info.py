@@ -1,9 +1,5 @@
-from ansi2html import Ansi2HTMLConverter
 from drone_ci_butler.slack import SlackClient
 from .puller import PullerWorker
-
-
-ansi2html = Ansi2HTMLConverter()
 
 
 class GetBuildInfoWorker(PullerWorker):
@@ -70,7 +66,7 @@ class GetBuildInfoWorker(PullerWorker):
                 {"type": "divider"},
                 {
                     "type": "section",
-                    "text": {"type": "mrkdwn", "text": ansi2html.convert(message)},
+                    "text": {"type": "mrkdwn", "text": f"```\n{message}\n```"},
                 },
                 {"type": "divider"},
             ]

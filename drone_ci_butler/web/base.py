@@ -11,18 +11,39 @@ SERVER_NAME = f"DroneAPI Butler v{version}"
 
 
 class Application(Flask):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.oauth = OAuth(self)
+
+    def setup_app(self):
+        self.setup_auth()
+
+    def setup_auth(self):
+        self.oauth.register(
+            name="github",
+            # server_metadata_url=CONF_URL,
+            client_kwargs={"scope": "user:read user:email"},
+        )
+
     def process_response(self, response):
         response.headers["server"] = SERVER_NAME
         super().process_response(response)
         return response
 
 
-webapp = Flask(__name__)
+webapp = Application(__name__)
+
+
+@webapp.route("/github/hooks/auth")
+def github_auth_hook():
+    import ipdb;ipdb.set_trace()  # fmt: skip
+    return "ok"
 
 
 @webapp.route("/slack/hooks/auth")
 def slack_auth_hook():
     # Verify the "state" parameter
+    import ipdb;ipdb.set_trace()  # fmt: skip
 
     # Retrieve the auth code from the request params
     code_param = request.args["code"]
