@@ -15,3 +15,6 @@ PyJWT==2.1.0
 bcrypt==3.2.0
 Authlib==0.15.4
 loginpass==0.5
+cachelib==0.1.1
+flask-cors==3.0.10
+flask-session==0.3.2
