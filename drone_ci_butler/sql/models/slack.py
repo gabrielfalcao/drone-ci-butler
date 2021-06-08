@@ -17,4 +17,5 @@ class SlackMessage(Model):
         db.Column("ts", db.Numeric),
         db.Column("ok", db.Boolean),
         db.Column("message", db.UnicodeText),
+        db.Column("sender", db.Unicode(255)),
     )
