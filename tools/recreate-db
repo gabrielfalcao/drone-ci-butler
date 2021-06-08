@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+password="${POSTGRES_PASSWORD}"
+db_name="${1}"
+shift
+user_name="${1}"
+
+if [ -z "${user_name}" ]; then
+   user_name="${db_name}"
+fi
+
+function set_password() {
+    if [ -n "${password}" ]; then
+        show_info "setting password for postgresql user ${user_name}"
+        ppsql -U scraper_engine -c "ALTER USER ${user_name} WITH PASSWORD '${password}';"
+    else
+        show_warning "\t\tno password was set for user ${user_name} because the POSTGRES_PASSWORD env var is not set"
+    fi
+
+}
+function show_error() {
+    echo -e "\033[1;2;31m${@}\033[0m" >&2
+}
+function show_info() {
+    echo -e "\033[1;2;34m${@}\033[0m"
+}
+function show_success() {
+    echo -e "\033[1;2;32m${@}\033[0m"
+}
+function show_warning() {
+    echo -e "\033[1;2;33m${@}\033[0m" >&2
+}
+function show_debug() {
+    echo -e "\033[1;2;30m${@}\033[0m" >&2
+}
+function show_log() {
+    echo -e "\033[1;2;37m${@}\033[0m" >&2
+}
+
+
+if 2>/dev/null dropdb "${db_name}" >/dev/null; then
+   show_debug "dropping database ${db_name}";
+else
+    show_warning "database ${db_name} does not exist yet"
+fi
+
+
+if 2>/dev/null dropuser "${user_name}" >/dev/null; then
+   show_debug "dropping user ${user_name}";
+else
+    show_warning "user ${user_name} does not exist yet"
+fi
+
+show_log "=================================================="
+show_info "creating postgresql user and database from scratch"
+createuser ${user_name}
+show_success "\tcreateuser: ${user_name}"
+set_password
+createdb --owner=${user_name} ${db_name}
+show_success "\tcreatedb: ${db_name}"
+show_debug "..................................................\n"

@@ -22,18 +22,18 @@ WEB_PORT		:= 4000
 all: | $(MAIN_CLI_PATH)
 
 db-create:
-	@2>/dev/null dropdb drone_ci_butler > /dev/null || echo "database does not exist yet"
-	@2>/dev/null dropuser drone_ci_butler > /dev/null || echo "user does not exist yet"
-	@echo "creating postgresql user and database from scratch"
-	-@createuser drone_ci_butler
-	-@createdb --owner=drone_ci_butler drone_ci_butler
+	@./tools/recreate-db drone-ci-butler drone-ci-butler
+	@./tools/recreate-db drone-ci-server drone-ci-server
 
 db-migrate: | $(VENV)/bin/alembic
 	@echo "running migrations"
 	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
 
 tunnel:
-	ngrok tls --subdomain drone-ci-butler $(WEB_PORT)
+	ngrok tls --subdomain drone-ci-monitor $(WEB_PORT)
+
+ci-tunnel:
+	ngrok http --subdomain drone-ci-server 8000
 
 db: db-create db-migrate
 # creates virtualenv
@@ -116,7 +116,7 @@ $(VENV)/bin/black: | $(VENV)/bin/pip
 
 # installs this package in "edit" mode after ensuring its requirements are installed
 $(VENV)/bin/alembic $(VENV)/bin/nosetests $(MAIN_CLI_PATH): | $(VENV) $(VENV)/bin/pip $(VENV)/bin/python $(REQUIREMENTS_PATH)
-	$(VENV)/bin/pip install --force-reinstall -r $(REQUIREMENTS_PATH)
+	$(VENV)/bin/pip install -r $(REQUIREMENTS_PATH)
 	$(VENV)/bin/pip install -e .
 
 # ensure that REQUIREMENTS_PATH exists
