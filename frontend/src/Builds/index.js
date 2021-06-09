@@ -4,7 +4,7 @@ import Screen from "drone-ci-butler/components/Screen";
 
 import NotAuthenticated from "drone-ci-butler/components/NotAuthenticated";
 
-function Settings() {
+function Builds() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
@@ -12,9 +12,9 @@ function Settings() {
   }
   return (
     <Screen>
-      <h1>Settings Page</h1>
+      <h1>Your list of (failed) builds goes here</h1>
     </Screen>
   );
 }
 
-export default Settings;
+export default Builds;

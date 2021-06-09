@@ -1,5 +1,3 @@
-"use strict";
-
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -330,7 +328,7 @@ module.exports = function(webpackEnv) {
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         "react-native": "react-native-web",
         "@nyt-cms/ink": "@nyt-cms/ink/lib",
-
+        "drone-ci-butler": paths.appSrc,
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
           "react-dom$": "react-dom/profiling",
