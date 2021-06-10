@@ -3,7 +3,8 @@ import io
 import requests
 from chemist import Model, db
 from datetime import datetime
-from drone_ci_butler.drone_api.models import Build, Output
+
+# from drone_ci_butler.drone_api.models import Build, Output
 from .base import metadata
 from .exceptions import BuildNotFound
 
@@ -31,7 +32,7 @@ class DroneBuild(Model):
     def drone_api_data_to_dict(self):
         return json.loads(self.drone_api_data)
 
-    def extract_data_from_drone_api(self, owner: str, repo: str, build: Build):
+    def extract_data_from_drone_api(self, owner: str, repo: str, build):
         data = {}
         if build.status:
             data["status"] = build.status
@@ -57,13 +58,13 @@ class DroneBuild(Model):
         data["drone_api_data"] = json.dumps(build.to_dict())
         return data
 
-    def update_from_drone_api(self, owner: str, repo: str, build: Build):
+    def update_from_drone_api(self, owner: str, repo: str, build):
         data = self.extract_data_from_drone_api(owner, repo, build)
         return self.update_and_save(**data)
 
     @classmethod
     def get_or_create_from_drone_api(
-        cls, owner: str, repo: str, build_number: int, build: Build, update=True
+        cls, owner: str, repo: str, build_number: int, build, update=True
     ):
         stored_build = cls.get_or_create(
             owner=owner,
@@ -77,7 +78,7 @@ class DroneBuild(Model):
             return stored_build.update_from_drone_api(owner, repo, build)
         return stored_build
 
-    def to_drone_api_model(self) -> Build:
+    def to_drone_api_model(self):
         return Build(**self.drone_api_data_to_dict())
 
 
@@ -106,7 +107,7 @@ class DroneStep(Model):
         build_number: int,
         stage_number: int,
         step_number: int,
-        output: Output,
+        output,
     ):
         stored_build = DroneBuild.find_one_by(
             owner=owner,

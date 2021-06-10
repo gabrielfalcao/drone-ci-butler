@@ -3,7 +3,8 @@ from requests import Request, Response
 from humanfriendly.text import pluralize
 
 from drone_ci_butler.logs import get_logger
-from drone_ci_butler.sql.models import DroneBuild, DroneStep
+from drone_ci_butler.sql.models.drone import DroneBuild, DroneStep
+from drone_ci_butler.sql.models.user import User, AccessToken
 from drone_ci_butler.drone_api.models import Build, Stage, Step, Output
 
 http_cache_hit = signal("http-cache-hit")
@@ -12,8 +13,53 @@ get_build_step_output = signal("get-build-step-output")
 get_build_info = signal("get-build-info")
 get_builds = signal("get-builds")
 
+user_created = signal("user-created")
+user_updated = signal("user-updated")
+
+token_created = signal("token-created")
+token_updated = signal("token-updated")
+github_event = signal("github-event")
+
 
 logger = get_logger("system-events")
+
+
+@github_event.connect
+def send_welcome_message_to_slack(flask_app, event, request):
+    logger.info(f"Received github event: {event}", request=request)
+
+
+@token_created.connect
+def send_welcome_message_to_slack(flask_app, token: AccessToken, user: User):
+    from drone_ci_butler.slack import SlackClient
+
+    if token.identity_provider != "slack":
+        return
+
+    client = SlackClient()
+    sent = client.send_message(
+        to=user.slack_username,
+        text="Github and Slack connected successfully  🎉",
+        blocks=[
+            {
+                "type": "header",
+                "text": {
+                    "type": "plain_text",
+                    "text": f"Congratulations 🎉",
+                    "emoji": True,
+                },
+            },
+            {"type": "divider"},
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"Now that you connected *Github ({user.github_username})* and *Slack* I will watch out for your failed builds with as much useful information as I can.",
+                },
+            },
+        ],
+    )
+    logger.info(f"Notified user {user} via slack: {sent}")
 
 
 @http_cache_miss.connect

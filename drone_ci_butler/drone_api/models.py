@@ -3,7 +3,6 @@ from itertools import chain
 from uiclasses import Model
 from uiclasses.typing import Property
 from datetime import datetime
-from drone_ci_butler import events
 
 
 class OutputLine(Model):

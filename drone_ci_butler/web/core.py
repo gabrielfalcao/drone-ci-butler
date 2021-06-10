@@ -7,13 +7,15 @@ from flask_session import Session
 from functools import lru_cache
 from authlib.integrations.flask_client import OAuth
 from loginpass import GitHub
+from datetime import datetime
 from drone_ci_butler.slack import SlackClient
 
 from flask_restx import Api
+from drone_ci_butler import events
 from drone_ci_butler.config import config
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.version import version
-from drone_ci_butler.sql.models import AccessToken, User
+from drone_ci_butler.sql.models.user import AccessToken, User
 from .oauth import create_flask_blueprint
 
 SERVER_NAME = f"Drone CI Butler v{version}"
@@ -86,11 +88,11 @@ class Application(Flask):
         username = user_info.get("preferred_username")  # github
         user_id = user_info.get("id")  # slack
         access_token = token.get("access_token")
+        refresh_token = token.get("refresh_token")
 
-        # if provider_name == "slack" and access_token:
-        #     slack_client = SlackClient()
-        #     import ipdb;ipdb.set_trace()  # fmt: skip
-        #     user_info = slack_client.get_user_info(user_id)
+        if provider_name == "slack" and access_token:
+            slack_client = SlackClient()
+            user_info = slack_client.get_user_info(user_id)
 
         db_user = None
         db_token = None
@@ -102,17 +104,26 @@ class Application(Flask):
             params = {
                 f"{provider_name}_username": username or user_id,
                 f"{provider_name}_email": email,
-                f"{provider_name}_token": access_token,
+                f"{provider_name}_access_token": access_token,
+                f"{provider_name}_refresh_token": refresh_token,
                 f"{provider_name}_json": json.dumps(user_info),
+                f"{provider_name}_activated_at": datetime.utcnow(),
+                f"updated_at": datetime.utcnow(),
             }
 
-            db_user = User.get_or_create(email=email).update_and_save(**params)
+            db_user = User.find_one_by(email=email)
+            if not db_user:
+                db_user = User.create(email=email, created_at=datetime.utcnow())
+                events.user_created.send(self, user=db_user)
+            db_user.update_and_save(**params)
+            events.user_updated.send(self, user=db_user)
 
         if db_user:
             session["user"] = db_user.to_dict()
 
         if token and db_user:
             db_token = db_user.create_token(provider_name, **token)
+            events.token_created.send(self, token=db_token, user=db_user)
 
         if db_token:
             session["token"] = db_token.to_dict()

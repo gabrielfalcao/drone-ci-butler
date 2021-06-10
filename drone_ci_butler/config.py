@@ -9,6 +9,12 @@ from pathlib import Path
 from uiclasses import DataBag, DataBagChild
 
 
+class ConfigMissing(Exception):
+    def __init__(self, key, filename):
+        msg = f"Config key missing {key} in {filename}"
+        super().__init__(msg)
+
+
 class Config(DataBag):
     REDIS_HOST = os.getenv("REDIS_HOST")
     if REDIS_HOST:
@@ -44,6 +50,13 @@ class Config(DataBag):
         return self.load()
 
     @property
+    def sqlalchemy_uri(self) -> str:
+        uri = self.traverse("sqlalchemy", "uri")
+        if not uri:
+            raise ConfigMissing("sqlalchemy.uri", self.path)
+        return uri
+
+    @property
     def auth(self) -> DataBagChild:
         return self.traverse("auth")
 
@@ -61,7 +74,10 @@ class Config(DataBag):
 
     @property
     def slack_oauth(self) -> DataBagChild:
-        return self.slack.traverse("oauth")
+        oauth = self.slack.traverse("oauth")
+        if not oauth:
+            raise ConfigMissing("slack.oauth", self.path)
+        return oauth
 
     @property
     def SLACK_CLIENT_SECRET(self) -> Optional[str]:
@@ -81,24 +97,23 @@ class Config(DataBag):
 
     @property
     def GITHUB_AUTHORIZE_PARAMS(self) -> dict:
-        return {"scope": "repo user read:user user:email"}
+        return {}  # {"scope": "repo user read:user user:email"}
 
     @property
     def GITHUB_CLIENT_ID(self) -> str:
-        return self.traverse("github", "oauth_client", "client_id")
+        return self.traverse("github", "app", "client_id")
 
     @property
     def GITHUB_CLIENT_SECRET(self) -> str:
-        return self.traverse("github", "oauth_client", "client_secret")
-
-    @property
-    def SLACK_AUTHORIZE_PARAMS(self) -> dict:
-        params = {}  # {"scope": "chat:write:user"}
-        return params
+        return self.traverse("github", "app", "client_secret")
 
     @property
     def SLACK_BOT_TOKEN(self) -> Optional[str]:
         return self.slack_oauth["bot_token"]
+
+    @property
+    def SLACK_APP_USER_TOKEN(self) -> Optional[str]:
+        return self.slack_oauth["app_user_token"]
 
     @property
     def slack_installation_store_path(self) -> Path:

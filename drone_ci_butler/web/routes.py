@@ -1,6 +1,8 @@
 from flask import Response
 from flask_restx import Resource, Api
-from drone_ci_butler.sql.models import DroneBuild, SlackMessage, User, AccessToken
+from drone_ci_butler.sql.models.drone import DroneBuild
+from drone_ci_butler.sql.models.slack import SlackMessage
+from drone_ci_butler.sql.models.user import User, AccessToken
 
 from .core import api
 

@@ -1,4 +1,3 @@
-import json
 import hashlib
 import jwt
 import bcrypt
@@ -9,6 +8,7 @@ from typing import Optional, List, Dict
 from functools import lru_cache
 from sqlalchemy import desc
 from drone_ci_butler.logs import get_logger
+from drone_ci_butler.util import load_json
 from drone_ci_butler.slack import SlackClient
 
 # from uiclasses import Model as DataClass
@@ -25,6 +25,7 @@ class AccessToken(Model):
         db.Column("id", db.Integer, primary_key=True),
         db.Column("identity_provider", db.Unicode(255)),
         db.Column("content", db.UnicodeText, nullable=False, unique=True),
+        db.Column("refresh_token", db.UnicodeText),
         db.Column("scope", db.UnicodeText, nullable=True),
         db.Column(
             "created_at", db.Unicode(255), default=lambda: datetime.utcnow().isoformat()
@@ -76,17 +77,19 @@ class User(Model):
         db.Column("password", db.Unicode(128)),
         db.Column("github_username", db.Unicode(255)),
         db.Column("github_email", db.Unicode(255)),
-        db.Column("github_token", db.UnicodeText),
+        db.Column("github_access_token", db.UnicodeText),
+        db.Column("github_refresh_token", db.UnicodeText),
         db.Column("github_json", db.UnicodeText),
         db.Column("slack_username", db.Unicode(255)),
         db.Column("slack_email", db.Unicode(255)),
-        db.Column("slack_token", db.UnicodeText),
+        db.Column("slack_access_token", db.UnicodeText),
+        db.Column("slack_refresh_token", db.UnicodeText),
         db.Column("slack_json", db.UnicodeText),
         db.Column("settings_json", db.UnicodeText),
         db.Column("created_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
-        db.Column("invited_at", db.DateTime),
-        db.Column("activated_at", db.DateTime),
+        db.Column("github_activated_at", db.DateTime),
+        db.Column("slack_activated_at", db.DateTime),
     )
 
     def __str__(self):
@@ -98,6 +101,8 @@ class User(Model):
     def to_dict(self):
         data = self.serialize()
         data.pop("password")
+        data["github"] = load_json(data.pop("github_json", ""))
+        data["slack"] = load_json(data.pop("slack_json", ""))
         return data
 
     def change_password(self, old_password, new_password):
@@ -136,10 +141,11 @@ class User(Model):
         return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     @classmethod
-    def create(cls, email, password, **kw):
+    def create(cls, email, password=None, **kw):
         email = email.lower()
-        password = cls.secretify_password(password)
-        return super(User, cls).create(email=email, password=password, **kw)
+        if password:
+            kw["password"] = cls.secretify_password(password)
+        return super(User, cls).create(email=email, **kw)
 
     def token_secret(self):
         return bcrypt.kdf(

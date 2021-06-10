@@ -45,7 +45,7 @@ class GetBuildInfoWorker(PullerWorker):
             print(message)
             author = User.find_one_by(github_username=build.author_login)
             if not author:
-                # ignore builds from unregistered github users
+                # ignore builds from github users who did not opt-in
                 return
 
             blocks = [

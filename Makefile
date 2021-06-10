@@ -117,6 +117,9 @@ react-app $(STATIC_PATHS): | $(NODE_MODULES)
 	@cd frontend && yarn build
 	@rsync -putao $(GIT_ROOT)/frontend/build/ $(GIT_ROOT)/drone_ci_butler/web/public/
 
+react-dev: | $(STATIC_PATHS)
+	@cd frontend && yarn start
+
 # creates virtual env if necessary and installs pip and setuptools
 $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
 	echo "Creating virtualenv in $(VENV_ROOT)" && python3 -mvenv $(VENV)

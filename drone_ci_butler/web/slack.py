@@ -9,7 +9,7 @@ from slack_sdk.oauth.state_store import FileOAuthStateStore
 from flask import request, make_response, redirect, url_for, session
 from drone_ci_butler.config import config
 from drone_ci_butler.web.core import webapp
-from drone_ci_butler.sql.models import User, AccessToken
+from drone_ci_butler.sql.models.user import User, AccessToken
 
 # Issue and consume state parameter value on the server-side.
 state_store = FileOAuthStateStore(
@@ -58,6 +58,8 @@ authorize_url_generator = AuthorizeUrlGenerator(
         # View people in a workspace
         "users:read.email",
         # View email addresses of people in a workspace
+        "users.profile:read",
+        # Read user (profile) info
     ],
     user_scopes=[
         "identity.avatar",
@@ -65,7 +67,9 @@ authorize_url_generator = AuthorizeUrlGenerator(
         "identity.basic",
         # View information about a user’s identity
         "identity.email",
-        # View a user’s email address
+        # View a user’s email address,
+        "users.profile:read",
+        # Read user (profile) info
     ],
 )
 

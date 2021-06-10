@@ -3,6 +3,7 @@ import gevent.monkey
 gevent.monkey.patch_all()
 
 import time
+import json
 import click
 from gevent.pool import Pool
 from typing import Optional
@@ -11,8 +12,6 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 
-from slack.errors import SlackApiError
-
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
 from drone_ci_butler.slack import SlackClient
@@ -20,7 +19,7 @@ from drone_ci_butler.logs import logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 from drone_ci_butler.web import webapp
 from drone_ci_butler.config import config
-
+from drone_ci_butler.sql.models.slack import SlackMessage
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
 
@@ -43,9 +42,7 @@ class Context(Model):
 @click.pass_context
 def main(ctx, drone_access_token, drone_url, owner, repo):
     print("DroneCI Butler")
-    sql.context.set_default_uri(
-        "postgresql://drone_ci_butler@localhost/drone_ci_butler"
-    )
+    sql.setup_db()
     ctx.obj = {
         "drone_url": drone_url,
         "access_token": drone_access_token,
@@ -56,7 +53,8 @@ def main(ctx, drone_access_token, drone_url, owner, repo):
 
 @main.command("slack")
 def slack_test():
-    client = SlackClient()
+    client = SlackClient()  # (token=config.SLACK_APP_USER_TOKEN)
+    app_client = SlackClient(token=config.SLACK_APP_USER_TOKEN)
 
     # message_response = client.chat_postMessage(
     #     channel="#drone-ci-butler", text="Hello from your app! :tada:"
@@ -84,14 +82,15 @@ def slack_test():
 
     channel = "C023Z62N59Q"
     user_id = "W01BD07TYGP"
-    # chat_response = client.slack.conversations_open(users=[user_id])
+    bot_user_id = "U024G7WKBL6"
 
-    message_response = client.send_message(
-        channel=user_id,
-        blocks=blocks,
-        # mrkdwn=True,
-    )
-    client.chat_delete(channel=user_id, ts=message_response.data["ts"])
+    conversations = client.get_user_conversations()
+
+    stored_messages = SlackMessage.all()
+    for m in stored_messages:
+        msg = json.loads(m.message)
+        logger.warning(f"deleting message: {m.get('text', m.id)}")
+        client.delete_message(channel_id=msg["channel"], ts=msg["ts"])
 
 
 @main.command("web")
