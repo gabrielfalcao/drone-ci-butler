@@ -67,11 +67,17 @@ export function useProvideAuth() {
     });
   };
 
+  const { github_json, slack_json } = user || {};
+  const github = github_json ? JSON.parse(user.github_json) : null;
+  const slack = slack_json ? JSON.parse(user.slack_json) : null;
   const isAuthenticated = user !== null || token !== null;
+  fakeAuth.isAuthenticated = isAuthenticated;
   return {
     signin,
     signout,
 
+    github,
+    slack,
     user,
     token,
 

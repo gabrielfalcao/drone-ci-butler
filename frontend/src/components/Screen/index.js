@@ -6,9 +6,7 @@ export default function Screen(props) {
   return (
     <Container style={{ paddingTop: "4rem" }}>
       <Row className="justify-content-md-center">
-        <Col xs> </Col>
-        <Col md="auto">{props.children}</Col>
-        <Col xs> </Col>
+        <Col>{props.children}</Col>
       </Row>
     </Container>
   );

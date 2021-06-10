@@ -2,7 +2,7 @@ from flask import Response
 from flask_restx import Resource, Api
 from drone_ci_butler.sql.models import DroneBuild, SlackMessage, User, AccessToken
 
-from .base import api
+from .core import api
 
 drone = api.namespace(
     "Drone",
@@ -26,12 +26,9 @@ class DroneBuilds(Resource):
         return [b.to_dict() for b in builds]
 
 
-@mgmt.route("/user/", endpoint="Users")
+@mgmt.route("/users", endpoint="Users")
 class Users(Resource):
     def get(self):
-        return [u.to_dict() for u in User.all()]
-
-    def post(self):
         return [u.to_dict() for u in User.all()]
 
 

@@ -72,11 +72,11 @@ class Config(DataBag):
         return self.slack_oauth["client_id"]
 
     @property
-    def slack_signing_secret(self) -> Optional[str]:
+    def SLACK_SIGNING_SECRET(self) -> Optional[str]:
         return self.slack_oauth["signing_secret"]
 
     @property
-    def slack_verification_token(self) -> Optional[str]:
+    def SLACK_VERIFICATION_TOKEN(self) -> Optional[str]:
         return self.slack_oauth["verification_token"]
 
     @property
@@ -97,8 +97,24 @@ class Config(DataBag):
         return params
 
     @property
-    def slack_bot_token(self) -> Optional[str]:
+    def SLACK_BOT_TOKEN(self) -> Optional[str]:
         return self.slack_oauth["bot_token"]
+
+    @property
+    def slack_installation_store_path(self) -> Path:
+        p = (
+            Path(self.traverse("slack", "store", "installation_path"))
+            .expanduser()
+            .absolute()
+        )
+        p.mkdir(exist_ok=True, parents=True)
+        return p
+
+    @property
+    def slack_state_store_path(self) -> Path:
+        p = Path(self.traverse("slack", "store", "state_path")).expanduser().absolute()
+        p.mkdir(exist_ok=True, parents=True)
+        return p
 
     def to_flask(self):
         for name in dir(self):

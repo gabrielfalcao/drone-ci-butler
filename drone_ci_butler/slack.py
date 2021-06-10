@@ -1,4 +1,4 @@
-from slack import WebClient
+from slack_sdk import WebClient
 from drone_ci_butler.config import config
 from drone_ci_butler.logs import get_logger
 
@@ -6,8 +6,8 @@ logger = get_logger(__name__)
 
 
 class SlackClient(object):
-    def __init__(self, limit=1000):
-        self.slack = WebClient(token=config.slack_bot_token)
+    def __init__(self, token: str = None, limit=1000):
+        self.slack = WebClient(token=token or config.SLACK_BOT_TOKEN)
         self.limit = limit
 
     def search_channel_by_name(self, channel_name: str, limit: int = None) -> dict:
@@ -61,3 +61,6 @@ class SlackClient(object):
         # join_response = self.slack.conversations_join(channel=channel)
         return self.slack.chat_postMessage(channel=channel, **kw)
         # return client.api_call(api_method="chat.postMessage", **kw)
+
+    def get_user_info(self, user_id: str):
+        return self.slack.api_call(api_method="users.info", json={"user": user_id})

@@ -6,8 +6,8 @@ from flask_cors import CORS
 from flask_session import Session
 from functools import lru_cache
 from authlib.integrations.flask_client import OAuth
-from loginpass import GitHub, Slack
-
+from loginpass import GitHub
+from drone_ci_butler.slack import SlackClient
 
 from flask_restx import Api
 from drone_ci_butler.config import config
@@ -52,8 +52,9 @@ class Application(Flask):
 
     def setup_routes(self):
         self.route("/")(self.serve_index)
+        self.route("/login")(self.serve_index)
         self.route("/settings")(self.serve_index)
-        self.route("/success")(self.serve_index)
+        self.route("/builds")(self.serve_index)
 
     def serve_index(self, path=None):
         return render_template(
@@ -69,7 +70,7 @@ class Application(Flask):
             version=version,
             default="API",
             title="Drone CI Monitor API",
-            endpoint=f"/api/v{version}/",
+            endpoint=f"/api/v1",
             description="Manage settings and notifications",
         )
 
@@ -77,11 +78,19 @@ class Application(Flask):
         self.save_oauth_token(remote.name, token, user_info)
         return redirect("/settings")
 
-    def save_oauth_token(self, provider_name: str, token: dict, user_info: dict):
+    def save_oauth_token(
+        self, provider_name: str, token: dict, user_info: dict, email: str = None
+    ):
         logger.info("saving oauth token")
-        email = user_info.get("email")
-        username = user_info.get("preferred_username")
+        email = email or user_info.get("email")
+        username = user_info.get("preferred_username")  # github
+        user_id = user_info.get("id")  # slack
         access_token = token.get("access_token")
+
+        # if provider_name == "slack" and access_token:
+        #     slack_client = SlackClient()
+        #     import ipdb;ipdb.set_trace()  # fmt: skip
+        #     user_info = slack_client.get_user_info(user_id)
 
         db_user = None
         db_token = None
@@ -91,7 +100,7 @@ class Application(Flask):
 
         if email:
             params = {
-                f"{provider_name}_username": username,
+                f"{provider_name}_username": username or user_id,
                 f"{provider_name}_email": email,
                 f"{provider_name}_token": access_token,
                 f"{provider_name}_json": json.dumps(user_info),
@@ -118,7 +127,9 @@ class Application(Flask):
 
         self.oauth = OAuth(self)
 
-        backends = [GitHub, Slack]
+        backends = [
+            GitHub,
+        ]
         for b in backends:
             b.OAUTH_CONFIG["client_kwargs"].update(
                 getattr(config, f"{b.NAME.upper()}_AUTHORIZE_PARAMS")
@@ -132,3 +143,9 @@ class Application(Flask):
         response.headers["server"] = SERVER_NAME
         super().process_response(response)
         return response
+
+
+webapp = Application()
+api = webapp.api
+oauth = webapp.oauth
+cors = webapp.cors

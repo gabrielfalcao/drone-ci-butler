@@ -43,8 +43,11 @@ class GetBuildInfoWorker(PullerWorker):
 
         def notify(message, stage, step, output):
             print(message)
-            if build.author_login != "gabrielfalcao":
+            author = User.find_one_by(github_username=build.author_login)
+            if not author:
+                # ignore builds from unregistered github users
                 return
+
             blocks = [
                 {
                     "type": "header",

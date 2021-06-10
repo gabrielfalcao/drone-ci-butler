@@ -26,8 +26,8 @@
     -->
     <title>{{ meta.title }}</title>
     <script>(function(window){
-       window.DRONE_CI_BUTLER_TOKEN = ({{ token|tojson }});
-       window.DRONE_CI_BUTLER_USER = ({{ user|tojson }});
+       window.DRONE_CI_BUTLER_TOKEN = {{ token|tojson }};
+       window.DRONE_CI_BUTLER_USER = {{ user|tojson }};
      }(window))</script>
   </head>
   <body>

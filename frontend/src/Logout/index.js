@@ -2,14 +2,18 @@ import React from "react";
 import { useAuth } from "drone-ci-butler/auth";
 import Screen from "drone-ci-butler/components/Screen";
 import { LinkContainer } from "react-router-bootstrap";
-import { useHistory } from "react-router";
+//import { useHistory } from "react-router";
 
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import NotAuthenticated from "drone-ci-butler/components/NotAuthenticated";
 
 function Logout() {
-  const { signout } = useAuth();
-  const history = useHistory();
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <NotAuthenticated />;
+  }
+  //const history = useHistory();
 
   return (
     <Screen>
@@ -19,16 +23,9 @@ function Logout() {
         </Modal.Header>
 
         <Modal.Footer>
-          <Button
-            variant="danger"
-            onClick={() =>
-              signout(() => {
-                history.push("/");
-              })
-            }
-          >
+          <a href="/logout" className="btn btn-danger">
             Yes, logout
-          </Button>
+          </a>
 
           <LinkContainer to="/">
             <Button>Cancel</Button>

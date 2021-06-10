@@ -9,6 +9,7 @@ from typing import Optional, List, Dict
 from functools import lru_cache
 from sqlalchemy import desc
 from drone_ci_butler.logs import get_logger
+from drone_ci_butler.slack import SlackClient
 
 # from uiclasses import Model as DataClass
 from chemist import Model, db, metadata
@@ -90,6 +91,9 @@ class User(Model):
 
     def __str__(self):
         return f"<User id={self.id} email={self.email!r}>"
+
+    def slack_client(self):
+        return SlackClient(token=self.slack_token)
 
     def to_dict(self):
         data = self.serialize()
