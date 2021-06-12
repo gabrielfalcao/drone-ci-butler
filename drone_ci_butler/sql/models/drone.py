@@ -4,7 +4,7 @@ import requests
 from chemist import Model, db
 from datetime import datetime
 
-# from drone_ci_butler.drone_api.models import Build, Output
+from drone_ci_butler.drone_api.models import Build, Output
 from .base import metadata
 from .exceptions import BuildNotFound
 
