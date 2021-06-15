@@ -1,6 +1,8 @@
 import logging
 from urllib.parse import urljoin
 from pathlib import Path
+from typing import NoReturn
+
 from datetime import datetime, timedelta
 from requests import Response, Session
 from drone_ci_butler import events
@@ -87,10 +89,6 @@ class DroneAPIClient(object):
             skip_cache=True,
         )
         all_builds = Build.List(result.json())
-        for build in all_builds:
-            events.get_build_info.send(
-                self, owner=owner, repo=repo, build_number=build.number, build=build
-            )
 
         builds = Build.List(
             map(
@@ -105,7 +103,14 @@ class DroneAPIClient(object):
             # and build.author_login in ALLOWED_GITHUB_USERS
         )
         events.get_builds.send(
-            self, owner=owner, repo=repo, limit=limit, page=page, builds=builds
+            self,
+            owner=owner,
+            repo=repo,
+            limit=limit,
+            page=page,
+            builds=builds,
+            max_builds=self.max_builds,
+            max_pages=self.max_pages,
         )
         total_builds = len(builds) + count
         if total_builds < self.max_builds and page < self.max_pages:
@@ -116,9 +121,15 @@ class DroneAPIClient(object):
             if next_page:
                 builds.extend(next_page)
 
-        return Build.List(
+        all_builds = Build.List(
             builds.sorted(key=lambda b: b.updated, reverse=True)[: self.max_builds]
         )
+
+        for build in all_builds:
+            events.get_build_info.send(
+                self, owner=owner, repo=repo, build_number=build.number, build=build
+            )
+        return all_builds
 
     def get_build_info(self, owner: str, repo: str, build_number: str) -> Build:
         result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_number}")
@@ -205,7 +216,7 @@ class DroneAPIClient(object):
         info = self.get_build_info(owner, repo, build_id)
         return self.inject_logs_into_build(owner, repo, info)
 
-    def close(self):
+    def close(self) -> NoReturn:
         self.http.close()
 
     def __del__(self):

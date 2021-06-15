@@ -97,6 +97,7 @@ class DroneStep(Model):
         db.Column("started_at", db.DateTime),
         db.Column("stopped_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
+        db.Column("last_notified_at", db.DateTime),
     )
 
     @classmethod

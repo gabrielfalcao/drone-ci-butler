@@ -3,7 +3,6 @@ from requests import Request, Response
 from humanfriendly.text import pluralize
 
 from drone_ci_butler.logs import get_logger
-from drone_ci_butler.sql.models.drone import DroneBuild, DroneStep
 from drone_ci_butler.sql.models.user import User, AccessToken
 from drone_ci_butler.drone_api.models import Build, Stage, Step, Output
 
@@ -72,53 +71,65 @@ def log_cache_hit(cache, request: Request, response: Response):
     logger.debug(f"cache hit: {request} {response}")
 
 
-@get_builds.connect
-def log_get_builds(
-    client, owner: str, repo: str, limit: int, page: int, builds: Build.List.Type
-):
-    count = len(builds)
-    logger.debug(
-        f'found {pluralize(count, "build")} for {owner}/{repo} page={page} limit={limit}'
-    )
+# @get_builds.connect
+# def log_get_builds(
+#     client,
+#     owner: str,
+#     repo: str,
+#     limit: int,
+#     page: int,
+#     builds: Build.List.Type,
+#     max_builds: int,
+#     max_pages: int,
+# ):
+#     from drone_ci_butler.sql.models.drone import DroneBuild
 
-    for build in builds:
-        stored_build = DroneBuild.get_or_create_from_drone_api(
-            owner, repo, build_number=build.number, build=build
-        )
-        logger.debug(
-            f"stored updated build information for build {build.number} {build.link}: {stored_build}"
-        )
+#     count = len(builds)
+#     logger.debug(
+#         f'found {pluralize(count, "build")} for {owner}/{repo} page={page} limit={limit}'
+#     )
+
+#     for build in builds:
+#         stored_build = DroneBuild.get_or_create_from_drone_api(
+#             owner, repo, build_number=build.number, build=build
+#         )
+#         logger.debug(
+#             f"stored updated build information for build {build.number} {build.link}: {stored_build}"
+#         )
 
 
-@get_build_info.connect
-def log_get_build_info(client, owner: str, repo: str, build_number: int, build: Build):
-    stored_build = DroneBuild.get_or_create_from_drone_api(
-        owner, repo, build_number=build_number, build=build
-    )
-    logger.debug(
-        f"stored updated build information for build {build_number} {build.link}: {stored_build}"
-    )
+# @get_build_info.connect
+# def log_get_build_info(client, owner: str, repo: str, build_number: int, build: Build):
+#     from drone_ci_butler.sql.models.drone import DroneBuild
+
+#     stored_build = DroneBuild.get_or_create_from_drone_api(
+#         owner, repo, build_number=build_number, build=build
+#     )
+#     logger.debug(
+#         f"stored updated build information for build {build_number} {build.link}: {stored_build}"
+#     )
 
 
-@get_build_step_output.connect
-def log_get_build_step_output(
-    client,
-    owner: str,
-    repo: str,
-    build_number: int,
-    stage_number: int,
-    step_number: int,
-    output: Output,
-):
+# @get_build_step_output.connect
+# def log_get_build_step_output(
+#     client,
+#     owner: str,
+#     repo: str,
+#     build_number: int,
+#     stage_number: int,
+#     step_number: int,
+#     output: Output,
+# ):
+#     from drone_ci_butler.sql.models.drone import DroneStep
 
-    stored_step = DroneStep.get_or_create_from_drone_api(
-        owner,
-        repo,
-        build_number=build_number,
-        stage_number=stage_number,
-        step_number=step_number,
-        output=output,
-    )
-    logger.debug(
-        f"stored updated step output {stage_number}/{step_number}: {stored_step}"
-    )
+#     stored_step = DroneStep.get_or_create_from_drone_api(
+#         owner,
+#         repo,
+#         build_number=build_number,
+#         stage_number=stage_number,
+#         step_number=step_number,
+#         output=output,
+#     )
+#     logger.debug(
+#         f"stored updated step output {stage_number}/{step_number}: {stored_step}"
+#     )

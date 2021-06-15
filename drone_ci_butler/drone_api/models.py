@@ -2,6 +2,8 @@ from typing import Union, Optional
 from itertools import chain
 from uiclasses import Model
 from uiclasses.typing import Property
+from term2md.term2md import convert as ansi_to_markdown
+
 from datetime import datetime
 
 
@@ -29,9 +31,15 @@ class Output(Model):
         data.pop("headers", None)
         return data
 
+    def get_sorted_output_lines(self):
+        return [l.out for l in self.lines.sorted(key=lambda l: l.pos)]
+
     def to_html(self):
-        ansi = "\n".join([l.out for l in self.lines])
+        ansi = "\n".join(self.get_sorted_output_lines())
         return ansi
+
+    def to_markdown(self):
+        return "\n".join(map(ansi_to_markdown, self.get_sorted_output_lines()))
 
     def to_string(self, prefix: str = "") -> str:
         lines = []
@@ -45,7 +53,14 @@ class Output(Model):
 
 
 class Step(Model):
-    __visible_attributes__ = ["name", "status", "number"]
+    __visible_attributes__ = [
+        "name",
+        "status",
+        "number",
+        "started",
+        "stopped",
+        "exit_code",
+    ]
     __id_attributes__ = ["id", "step_id", "number"]
 
     id: int
@@ -76,6 +91,7 @@ class Step(Model):
         return {
             "number": self.id,
             "name": self.name,
+            "status": self.status,
             "started": self.started,
             "stopped": self.stopped,
             "exit_code": self.exit_code,
@@ -84,6 +100,12 @@ class Step(Model):
     def to_string(self, *args, **kw) -> str:
         if self.output:
             return self.output.to_string(*args, **kw)
+
+        return ""
+
+    def to_markdown(self, *args, **kw) -> str:
+        if self.output:
+            return self.output.to_markdown(*args, **kw)
 
         return ""
 
@@ -256,3 +278,9 @@ class Build(Model):
             for step in stage.steps:
                 if step.number == step_number:
                     return step
+
+
+class BuildContext(Model):
+    build: Build
+    stage: Stage
+    step: Step

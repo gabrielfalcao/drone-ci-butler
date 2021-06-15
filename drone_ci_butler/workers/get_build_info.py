@@ -1,4 +1,6 @@
 from drone_ci_butler.slack import SlackClient
+from drone_ci_butler.sql.models.drone import DroneBuild
+from drone_ci_butler.sql.models.user import User
 from .puller import PullerWorker
 
 
@@ -40,6 +42,9 @@ class GetBuildInfoWorker(PullerWorker):
             return
 
         build = self.api.inject_logs_into_build(owner, repo, build)
+        stored = DroneBuild.get_or_create_from_drone_api(
+            build.owner, build.repo, build.number, build
+        )
 
         def notify(message, stage, step, output):
             print(message)
@@ -150,7 +155,7 @@ class GetBuildInfoWorker(PullerWorker):
                     f"failure in {stage.name}.{step.name} of build {build.number} on PR #{pr_number} by {build.author_login}",
                     stage,
                     step,
-                    output,
+                    step.to_markdown(),
                 )
         # 1. Poll zmq for job with build_id
         # 2. Iterate over failed stages

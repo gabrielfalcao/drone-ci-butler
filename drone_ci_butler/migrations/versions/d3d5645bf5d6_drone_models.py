@@ -38,7 +38,6 @@ def upgrade():
         "drone_step",
         db.Column("id", db.Integer, primary_key=True),
         db.Column("stored_build_id", db.Integer, index=True),
-        # db.Column("stored_build_id", db.Integer, db.ForeignKey("drone_step.id")),
         db.Column("build_number", db.Integer, nullable=False),
         db.Column("stage_number", db.Integer, nullable=False),
         db.Column("number", db.Integer, nullable=False),

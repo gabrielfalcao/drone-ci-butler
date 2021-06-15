@@ -5,12 +5,13 @@ gevent.monkey.patch_all()
 import time
 import json
 import click
+import multiprocessing
 from gevent.pool import Pool
 from typing import Optional
 from uiclasses import Model
 from pathlib import Path
 from datetime import datetime, timedelta
-
+from zmq.devices import ProxySteerable
 
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
@@ -20,11 +21,15 @@ from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Out
 from drone_ci_butler.web import webapp
 from drone_ci_butler.config import config
 from drone_ci_butler.sql.models.slack import SlackMessage
+from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
 
 DEFAULT_QUEUE_ADDRESS = "tcp://127.0.0.1:5555"
 DEFAULT_PUSH_ADDRESS = "tcp://127.0.0.1:6666"
+DEFAULT_PULL_ADDRESS = "tcp://127.0.0.1:7777"
+DEFAULT_PUB_MONITOR_ADDRESS = "tcp://127.0.0.1:7765"
+DEFAULT_CONTROL_BIND_ADDRESS = "tcp://127.0.0.1:6556"
 
 
 class Context(Model):
@@ -104,7 +109,7 @@ def workers(ctx, host, port, debug):
 
 @main.command("workers")
 @click.option("-s", "--queue-address", default=DEFAULT_QUEUE_ADDRESS)
-@click.option("-m", "--max-workers", default=2, type=int)
+@click.option("-m", "--max-workers", default=multiprocessing.cpu_count(), type=int)
 @click.pass_context
 def workers(ctx, queue_address, max_workers):
     pool = Pool()
@@ -134,11 +139,22 @@ def worker_get_build_info(ctx, pull_connect_address):
 
 
 @main.command("worker:queue")
-@click.option("-s", "--rep-bind-address", default=DEFAULT_QUEUE_ADDRESS)
+@click.option("-s", "--pull-bind-address", default=DEFAULT_PULL_ADDRESS)
 @click.option("-p", "--push-bind-address", default=DEFAULT_PUSH_ADDRESS)
+@click.option("-P", "--pub-bind-address", default=DEFAULT_PUB_MONITOR_ADDRESS)
+@click.option("-C", "--control-bind-address", default=DEFAULT_CONTROL_BIND_ADDRESS)
 @click.pass_context
-def worker_queue(ctx, rep_bind_address, push_bind_address):
-    worker.run()
+def worker_queue(
+    ctx, pull_bind_address, push_bind_address, pub_bind_address, control_bind_address
+):
+    device = ProxySteerable(
+        frontend=zmq.PULL, backend=zmq.PUSH, capture=zmq.PUB, control=zmq.PULL
+    )
+    device.bind_in(pull_bind_address)
+    device.bind_out(push_bind_address)
+    device.bind_mon(pub_bind_address)
+    device.bind_ctrl(control_bind_address)
+    device.run()
 
 
 @main.command("builds")
@@ -149,12 +165,14 @@ def get_builds(ctx, rep_connect_address, days):
     client = DroneAPIClient(
         url=ctx.obj["drone_url"],
         access_token=ctx.obj["access_token"],
+        max_builds=1000000,
+        max_pages=1000,
     )
     builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
-    builds = builds.filter(
-        lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days)
-        and b.author_login == "gabrielfalcao"
-    )
+    # builds = builds.filter(
+    #     lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days)
+    #     and b.author_login == "gabrielfalcao"
+    # )
     count = len(builds)
     print(f"found {count} failed builds in the last {days} days")
     for i, build in enumerate(builds, start=1):
@@ -179,6 +197,11 @@ def filter_builds(builds):
         build = ctx.obj.client.get_build_with_logs(
             ctx.obj.owner, ctx.obj.repo, build.number
         )
+        stored = DroneBuild.get_or_create_from_drone_api(
+            build.owner, build.repo, build.number, build
+        )
+        if stored:
+            print(f"Stored build {stored}")
         failed_steps = build.failed_steps()
         finished = datetime.fromtimestamp(build.finished)
         status_color = build.status == "success" and "\033[1;32m" or "\033[1;31m"
