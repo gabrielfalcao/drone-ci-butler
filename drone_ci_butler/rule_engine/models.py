@@ -55,12 +55,12 @@ def list_of_strings(value: StringOrListOfStrings) -> List[str]:
         result.append(value)
 
     elif isinstance(value, bytes):
-        value.append(value.decode("utf-8"))
+        result.append(value.decode("utf-8"))
 
     elif isinstance(value, list):
-        result.extend(map(str, value))
+        result.extend(chain(*list(map(list_of_strings, value))))
     else:
-        raise NotStringOrListOfStrings(value)
+        result.append(str(value))
 
     return result
 
@@ -80,9 +80,9 @@ class ValueList(list, UserFriendlyObject):
         for theirs in list_of_strings(value_or_values):
             for mine in self.values:
                 if fnmatch(f"{theirs}", f"{mine}") or fnmatch(f"{mine}", f"{theirs}"):
-                    return theirs
+                    return mine
                 if theirs in mine or mine in theirs:
-                    return theirs
+                    return mine
 
     @property
     def name(self) -> str:
@@ -130,7 +130,7 @@ class Condition(Model):
             kw["matches_value"] = condition.matches_value
             kw["value"] = condition.value
 
-        elif condition is not None:
+        elif condition is not None:  # pragma: no cover
             raise RuntimeError(f"invalid condition {repr(condition)}")
 
         for attr in ("target_attribute", "contains_string"):
@@ -154,6 +154,26 @@ class Condition(Model):
                 f"missing context_element from condition {self}",
                 condition=self,
             )
+
+
+        if not self.target_attribute.name:
+            raise InvalidCondition(
+                f"missing target_attribute from condition {self}",
+                condition=self,
+            )
+
+        if not self.describe_matches():
+            raise InvalidCondition(
+                f"Invalid {self.to_description()}: does not declare any matchers",
+                condition=self,
+            )
+        valid_elements = ("build", "stage", "step")
+        if self.context_element not in valid_elements:
+            raise InvalidCondition(
+                f"Invalid {self.to_description()}: {self.context_element} is not a valid context element. {valid_elements}",
+                condition=self,
+            )
+
 
     def to_description(self):
         match = self.describe_matches()
@@ -180,14 +200,6 @@ class Condition(Model):
     def process_context(
         self: Type[T], context: BuildContext
     ) -> Tuple[Any, List[str], str, str, Any]:
-        valid_elements = ("build", "stage", "step")
-        if self.context_element not in valid_elements:
-            raise InvalidCondition(
-                f"{self.context_element} is not a valid context element. {valid_elements} ({self})",
-                condition=self,
-                context=context,
-            )
-
         element = context[self.context_element]
 
         path = list_of_strings(self.target_attribute)
@@ -229,7 +241,7 @@ class Condition(Model):
             )
 
         if self.contains_string:
-            contains_string = self.contains_string.contains(list_of_strings(value))
+            contains_string = self.contains_string.contains(value)
             if contains_string:
                 result.append(
                     matched_condition_of_type(

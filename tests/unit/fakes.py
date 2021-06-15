@@ -23,15 +23,16 @@ from drone_ci_butler.rule_engine.models import (
 
 def fake_context_with_output_lines(
     build_link: str,
-    step_name: str,
+    step_name: str = "dummy",
     stage_name="build",
-    build_number=42,
+    build_number=1337,
     step_status="failure",
     lines: List[str] = None,
     **kw
 ):
     fake_build = Build(
         link=build_link,
+        number=build_number,
     )
     fake_stage = Stage(name=stage_name)
     fake_step = Step(
