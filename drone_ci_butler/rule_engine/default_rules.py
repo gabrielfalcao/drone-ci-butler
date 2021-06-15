@@ -52,7 +52,7 @@ GitBranchNameInvalidForGKEDeploy = Rule(
             ),
         ),
     ],
-    action=RuleAction.INTERRUPT_BUILD,
+    action=RuleAction.SKIP_BUILD,
 )
 
 SamizdatConnectionError = Rule(
@@ -64,7 +64,7 @@ SamizdatConnectionError = Rule(
             contains_string=["ECONNREFUSED", "samizdat"],
         ),
     ],
-    action=RuleAction.INTERRUPT_BUILD,
+    action=RuleAction.SKIP_BUILD,
 )
 
 GitMergeConflict = Rule(
@@ -76,9 +76,8 @@ GitMergeConflict = Rule(
             matches_regex="(not something we can merge|Automatic merge failed; fix conflicts)",
         ),
     ],
-    action=RuleAction.INTERRUPT_BUILD,
+    action=RuleAction.SKIP_BUILD,
 )
-
 
 YarnDependencyNotResolved = Rule(
     name="YarnDependencyNotResolved",
@@ -87,16 +86,41 @@ YarnDependencyNotResolved = Rule(
             context_element="step",
             target_attribute="name",
             matches_value="node_modules",
+            required=True,
         ),
         Condition(
             context_element="step",
             target_attribute=["output", "lines"],
-            contains_string="Couldn't find any versions for",
+            matches_regex=r"Couldn't find any versions for\s*(\"([^\"]+)\" that matches \"([^\"]+)\")?",
+            required=True,
         ),
     ],
-    action=RuleAction.INTERRUPT_BUILD,
+    action=RuleAction.SKIP_BUILD,
 )
 
+
+build_matches_vi_project = Condition(
+    context_element="build",
+    target_attribute="link",
+    contains_string="nytm/wf-project-vi",
+    required=True,
+)
+step_failed_or_running = Condition(
+    context_element="step",
+    target_attribute="status",
+    required=True,
+    matches_value=[
+        "fail*",
+        "running",
+    ],
+)
+
+step_exit_code_nonzero = Condition(
+    context_element="step",
+    target_attribute="exit_code",
+    is_not=0,
+    required=True,
+)
 
 wf_project_vi = RuleSet(
     name="wf_project_vi_pr",
@@ -108,20 +132,12 @@ wf_project_vi = RuleSet(
         GitMergeConflict,
         YarnDependencyNotResolved,
     ],
+    required_conditions=[
+        build_matches_vi_project,
+        step_failed_or_running,
+    ],
     default_conditions=[
-        Condition(
-            context_element="build",
-            target_attribute="link",
-            contains_string="nytm/wf-project-vi",
-        ),
-        Condition(
-            context_element="step",
-            target_attribute="status",
-            matches_value=["failed", "running"],
-        ),
-        Condition(
-            context_element="step", target_attribute="exit_code", matches_value=0
-        ),
+        step_exit_code_nonzero,
     ],
     default_action=RuleAction.NEXT_STEP,
     default_notify=["slack"],

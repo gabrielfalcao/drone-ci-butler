@@ -66,12 +66,14 @@ dependencies:
 tests: unit functional | $(MAIN_CLI_PATH)  # runs all tests
 
 # -> unit tests
-unit: | $(VENV)/bin/nosetests  # runs only unit tests
-	@$(VENV)/bin/nosetests --cover-erase tests/unit
+unit functional: | $(VENV)/bin/pytest # runs only unit tests
+	@$(VENV)/bin/pytest --capture=no -vv --cov=drone_ci_butler.rule_engine tests/$@
 
-# -> functional tests
-functional:| $(VENV)/bin/nosetests  # runs functional tests
-	@$(VENV)/bin/nosetests tests/functional
+# -> unit tests
+tdd: | $(VENV)/bin/nosetests  # runs only unit tests
+	@$(VENV)/bin/ptw  -- --capture=no -vv --cov=drone_ci_butler.rule_engine tests/unit
+
+
 
 # run main command-line tool
 builds workers: | $(MAIN_CLI_PATH)
@@ -136,7 +138,7 @@ $(VENV)/bin/black: | $(VENV)/bin/pip
 	$(VENV)/bin/pip install -U black
 
 # installs this package in "edit" mode after ensuring its requirements are installed
-$(VENV)/bin/alembic $(VENV)/bin/nosetests $(MAIN_CLI_PATH): | $(VENV) $(VENV)/bin/pip $(VENV)/bin/python $(REQUIREMENTS_PATH)
+$(VENV)/bin/alembic $(VENV)/bin/pytest $(VENV)/bin/nosetests $(MAIN_CLI_PATH): | $(VENV) $(VENV)/bin/pip $(VENV)/bin/python $(REQUIREMENTS_PATH)
 	$(VENV)/bin/pip install -r $(REQUIREMENTS_PATH)
 	$(VENV)/bin/pip install -e .
 
@@ -174,4 +176,5 @@ $(REQUIREMENTS_PATH):
 	public \
 	react-app \
 	tunnel \
+	tdd \
 	web

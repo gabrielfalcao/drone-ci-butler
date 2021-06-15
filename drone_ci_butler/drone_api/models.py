@@ -8,17 +8,33 @@ from datetime import datetime
 
 
 class OutputLine(Model):
+    __id_attributes__ = ["time", "pos", "out"]
     time: int
     pos: int
     out: str
 
+    def __str__(self):
+        return self.to_string()
+
+    def to_string(self):
+        if self.out:
+            return self.out
+        return f"{time}:{pos}:{out}"
+
 
 class OutputMessage(Model):
+    __id_attributes__ = ["message"]
     message: str
 
 
+class OutputLines(OutputLine.List):
+    def __str__(self):
+        return "\n".join([str(l.out or "") for l in self])
+
+
 class Output(Model):
-    lines: OutputLine.List
+    __id_attributes__ = ["lines", "message"]
+    lines: OutputLines
     message: str
     headers: Property[dict]
 
@@ -281,6 +297,7 @@ class Build(Model):
 
 
 class BuildContext(Model):
+    __id_attributes__ = ["build", "state", "step"]
     build: Build
     stage: Stage
     step: Step
