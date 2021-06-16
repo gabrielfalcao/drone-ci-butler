@@ -7,9 +7,10 @@ from drone_ci_butler import sql
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 
 functional_tests_path = Path(__file__).parent.absolute()
+
 vcr = VCR(
     cassette_library_dir=str(functional_tests_path.joinpath(".cassetes")),
-    # record_mode="once",
+    record_mode="new_episodes",
 )
 
 
@@ -36,7 +37,6 @@ with_client = scenario(prepare_client, disconnect_client)
 @with_client
 def test_drone_api_client_get_builds(context):
     "GET /api/repos/{owner}/{repo}/builds"
-
     # Given that I request the list of builds
     builds = context.client.get_builds("nytm", "wf-project-vi")
 
@@ -87,6 +87,18 @@ def test_drone_api_client_get_build_step_log(context):
 
     # And should have X items
     output.lines.should.have.length_of(27)
+
+
+@vcr.use_cassette
+@with_client
+def test_drone_api_client_get_build_step_log_skipped(context):
+    "get_build_step_output() with a skipped step should throw error"
+
+    # Given I request the list of builds
+    output = context.client.get_build_step_output("nytm", "wf-project-vi", 139181, 3, 9)
+
+    # Then it should return an Output
+    output.should.be.none
 
 
 @vcr.use_cassette

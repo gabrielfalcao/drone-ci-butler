@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import urljoin
 from pathlib import Path
-from typing import NoReturn
+from typing import NoReturn, Optional
 
 from datetime import datetime, timedelta
 from requests import Response, Session
@@ -11,7 +11,7 @@ from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
 from drone_ci_butler.drone_api.cache import HttpCache
 
-from drone_ci_butler.drone_api.exceptions import invalid_response, ClientError
+from drone_ci_butler.drone_api.exceptions import invalid_response, ClientError, NotFound
 
 logger = get_logger(__name__)
 
@@ -97,8 +97,7 @@ class DroneAPIClient(object):
             )
             # running and failed pull-requests only
         ).filter(
-            lambda build: "/pull/" in build.link
-            and build.status == "failure"
+            # and build.status == "failure"
             # and build.status in ("running", "failure")
             # and build.author_login in ALLOWED_GITHUB_USERS
         )
@@ -146,11 +145,17 @@ class DroneAPIClient(object):
         build_number: int,
         stage_number: int,
         step_number: int,
-    ) -> OutputLine.List:
-        result = self.request(
-            "GET",
-            f"/api/repos/{owner}/{repo}/builds/{build_number}/logs/{stage_number}/{step_number}",
-        )
+    ) -> Optional[Output]:
+        try:
+            result = self.request(
+                "GET",
+                f"/api/repos/{owner}/{repo}/builds/{build_number}/logs/{stage_number}/{step_number}",
+            )
+        except NotFound:
+            logger.error(
+                "failed to retrieve drone step output of build {build_number}: {e}"
+            )
+            return
         data = result.json()
 
         if isinstance(data, dict):
@@ -191,6 +196,8 @@ class DroneAPIClient(object):
                 stage = stage.with_build(build)
                 for step in stage.steps or []:
                     step = step.with_stage(stage)
+                    if step.status == "skipped":
+                        continue
                     try:
                         output = self.get_build_step_output(
                             owner=owner,
@@ -200,7 +207,7 @@ class DroneAPIClient(object):
                             step_number=step.number,
                         )
                     except ClientError as e:
-                        logger.debug(
+                        logger.error(
                             f"failed to retrieve logs for {owner}/{repo}/logs/{build.number}/{stage}/{step}",
                             e,
                         )

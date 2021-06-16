@@ -43,7 +43,7 @@ def test_rule_set_match_build():
 
     # And a fake context that matches that ruleset
     fake_context = fake_context_with_output_lines(
-        build_link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
+        build_link="https://github.com/nytm/wf-project-vi/pull/13624",
         step_name="node_modules",
         lines=[
             '''Couldn't find any versions for "react" that matches "2021"''',
@@ -65,7 +65,8 @@ def test_rule_set_match_build():
         == r"""
 Matched Rule **YarnDependencyNotResolved**:
   Matched Condition: Expect step.exit_code `1` to not be `0`
-  Matched Condition: Expect build.link `https://drone.dv.nyt.net/nytm/wf-project-vi/138785` to contain string `nytm/wf-project-vi`
+  Matched Condition: Expect build.link `https://github.com/nytm/wf-project-vi/pull/13624` to contain string `nytm/wf-project-vi`
+  Matched Condition: Expect build.link `https://github.com/nytm/wf-project-vi/pull/13624` to contain string `/pull/`
   Matched Condition: Expect step.status `failure` to match value `['fail*', 'running']`
   Matched Condition: Expect step.name `node_modules` to match value `node_modules`
   Matched Condition: Expect step.output.lines `[{'time': 0, 'pos': 0, 'out': 'Couldn\'t find any versions for "react" that matches "2021"'}]` to match regular expression `Couldn't find any versions for\s*(\"([^\"]+)\" that matches \"([^\"]+)\")?`
@@ -73,13 +74,13 @@ Matched Rule **YarnDependencyNotResolved**:
     )
 
 
-def test_rule_set_match_build():
+def test_rule_et_match_build_everything():
     # Given a set of rules with only one match
     rule_set = wf_project_vi
 
     # And a fake context that matches that ruleset
     fake_context = fake_context_with_output_lines(
-        build_link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
+        build_link="https://github.com/nytm/wf-project-vi/pull/13624",
         step_name="node_modules",
         lines=[
             '''Couldn't find any versions for "react" that matches "2021"''',
@@ -98,7 +99,8 @@ def test_rule_set_match_build():
         == r"""
 Matched Rule **YarnDependencyNotResolved**:
   Matched Condition: Expect step.exit_code `1` to not be `0`
-  Matched Condition: Expect build.link `https://drone.dv.nyt.net/nytm/wf-project-vi/138785` to contain string `nytm/wf-project-vi`
+  Matched Condition: Expect build.link `https://github.com/nytm/wf-project-vi/pull/13624` to contain string `nytm/wf-project-vi`
+  Matched Condition: Expect build.link `https://github.com/nytm/wf-project-vi/pull/13624` to contain string `/pull/`
   Matched Condition: Expect step.status `failure` to match value `['fail*', 'running']`
   Matched Condition: Expect step.name `node_modules` to match value `node_modules`
   Matched Condition: Expect step.output.lines `[{'time': 0, 'pos': 0, 'out': 'Couldn\'t find any versions for "react" that matches "2021"'}]` to match regular expression `Couldn't find any versions for\s*(\"([^\"]+)\" that matches \"([^\"]+)\")?`

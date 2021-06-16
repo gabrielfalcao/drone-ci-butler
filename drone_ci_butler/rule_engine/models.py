@@ -525,7 +525,10 @@ class RuleSet(Model):
         matched_rules = MatchedRule.List([])
 
         if required_matches or required_conditions:
-            if self.default_action is None or self.default_action in (RuleAction.OMIT_FAILED, RuleAction.NEXT_RULE):
+            if self.default_action is None or self.default_action in (
+                RuleAction.OMIT_FAILED,
+                RuleAction.NEXT_RULE,
+            ):
                 pass
             elif self.default_action == RuleAction.SKIP_ANALYSIS:
                 return []
@@ -559,7 +562,7 @@ class RuleSet(Model):
                 )
 
             else:
-                import ipdb;ipdb.set_trace()  # fmt: skip
+                raise RuntimeError(f"unhandled action {self.default_action}")
 
         elif required_matches:
             # just proceed to apply rules
@@ -588,6 +591,8 @@ class RuleSet(Model):
                 elif rule.action == RuleAction.NEXT_RULE:
                     continue
                 elif rule.action == RuleAction.SKIP_ANALYSIS:
+                    return []
+                elif rule.action == RuleAction.ABRUPT_INTERRUPTION:
                     break
                 else:
                     logger.error(f"rule {rule} has invalid action: {rule.action}")

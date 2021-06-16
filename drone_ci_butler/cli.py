@@ -159,20 +159,25 @@ def worker_queue(
 
 @main.command("builds")
 @click.option("-d", "--days", default=30, type=int)
+@click.option("-P", "--max-pages", default=1000, type=int)
+@click.option("-m", "--max-builds", default=1000000, type=int)
 @click.option("-c", "--rep-connect-address", default=DEFAULT_QUEUE_ADDRESS)
 @click.pass_context
-def get_builds(ctx, rep_connect_address, days):
+def get_builds(ctx, rep_connect_address, days, max_builds, max_pages):
     client = DroneAPIClient(
         url=ctx.obj["drone_url"],
         access_token=ctx.obj["access_token"],
-        max_builds=1000000,
-        max_pages=1000,
+        max_builds=max_builds,
+        max_pages=max_pages,
     )
-    builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
+    # builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
     # builds = builds.filter(
     #     lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days)
     #     and b.author_login == "gabrielfalcao"
     # )
+
+    b = client.get_build_info("nytm", "wf-project-vi", 139181)
+    builds = Build.List([b])
     count = len(builds)
     print(f"found {count} failed builds in the last {days} days")
     for i, build in enumerate(builds, start=1):

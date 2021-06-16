@@ -98,6 +98,12 @@ YarnDependencyNotResolved = Rule(
 )
 
 
+pull_requests_only = Condition(
+    context_element="build",
+    target_attribute="link",
+    contains_string="/pull/",
+    required=True,
+)
 build_matches_vi_project = Condition(
     context_element="build",
     target_attribute="link",
@@ -113,7 +119,6 @@ step_failed_or_running = Condition(
         "running",
     ],
 )
-
 step_exit_code_nonzero = Condition(
     context_element="step",
     target_attribute="exit_code",
@@ -133,6 +138,7 @@ wf_project_vi = RuleSet(
     ],
     required_conditions=[
         build_matches_vi_project,
+        pull_requests_only,
         step_failed_or_running,
     ],
     default_conditions=[

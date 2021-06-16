@@ -145,3 +145,53 @@ def test_apply_rule_required_conditions_skip_analysis():
 
     matches = ruleset.apply(context)
     matches.should.be.empty
+
+
+def test_apply_rule_required_conditions_request_cancelation():
+    "Rule(action=RuleAction.REQUEST_CANCELATION).apply() when failed should not return failed matches"
+
+    context = fake_context_with_output_lines(
+        build_link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
+        step_name="node_modules",
+        exit_code=0,
+        lines=["yarn install"],
+    )
+
+    ruleset = RuleSet(
+        name="my-ruleset",
+        default_action=RuleAction.REQUEST_CANCELATION,
+        required_conditions=[
+            Condition(
+                context_element="step",
+                target_attribute="exit_code",
+                value_exact=0,
+                required=True,
+            ),
+            Condition(
+                context_element="step",
+                target_attribute="name",
+                value_exact="node_modules",
+                required=True,
+            ),
+            Condition(
+                context_element="step",
+                target_attribute="output.lines",
+                contains_string="foo bar",
+                required=True,
+            ),
+        ],
+    )
+
+    matches = ruleset.apply(context)
+    matches.should.have.length_of(1)
+    assert (
+        "\n".join([t.to_description() for t in matches])
+        == r"""
+Matched Rule **my-ruleset.required_conditions**:
+  Matched Condition: Expect step.name `node_modules` to have exact value `node_modules`
+  **Invalid Conditions**:
+    Condition could not be fulfilled: Condition: Expect step.exit_code to have exact value `0`
+    Condition(context_element='step', target_attribute=<ValueList: ['output.lines']>, matches_regex=None, matches_value=None, value_exact=(), contains_string=<ValueList: ['foo bar']>, is_not=(), value=None, regex_options=<RegexFlag.UNICODE|DOTALL|MULTILINE|IGNORECASE: 58>, required=True) could not find attribute output.lines in step: 'output.lines'
+    Cancelation requested on BuildContext(build=<Build number=None link='https://drone.dv.nyt.net/nytm/wf-project-vi/138785' message=None started=None finished=None>, stage=<Stage number=None name='build' started=None stopped=None>, step=<Step number=None name='node_modules' status='failure' started=None stopped=None exit_code=1>)
+""".strip()
+    )
