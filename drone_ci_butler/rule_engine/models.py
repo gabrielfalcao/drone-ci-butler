@@ -21,6 +21,7 @@ from datetime import datetime
 from drone_ci_butler.config import Config
 from drone_ci_butler.drone_api.models import BuildContext, Build, Step, Stage
 from .exceptions import ConditionRequired
+from .exceptions import CancelationRequested
 from .exceptions import InvalidCondition
 from .exceptions import InvalidConditionSet
 from .exceptions import NotStringOrListOfStrings
@@ -523,25 +524,40 @@ class RuleSet(Model):
 
         matched_rules = MatchedRule.List([])
 
-        if len(invalid_conditions) == len(required_conditions):
+        if required_matches or required_conditions:
             if self.default_action is None or self.default_action in (RuleAction.OMIT_FAILED, RuleAction.NEXT_RULE):
                 pass
             elif self.default_action == RuleAction.SKIP_ANALYSIS:
-                return matched_rules
+                return []
             elif self.default_action == RuleAction.ABRUPT_INTERRUPTION:
                 matched_rules.append(
                     MatchedRule(
                         rule=Rule(
-                            name=f"{self.name}.default_action",
+                            name=f"{self.name}.required_conditions",
                             conditions=required_conditions,
                             action=self.default_action,
                         ),
-                        matched_conditions=required_conditions,
+                        matched_conditions=required_matches,
                         invalid_conditions=invalid_conditions,
                         context=context,
                     )
                 )
                 return matched_rules
+            elif self.default_action == RuleAction.REQUEST_CANCELATION:
+                invalid_conditions.append(CancelationRequested(context))
+                matched_rules.append(
+                    MatchedRule(
+                        rule=Rule(
+                            name=f"{self.name}.required_conditions",
+                            conditions=required_conditions,
+                            action=self.default_action,
+                        ),
+                        matched_conditions=required_matches,
+                        invalid_conditions=invalid_conditions,
+                        context=context,
+                    )
+                )
+
             else:
                 import ipdb;ipdb.set_trace()  # fmt: skip
 

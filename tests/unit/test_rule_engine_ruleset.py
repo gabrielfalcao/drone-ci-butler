@@ -61,8 +61,8 @@ def test_apply_rule_omit_failed():
     matches.should.be.empty
 
 
-def test_apply_rule_default_conditions_required():
-    "Rule(action=RuleAction.OMIT_FAILED).apply() when failed should not return failed matches"
+def test_apply_rule_required_conditions_abrupt_interruption():
+    "Rule(action=RuleAction.ABRUPT_INTERRUPTION).apply() when failed should not return failed matches"
 
     context = fake_context_with_output_lines(
         build_link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
@@ -73,7 +73,7 @@ def test_apply_rule_default_conditions_required():
     ruleset = RuleSet(
         name="my-ruleset",
         default_action=RuleAction.ABRUPT_INTERRUPTION,
-        default_conditions=[
+        required_conditions=[
             Condition(
                 context_element="step",
                 target_attribute="exit_code",
@@ -84,16 +84,64 @@ def test_apply_rule_default_conditions_required():
                 context_element="step",
                 target_attribute="name",
                 value_exact="node_modules",
-                required=False,
+                required=True,
             ),
             Condition(
                 context_element="step",
                 target_attribute="output.lines",
                 contains_string="yarn install",
-                required=False,
+                required=True,
             ),
         ],
     )
 
     matches = ruleset.apply(context)
     matches.should.have.length_of(1)
+    assert (
+        "\n".join([t.to_description() for t in matches])
+        == r"""
+Matched Rule **my-ruleset.required_conditions**:
+  Matched Condition: Expect step.name `node_modules` to have exact value `node_modules`
+  **Invalid Conditions**:
+    Condition could not be fulfilled: Condition: Expect step.exit_code to have exact value `0`
+    Condition(context_element='step', target_attribute=<ValueList: ['output.lines']>, matches_regex=None, matches_value=None, value_exact=(), contains_string=<ValueList: ['yarn install']>, is_not=(), value=None, regex_options=<RegexFlag.UNICODE|DOTALL|MULTILINE|IGNORECASE: 58>, required=True) could not find attribute output.lines in step: 'output.lines'
+""".strip()
+    )
+
+
+def test_apply_rule_required_conditions_skip_analysis():
+    "Rule(action=RuleAction.SKIP_ANALYSIS).apply() when failed should not return failed matches"
+
+    context = fake_context_with_output_lines(
+        build_link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
+        step_name="node_modules",
+        lines=["yarn install"],
+    )
+
+    ruleset = RuleSet(
+        name="my-ruleset",
+        default_action=RuleAction.SKIP_ANALYSIS,
+        required_conditions=[
+            Condition(
+                context_element="step",
+                target_attribute="exit_code",
+                value_exact=0,
+                required=True,
+            ),
+            Condition(
+                context_element="step",
+                target_attribute="name",
+                value_exact="node_modules",
+                required=True,
+            ),
+            Condition(
+                context_element="step",
+                target_attribute="output.lines",
+                contains_string="yarn install",
+                required=True,
+            ),
+        ],
+    )
+
+    matches = ruleset.apply(context)
+    matches.should.be.empty

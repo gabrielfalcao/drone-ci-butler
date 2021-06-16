@@ -24,6 +24,14 @@ class ConditionRequired(InvalidCondition):
         super().__init__(message, condition, context)
 
 
+class CancelationRequested(InvalidCondition):
+    """specifically raised when a rule or ruleset have the RuleAction.REQUEST_CANCELATION"""
+
+    def __init__(self, context: BuildContext):
+        message = f"Cancelation requested on {context}"
+        super().__init__(message, None, context)
+
+
 class InvalidConditionSet(Exception):
     def __init__(self, message):
         super().__init__(f"{message}")
