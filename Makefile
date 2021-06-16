@@ -67,7 +67,7 @@ tests: unit functional | $(MAIN_CLI_PATH)  # runs all tests
 
 # -> unit tests
 unit functional: | $(VENV)/bin/pytest # runs only unit tests
-	@$(VENV)/bin/pytest --capture=no -vv --cov=drone_ci_butler.rule_engine tests/$@
+	@$(VENV)/bin/pytest --maxfail=1 --capture=no -vv --cov=drone_ci_butler.rule_engine tests/$@
 
 # -> unit tests
 tdd: | $(VENV)/bin/nosetests  # runs only unit tests

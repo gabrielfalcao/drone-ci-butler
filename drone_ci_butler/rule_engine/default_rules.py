@@ -12,7 +12,7 @@ ValidateDocsPrettified = Rule(
             possible_solution="run `yarn prettier:docs` to fix the issue",
         ),
     ],
-    action=RuleAction.NEXT_STEP,
+    action=RuleAction.NEXT_RULE,
 )
 
 SlackServerError = Rule(
@@ -27,7 +27,6 @@ SlackServerError = Rule(
             contains_string="server error",
         ),
     ],
-    action=RuleAction.NEXT_STEP,
 )
 
 GitBranchNameInvalidForGKEDeploy = Rule(
@@ -52,7 +51,7 @@ GitBranchNameInvalidForGKEDeploy = Rule(
             ),
         ),
     ],
-    action=RuleAction.SKIP_BUILD,
+    action=RuleAction.SKIP_ANALYSIS,
 )
 
 SamizdatConnectionError = Rule(
@@ -64,7 +63,7 @@ SamizdatConnectionError = Rule(
             contains_string=["ECONNREFUSED", "samizdat"],
         ),
     ],
-    action=RuleAction.SKIP_BUILD,
+    action=RuleAction.SKIP_ANALYSIS,
 )
 
 GitMergeConflict = Rule(
@@ -76,7 +75,7 @@ GitMergeConflict = Rule(
             matches_regex="(not something we can merge|Automatic merge failed; fix conflicts)",
         ),
     ],
-    action=RuleAction.SKIP_BUILD,
+    action=RuleAction.SKIP_ANALYSIS,
 )
 
 YarnDependencyNotResolved = Rule(
@@ -95,7 +94,7 @@ YarnDependencyNotResolved = Rule(
             required=True,
         ),
     ],
-    action=RuleAction.SKIP_BUILD,
+    action=RuleAction.SKIP_ANALYSIS,
 )
 
 
@@ -139,6 +138,6 @@ wf_project_vi = RuleSet(
     default_conditions=[
         step_exit_code_nonzero,
     ],
-    default_action=RuleAction.NEXT_STEP,
+    default_action=RuleAction.NEXT_RULE,
     default_notify=["slack"],
 )

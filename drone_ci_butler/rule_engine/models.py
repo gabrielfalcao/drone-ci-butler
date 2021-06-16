@@ -27,10 +27,11 @@ from .exceptions import NotStringOrListOfStrings
 
 
 class RuleAction(Enum):
-    NEXT_STEP = "NEXT_STEP"
-    NEXT_STAGE = "NEXT_STAGE"
-    SKIP_BUILD = "SKIP_BUILD"
+    NEXT_RULE = "NEXT_RULE"
+    OMIT_FAILED = "OMIT_FAILED"
+    SKIP_ANALYSIS = "SKIP_ANALYSIS"
     REQUEST_CANCELATION = "REQUEST_CANCELATION"
+    ABRUPT_INTERRUPTION = "ABRUPT_INTERRUPTION"
 
 
 class ConditionMatchType(Enum):
@@ -38,10 +39,11 @@ class ConditionMatchType(Enum):
     IS_NOT = "IS_NOT"
     MATCHES_REGEX = "MATCHES_REGEX"
     MATCHES_VALUE = "MATCHES_VALUE"
+    VALUE_EXACT = "VALUE_EXACT"
 
 
 DEFAULT_REGEX_OPTIONS: int = re.I | re.MULTILINE | re.DOTALL | re.UNICODE
-DEFAULT_ACTION: RuleAction = RuleAction.NEXT_STEP
+DEFAULT_ACTION: RuleAction = RuleAction.NEXT_RULE
 T = TypeVar("T")
 nothing = type("nothing", (tuple,), {})()
 
@@ -101,12 +103,14 @@ class Condition(Model):
         "matches_value",
         "contains_string",
         "is_not",
+        "value_exact",
         "required",
     ]
     context_element: str
     target_attribute: ValueList
     matches_regex: Union[str, Pattern]
     matches_value: Any
+    value_exact: Any
     contains_string: ValueList
     is_not: Any
     value: Any
@@ -128,6 +132,7 @@ class Condition(Model):
             kw["context_element"] = condition.context_element
             kw["matches_regex"] = condition.matches_regex
             kw["matches_value"] = condition.matches_value
+            kw["value_exact"] = condition.value_exact
             kw["value"] = condition.value
 
         elif condition is not None:  # pragma: no cover
@@ -144,6 +149,9 @@ class Condition(Model):
         if "is_not" not in kw:
             kw["is_not"] = nothing
 
+        if "value_exact" not in kw:
+            kw["value_exact"] = nothing
+
         if "required" not in kw:
             kw["required"] = True
 
@@ -154,7 +162,6 @@ class Condition(Model):
                 f"missing context_element from condition {self}",
                 condition=self,
             )
-
 
         if not self.target_attribute.name:
             raise InvalidCondition(
@@ -174,7 +181,6 @@ class Condition(Model):
                 condition=self,
             )
 
-
     def to_description(self):
         match = self.describe_matches()
         return f"Condition: Expect {self.context_element}.{self.target_attribute.name} {match}"
@@ -192,6 +198,9 @@ class Condition(Model):
 
         if not isinstance(self.is_not, tuple):
             message.append(f"to not be `{self.is_not}`")
+
+        if not isinstance(self.value_exact, tuple):
+            message.append(f"to have exact value `{self.value_exact}`")
         # else:
         #     # TODO: unit test
 
@@ -210,9 +219,7 @@ class Condition(Model):
             try:
                 value = getattr(value, attr, nothing)
                 if value is nothing:
-                    value = value[attr]
-                elif not value:
-                    import ipdb;ipdb.set_trace()  # fmt: skip
+                    raise KeyError(attr)
 
             except (AttributeError, KeyError) as e:
                 raise InvalidCondition(
@@ -254,7 +261,7 @@ class Condition(Model):
                 regex = re.compile(self.matches_regex, self.regex_options)
             except re.error as e:
                 raise InvalidCondition(
-                    f"cannot match invalid regex `{self.matches_regex}`",
+                    f"Invalid {self.to_description()} regex is INVALID: `{e}`",
                     condition=self,
                     context=context,
                 )
@@ -301,6 +308,15 @@ class Condition(Model):
                     )
                 )
 
+        if not isinstance(self.value_exact, tuple):
+            matched = value == self.value_exact
+            if matched:
+                result.append(
+                    matched_condition_of_type(
+                        ConditionMatchType.VALUE_EXACT,
+                    )
+                )
+
         if self.required and len(result) == 0:
             raise ConditionRequired(
                 condition=self,
@@ -327,13 +343,8 @@ class MatchedCondition(Model):
         #     import ipdb;ipdb.set_trace()  # fmt: skip
         return f"Matched Condition: Expect {self.condition.context_element}.{self.attribute} `{self.value}` {matches}"
 
-    def with_match_type(self: Type[T], match_type: ConditionMatchType) -> T:
-        self.match_type = match_type
-        return self
-
 
 class ConditionSet(Model):
-    __id_attributes__ = ["conditions"]
     conditions: Condition.Set
 
     def __init__(
@@ -373,11 +384,14 @@ class ConditionSet(Model):
         matched_count = 0
         required_count = 0
         total_conditions = len(self.conditions)
-        total_required = len([c for c in self.conditions if c.required])
-        for condition in self.conditions:
+        total_required = len(
+            [c for c in self.conditions if getattr(c, "required", False)]
+        )
+        conditions = list(self.conditions)
+        for condition in conditions:
             if not isinstance(condition, Condition):
                 raise InvalidConditionSet(
-                    f"object is not a condition {repr(condition)} from {self.conditions}"
+                    f"Invalid Condition: {repr(condition)} from set {conditions}"
                 )
             try:
                 matched = condition.apply(context)
@@ -390,10 +404,9 @@ class ConditionSet(Model):
                     required_count += 1
 
                 matched_conditions.extend(matched)
-            else:
-                raise ConditionRequired(
-                    condition=condition,
-                    context=context,
+            elif condition.required:
+                invalid_conditions.append(
+                    ConditionRequired(condition=condition, context=context)
                 )
 
         did_match_all = matched_count >= total_conditions
@@ -403,7 +416,7 @@ class ConditionSet(Model):
         elif did_match_any:
             return matched_conditions, invalid_conditions
         else:
-            raise RuntimeError("unexpected state")
+            return [], invalid_conditions
 
     def extend(self: Type[T], conditions: Condition.List) -> T:
         for c in conditions:
@@ -413,10 +426,8 @@ class ConditionSet(Model):
 
 
 class Rule(Model):
-    __id_attributes__ = ["name", "output_contains", "output_matches_regex", "action"]
+    __id_attributes__ = ["name", "action"]
     name: str
-    output_contains: Optional[str]
-    output_matches_regex: Optional[Pattern]
 
     action: RuleAction
     notify: ValueList
@@ -424,8 +435,8 @@ class Rule(Model):
     conditions: ConditionSet
 
     def with_preconditions(self: Type[T], pre_conditions: Condition.List) -> T:
-        pre_conditions = ConditionSet(pre_conditions)
-        pre_conditions.extend(self.conditions)
+        pre_conditions = ConditionSet(pre_conditions or [])
+        pre_conditions.extend(self.conditions or [])
         self.conditions = pre_conditions
         return self
 
@@ -447,6 +458,15 @@ class Rule(Model):
             return [], []
         return matched_conditions, invalid_conditions
 
+    def match(self, context: BuildContext):
+        matched_conditions, invalid_conditions = self.apply(context)
+        return MatchedRule(
+            matched_conditions=matched_conditions,
+            invalid_conditions=invalid_conditions,
+            context=context,
+            rule=self,
+        )
+
 
 class MatchedRule(Model):
     __id_attributes__ = ["rule", "context"]
@@ -461,14 +481,14 @@ class MatchedRule(Model):
     def to_description(self, indent=2):
         padding = " " * indent
         message = [f"Matched Rule **{self.rule.name}**:"]
-        for condition in self.matched_conditions:
+        for condition in self.matched_conditions or []:
             description = condition.to_description()
             message.append(f"{padding}{description}")
 
-        if self.invalid_conditions:
+        if self.invalid_conditions or []:
             message.append(f"{padding}**Invalid Conditions**:")
 
-        for condition in self.invalid_conditions:
+        for condition in self.invalid_conditions or []:
             message.append(f"{padding * 2}{condition}")
 
         return "\n".join(message)
@@ -483,15 +503,17 @@ class RuleSet(Model):
     default_notify: StringOrListOfStrings
     rules: Rule.List
 
-    @classmethod
-    def from_config(cls: Type[T], config: Config) -> T:
-        data = config.load_drone_output_rules()
-
-        return cls(**data)
+    # @classmethod
+    # def from_config(cls: Type[T], config: Config) -> T:
+    #     data = config.load_drone_output_rules()
+    #     return cls(**data)
 
     def apply(self, context: BuildContext) -> MatchedRule.List:
-
-        required_matches, invalid_conditions = self.required_conditions.apply(context)
+        required_conditions = self.required_conditions or []
+        if required_conditions:
+            required_matches, invalid_conditions = required_conditions.apply(context)
+        else:
+            required_matches = invalid_conditions = []
         invalid_matches = [
             c.condition
             for c in filter(
@@ -501,38 +523,57 @@ class RuleSet(Model):
 
         matched_rules = MatchedRule.List([])
 
-        for rule in self.rules:
-            rule = rule.with_preconditions(
-                pre_conditions=self.required_conditions
-            ).with_preconditions(
-                pre_conditions=self.default_conditions,
-            ).with_default_action(self.default_action)
-
-            try:
-                matched_conditions, invalid_conditions = rule.apply(context)
-            except InvalidCondition as e:
-                matched_conditions = []
-                invalid_conditions = [e]
-
-            if matched_conditions or invalid_conditions:
-
+        if len(invalid_conditions) == len(required_conditions):
+            if self.default_action is None or self.default_action in (RuleAction.OMIT_FAILED, RuleAction.NEXT_RULE):
+                pass
+            elif self.default_action == RuleAction.SKIP_ANALYSIS:
+                return matched_rules
+            elif self.default_action == RuleAction.ABRUPT_INTERRUPTION:
                 matched_rules.append(
                     MatchedRule(
-                        matched_conditions=matched_conditions,
+                        rule=Rule(
+                            name=f"{self.name}.default_action",
+                            conditions=required_conditions,
+                            action=self.default_action,
+                        ),
+                        matched_conditions=required_conditions,
                         invalid_conditions=invalid_conditions,
                         context=context,
-                        rule=rule,
                     )
                 )
-            if rule.action is None or rule.action in (
-                RuleAction.NEXT_STEP,
-                RuleAction.NEXT_STAGE,
-            ):
-                continue
-            elif rule.action == RuleAction.SKIP_BUILD:
-                if matched_conditions or invalid_conditions:
-                    break
+                return matched_rules
             else:
-                logger.error(f"rule {rule} has invalid action: {rule.action}")
+                import ipdb;ipdb.set_trace()  # fmt: skip
+
+        elif required_matches:
+            # just proceed to apply rules
+            pass
+
+        for rule in self.rules or []:
+            rule = (
+                rule.with_preconditions(pre_conditions=required_conditions)
+                .with_preconditions(
+                    pre_conditions=self.default_conditions,
+                )
+                .with_default_action(self.default_action)
+            )
+
+            matched_conditions, invalid_conditions = rule.apply(context)
+            if matched_conditions or invalid_conditions:
+                if rule.action is None or rule.action != RuleAction.OMIT_FAILED:
+                    matched_rules.append(
+                        MatchedRule(
+                            matched_conditions=matched_conditions,
+                            invalid_conditions=invalid_conditions,
+                            context=context,
+                            rule=rule,
+                        )
+                    )
+                elif rule.action == RuleAction.NEXT_RULE:
+                    continue
+                elif rule.action == RuleAction.SKIP_ANALYSIS:
+                    break
+                else:
+                    logger.error(f"rule {rule} has invalid action: {rule.action}")
 
         return matched_rules

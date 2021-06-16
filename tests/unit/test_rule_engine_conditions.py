@@ -97,3 +97,28 @@ def test_matching_step_property_is_not_value():
     assert matched_conditions[0].to_description() == (
         "Matched Condition: Expect step.exit_code `42` to not be `0`"
     )
+
+
+def test_matching_step_property_value_exact_value():
+    "Condition matching step.status value_exact 0"
+    # Given fake context that matches that condition
+
+    success_step = Condition(
+        context_element="step",
+        target_attribute="exit_code",
+        value_exact=0,
+        required=True,
+    )
+
+    context_step_nonzero = BuildContext(step=Step(exit_code=0))
+
+    assert success_step.describe_matches() == "to have exact value `0`"
+    # When I apply a condition that matches the step
+    matched_conditions = success_step.apply(context_step_nonzero)
+
+    matched_conditions.should.have.length_of(1)
+
+    # Then it should have 1 match
+    assert matched_conditions[0].to_description() == (
+        "Matched Condition: Expect step.exit_code `0` to have exact value `0`"
+    )

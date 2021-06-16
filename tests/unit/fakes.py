@@ -22,7 +22,7 @@ from drone_ci_butler.rule_engine.models import (
 
 
 def fake_context_with_output_lines(
-    build_link: str,
+    build_link: str = "https://dummy.drone.com/owner/repo/1337",
     step_name: str = "dummy",
     stage_name="build",
     build_number=1337,

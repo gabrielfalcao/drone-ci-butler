@@ -32,9 +32,9 @@ def test_rule_output_contains_string():
                 matches_regex="prettier:docs",
             ),
         ],
-        action=RuleAction.NEXT_STEP,
+        action=RuleAction.NEXT_RULE,
     )
-    rule.action.should.equal(RuleAction.NEXT_STEP)
+    rule.action.should.equal(RuleAction.NEXT_RULE)
 
 
 def test_rule_set_match_build():
