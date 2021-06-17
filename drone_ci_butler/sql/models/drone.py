@@ -27,6 +27,7 @@ class DroneBuild(Model):
         db.Column("started_at", db.DateTime),
         db.Column("finished_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
+        db.Column("output_retrieved_at", db.DateTime),
     )
 
     def drone_api_data_to_dict(self):
@@ -58,9 +59,19 @@ class DroneBuild(Model):
         data["drone_api_data"] = json.dumps(build.to_dict())
         return data
 
-    def update_from_drone_api(self, owner: str, repo: str, build):
+    def update_from_drone_api(
+        self, owner: str, repo: str, build, output_retrieved_at: datetime = None
+    ):
         data = self.extract_data_from_drone_api(owner, repo, build)
+        if output_retrieved_at:
+            data["output_retrieved_at"] = output_retrieved_at
         return self.update_and_save(**data)
+
+    def is_running(self) -> bool:
+        return self.status and self.status == "running"
+
+    def requires_processing(self) -> bool:
+        return self.finished_at is None or self.output_retrieved_at is None
 
     @classmethod
     def get_or_create_from_drone_api(

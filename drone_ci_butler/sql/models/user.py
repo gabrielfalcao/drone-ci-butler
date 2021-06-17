@@ -4,14 +4,13 @@ import bcrypt
 
 from datetime import datetime, timedelta
 from dateutil.parser import parse as parse_datetime
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from functools import lru_cache
 from sqlalchemy import desc
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.util import load_json
 from drone_ci_butler.slack import SlackClient
-
-# from uiclasses import Model as DataClass
+from drone_ci_butler.drone_api.models import BuildContext
 from chemist import Model, db, metadata
 from drone_ci_butler.config import config
 
@@ -187,3 +186,12 @@ class User(Model):
         duration = access_token.duration
         valid_until = parse_datetime(created_at) + timedelta(seconds=duration)
         return now() < valid_until
+
+    def notify_error(
+        self, message: str, context: BuildContext, matches: List[Any] = None
+    ):
+        logger.error(f"{message} {matches} {context}")
+
+    def notify_ruleset_matches(self, context: BuildContext, matches: List[Any] = None):
+        count = len(matches or [])
+        logger.warning(f"found {count} matches {matches} in {context}")
