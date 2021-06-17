@@ -125,6 +125,12 @@ react-app $(STATIC_PATHS): | $(NODE_MODULES)
 react-dev: | $(STATIC_PATHS)
 	@cd frontend && yarn start
 
+docker-base:
+	docker build -t gabrielfalcao/drone-ci-butler-base -f Dockerfile.base .
+
+docker-k8s:
+	docker build -t gabrielfalcao/drone-ci-butler -f Dockerfile .
+
 # creates virtual env if necessary and installs pip and setuptools
 $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
 	echo "Creating virtualenv in $(VENV_ROOT)" && python3 -mvenv $(VENV)
@@ -133,8 +139,6 @@ $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
 $(VENV)/bin/python $(VENV)/bin/pip: # installs latest pip
 	@test -e $(VENV)/bin/python || $(MAKE) $(VENV)
 	@test -e $(VENV)/bin/pip || $(MAKE) $(VENV)
-	@echo "Installing latest version of pip and setuptools"
-	@$(VENV)/bin/pip install -U pip setuptools
 
  # installs latest version of the "black" code formatting tool
 $(VENV)/bin/black: | $(VENV)/bin/pip
@@ -181,3 +185,5 @@ $(REQUIREMENTS_PATH):
 	tunnel \
 	tdd \
 	web
+	docker-base \
+	docker-k8s
