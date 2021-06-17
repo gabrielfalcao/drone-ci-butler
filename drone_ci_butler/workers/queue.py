@@ -48,8 +48,11 @@ class QueueClient(object):
         return response
 
     def __del__(self):
-        if self.__connected__:
-            self.close()
+        if getattr(self, "__connected__", False):
+            try:
+                self.close()
+            except Exception as e:
+                self.logger.warning("error to disconnect socket")
 
 
 class QueueServer(object):
@@ -61,6 +64,7 @@ class QueueServer(object):
         push_high_watermark: int = 1,
         sleep_timeout: float = 0.1,
         log_level: int = logging.WARNING,
+        postmortem_sleep_seconds: int = 10,
     ):
         self.logger = get_logger("queue-server")
         self.log_level = log_level
@@ -78,7 +82,13 @@ class QueueServer(object):
         self.push.set_hwm(push_high_watermark)
 
     def handle_exception(self, e):
+        self.disconnect()
         self.logger.exception(f"{self.__class__.__name__} interrupted by error")
+        self.logger.info(
+            "restoring health of worker in {self.postmortem_sleep_seconds} seconds"
+        )
+        gevent.sleep(self.postmortem_sleep_seconds)
+        self.listen()
 
     def listen(self):
         self.logger.info(f"Listening on REP address: {self.rep_bind_address}")
@@ -89,7 +99,13 @@ class QueueServer(object):
 
     def disconnect(self):
         self.rep.disconnect(self.rep_bind_address)
+        self.logger.info(
+            f"Releasing connections from REP address: {self.rep_bind_address}"
+        )
         self.push.disconnect(self.push_bind_address)
+        self.logger.info(
+            f"Releasing connections from PUSH address: {self.push_bind_address}"
+        )
 
     def run(self):
         self.listen()
@@ -129,50 +145,3 @@ class QueueServer(object):
         if not data:
             gevent.sleep()
             return
-
-    def process_job(self, info: dict):
-        url = info.get("url")
-        repo = info.get("repo")
-        owner = info.get("owner")
-        build_id = info.get("build_id")
-        access_token = info.get("access_token")
-
-        missing_fields = []
-
-        if not url:
-            missing_fields.append("url")
-
-        if not repo:
-            missing_fields.append("repo")
-
-        if not repo:
-            missing_fields.append("owner")
-
-        if missing_fields:
-            self.logger.error(f"missing fields: {missing_fields} in {info}")
-            return
-
-        api = DroneAPIClient(
-            url=url,
-            access_token=access_token,
-        )
-        # gevent.sleep()
-        self.fetch_data(api, repo, owner)
-        # gevent.sleep(self.sleep_timeout)
-
-    def fetch_data(self, api: DroneAPIClient, repo: str, owner: str, build_id: int):
-        build = api.get_build_info(repo, owner, build_id)
-        failed_stages = build.failed_stages()
-        for stage in failed_stages:
-            self.publish(
-                "build:failed",
-            )
-        # 1. Poll zmq for job with build_id
-        # 2. Iterate over failed stages
-        # 3. For each failed stage check whether a failure notification was already sent
-        #      otherwise publish zmq event "stage failed" which will store this information in the db to prevent emitting the event twice
-        # 4. Iterate over pending stages (finished_at == None)
-        # 5. For each pending stage schedule a new job to monitor build_id
-        # 6. If the build has all its stages completed with success in all steps
-        #      then publish zmq event "build succeeded" which will store this information to the db to prevent emitting the event twice
-        pass
