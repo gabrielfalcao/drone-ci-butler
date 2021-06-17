@@ -57,6 +57,11 @@ class Output(Model):
     def to_markdown(self):
         return "\n".join(map(ansi_to_markdown, self.get_sorted_output_lines()))
 
+    def __str__(self):
+        if self.lines:
+            return str(self.lines)
+        return "`<no output>`"
+
     def to_string(self, prefix: str = "") -> str:
         lines = []
         if self.message:

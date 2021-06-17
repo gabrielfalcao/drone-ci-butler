@@ -79,9 +79,8 @@ class DroneAPIClient(object):
         return interaction.response()
 
     def get_builds(
-        self, owner: str, repo: str, limit=10000, page=1, count=0
+        self, owner: str, repo: str, limit=10000, page=0, count=0, max_pages=None
     ) -> Build.List:
-        logger.info(f"Retrieving builds for {owner}/{repo} page {page}")
         result = self.request(
             "GET",
             f"/api/repos/{owner}/{repo}/builds",
@@ -89,17 +88,12 @@ class DroneAPIClient(object):
             skip_cache=True,
         )
         all_builds = Build.List(result.json())
-
+        max_pages = max_pages or self.max_pages + page
         builds = Build.List(
             map(
                 lambda build: build.with_headers(result.headers),
                 all_builds,
             )
-            # running and failed pull-requests only
-        ).filter(
-            # and build.status == "failure"
-            # and build.status in ("running", "failure")
-            # and build.author_login in ALLOWED_GITHUB_USERS
         )
         events.get_builds.send(
             self,
@@ -107,21 +101,22 @@ class DroneAPIClient(object):
             repo=repo,
             limit=limit,
             page=page,
-            builds=builds,
+            builds=all_builds,
             max_builds=self.max_builds,
-            max_pages=self.max_pages,
+            max_pages=max_pages,
         )
+
         total_builds = len(builds) + count
-        if total_builds < self.max_builds and page < self.max_pages:
-            logger.info(f"total builds: {total_builds}")
+        logger.info(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
+        if total_builds < self.max_builds and page < max_pages:
             next_page = self.get_builds(
-                owner, repo, limit, page + 1, count=total_builds
+                owner, repo, limit, page + 1, count=total_builds, max_pages=max_pages
             )
             if next_page:
                 builds.extend(next_page)
 
         all_builds = Build.List(
-            builds.sorted(key=lambda b: b.updated, reverse=True)[: self.max_builds]
+            builds.sorted(key=lambda b: b.finished or b.updated, reverse=True)
         )
 
         for build in all_builds:
@@ -153,7 +148,7 @@ class DroneAPIClient(object):
             )
         except NotFound:
             logger.error(
-                "failed to retrieve drone step output of build {build_number}: {e}"
+                f"failed to retrieve drone step output of build {build_number}: {e}"
             )
             return
         data = result.json()
