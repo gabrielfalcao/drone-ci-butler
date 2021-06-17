@@ -22,6 +22,7 @@ from drone_ci_butler.config import Config
 from drone_ci_butler.drone_api.models import BuildContext, Build, Step, Stage
 from .exceptions import ConditionRequired
 from .exceptions import CancelationRequested
+from .exceptions import ContextElementMissing
 from .exceptions import InvalidCondition
 from .exceptions import InvalidConditionSet
 from .exceptions import NotStringOrListOfStrings
@@ -210,7 +211,10 @@ class Condition(Model):
     def process_context(
         self: Type[T], context: BuildContext
     ) -> Tuple[Any, List[str], str, str, Any]:
-        element = context[self.context_element]
+        element = context.get(self.context_element)
+
+        if not element:
+            raise ContextElementMissing(self, context)
 
         path = list_of_strings(self.target_attribute)
         attribute = ".".join(path)
@@ -508,6 +512,10 @@ class RuleSet(Model):
     # def from_config(cls: Type[T], config: Config) -> T:
     #     data = config.load_drone_output_rules()
     #     return cls(**data)
+
+    def __str__(self):
+        rules = [r.name for r in self.rules or []]
+        return f"<RuleSet {self.name} rules={rules}>"
 
     def apply(self, context: BuildContext) -> MatchedRule.List:
         required_conditions = self.required_conditions or []

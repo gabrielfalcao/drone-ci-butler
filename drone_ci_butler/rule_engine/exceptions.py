@@ -4,10 +4,11 @@ can be posted to slack or github if the user opts in the feature
 
 
 from typing import List, Union, Any, Optional
+from drone_ci_butler.exceptions import UserFriendlyException
 from drone_ci_butler.drone_api.models import BuildContext
 
 
-class InvalidCondition(Exception):
+class InvalidCondition(UserFriendlyException):
     def __init__(self, message, condition: Any, context: Optional[BuildContext] = None):
         self.message = message
         self.condition = condition
@@ -32,11 +33,22 @@ class CancelationRequested(InvalidCondition):
         super().__init__(message, None, context)
 
 
-class InvalidConditionSet(Exception):
+class InvalidConditionSet(UserFriendlyException):
     def __init__(self, message):
         super().__init__(f"{message}")
 
 
-class NotStringOrListOfStrings(Exception):
+class NotStringOrListOfStrings(UserFriendlyException):
     def __init__(self, v: Union[List[str], str]):
         super().__init__(f"got invalid value {v} {type(v)}")
+
+
+class ContextElementMissing(UserFriendlyException):
+    def __init__(self, condition: Any, context: BuildContext):
+        self.condition = condition
+        self.context = context
+        name = self.condition.context_element
+        description = self.condition.to_description()
+        super().__init__(
+            f"Could not process {description} because the {name} information is not present in the context {context}"
+        )
