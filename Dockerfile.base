@@ -1,0 +1,40 @@
+FROM python:3.7-alpine
+
+RUN apk --update --no-cache add \
+    bash \
+    build-base \
+    ca-certificates \
+    figlet \
+    gcc \
+    git \
+    libffi-dev \
+    openssl-dev \
+    make \
+    musl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libzmq \
+    libzmq-static \
+    cargo \
+    rust \
+    npm \
+    nodejs \
+    postgresql-dev \
+    postgresql-libs \
+    py3-openssl \
+    py3-pyzmq \
+    zeromq-dev \
+    python3-dev
+
+RUN mkdir -p /app /pip/cache
+RUN python3 -mvenv /venv
+
+WORKDIR /app
+
+COPY *.txt /app/
+
+ENV PIP_CACHE_DIR /pip/cache
+
+RUN /venv/bin/pip install -U pip
+RUN /venv/bin/pip install -U setuptools wheel
+RUN /venv/bin/pip install --no-binary :all: -r development.txt
