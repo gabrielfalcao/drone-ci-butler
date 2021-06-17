@@ -35,6 +35,5 @@ COPY *.txt /app/
 
 ENV PIP_CACHE_DIR /pip/cache
 
-RUN /venv/bin/pip install -U pip
-RUN /venv/bin/pip install -U setuptools wheel
-RUN /venv/bin/pip install --no-binary :all: -r development.txt
+RUN npm install -g webpack
+RUN /venv/bin/pip install -r development.txt
