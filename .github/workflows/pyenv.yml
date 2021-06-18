@@ -1,73 +1,89 @@
-name: 🐍 Python 3
+name: 🐍 Drone CI Butler
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   # pull_request:
-  #   branches: [ master ]
+  #   branches: [ main ]
 
 jobs:
   build:
     name: "Python Tests"
     runs-on: ubuntu-latest
+    container: python:3.7.5-buster
+    env:
+      POSTGRES_PASSWORD: drone_ci_butler
+      POSTGRES_USER: drone_ci_butler
+      POSTGRES_DB: drone_ci_butler
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      ELASTICSEARCH_HOST: elasticsearch
+      ALEMBIC_CONFIG: /tmp/alembic.ini
     strategy:
       matrix:
         python:
-          - 3.6.12
-          - 3.7.9
-          - 3.8.7
-          - 3.9.1
-
-    # services:
-    #   # Label used to access the service container
-    #   postgres:
-    #     # Docker Hub image
-    #     image: postgres
-    #     # Provide the password for postgres
-    #     env:
-    #       POSTGRES_DATABASE: test
-    #       POSTGRES_PASSWORD: postgres
-    #     # Set health checks to wait until postgres has started
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
+          - 3.7.5
+    services:
+      postgres:
+        image: postgres:13
+        env:  # env needs to be duplicated here or else github fails
+          POSTGRES_PASSWORD: drone_ci_butler
+          POSTGRES_USER: drone_ci_butler
+          POSTGRES_DB: drone_ci_butler
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 1s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v2
 
-    # - name: Update Apt
-    #   run: sudo apt-get update
+    # - name: Configure sysctl limits
+    #   run: |
+    #     swapoff -a
+    #     sysctl -w vm.swappiness=1
+    #     sysctl -w fs.file-max=262144
+    #     sysctl -w vm.max_map_count=262144
 
-    # - name: Install dependencies
-    #   run: sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl postgresql
-
-    - name: setup pyenv
-      uses: gabrielfalcao/pyenv-action@v7
+    - name: Runs Elasticsearch
+      uses: elastic/elastic-github-actions/elasticsearch@master
       with:
-        default: "${{ matrix.python }}"
+        stack-version: 7.13.1
 
-    - name: Cache VirtualEnv
+    - name: cache .venv
       id: cache-venv
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
-        path: .venv
-        key: ${{ runner.os }}-${{ hashFiles('*.txt') }}-python3.7
+        path: ~/.venv
+        key: ${{ runner.os }}-pip-${{ hashFiles('**.txt') }}-${{ matrix.python }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
-    - name: Unit Tests
+    - name: update apt
+      run: apt-get update
+
+    - name: install dependencies
+      run: apt-get install -y build-essential libxml2-dev libxslt1-dev libffi-dev libzmq3-dev
+
+    # - name: setup pyenv
+    #   uses: gabrielfalcao/pyenv-action@v7
+    #   with:
+    #     default: "${{ matrix.python }}"
+
+    - name: install dependencies
+      run: make develop setup
+
+    - name: run unit tests
       run: make unit
 
-    - name: Functional Tests
-      run: make functional
-      # env:
-      #     # The hostname used to communicate with the PostgreSQL service container
-      #     POSTGRES_HOST: postgres
-      #     POSTGRES_USERNAME: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     POSTGRES_DATABASE: test
-      #     # The default PostgreSQL port
-      #     POSTGRES_PORT: 5432
+    - name: run db migrations
+      run: make db-migrate
+
+    # - name: run functional tests
+    #   run: make functional
 
     - name: "Upload coverage results to codecov.io"
       uses: codecov/codecov-action@v1
