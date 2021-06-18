@@ -2,6 +2,7 @@ import os
 import yaml
 import json
 import redis
+import logging
 import multiprocessing
 from sqlalchemy.engine.url import make_url
 from typing import Optional, List, Any, Dict
@@ -9,13 +10,12 @@ from functools import lru_cache
 from pathlib import Path
 from collections import defaultdict
 from uiclasses import DataBag, DataBagChild, UserFriendlyObject
-from drone_ci_butler.logs import get_logger
-from drone_ci_butler.exceptions import ConfigMissing
+from drone_ci_butler.exceptions import ConfigMissing, UserFriendlyException
 from drone_ci_butler.meta import MetaConfig, ConfigProperty
 from drone_ci_butler.util import load_yaml
 
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class Config(DataBag, metaclass=MetaConfig):
@@ -109,14 +109,14 @@ class Config(DataBag, metaclass=MetaConfig):
         "port",
         fallback_env="REDIS_PORT",
         default_value=6379,
-        coerce=int,
+        deserialize=int,
     )
     REDIS_DB = ConfigProperty(
         "redis",
         "db",
         fallback_env="REDIS_DB",
         default_value=0,
-        coerce=int,
+        deserialize=int,
     )
     SECRET_KEY = ConfigProperty(
         "auth",
@@ -262,7 +262,7 @@ class Config(DataBag, metaclass=MetaConfig):
         "max_per_process",
         fallback_env="DRONE_CI_BUTLER_MAX_GREENLETS_PER_PROCESS",
         default_value=multiprocessing.cpu_count(),
-        coerce=int,
+        deserialize=int,
     )
     drone_api_max_pages = ConfigProperty(
         "drone",
@@ -270,7 +270,7 @@ class Config(DataBag, metaclass=MetaConfig):
         "max_pages",
         fallback_env="DRONE_API_MAX_PAGES",
         default_value=100000,
-        coerce=int,
+        deserialize=int,
     )
     drone_api_initial_page = ConfigProperty(
         "drone",
@@ -278,7 +278,7 @@ class Config(DataBag, metaclass=MetaConfig):
         "initial_page",
         fallback_env="DRONE_API_INITIAL_PAGE",
         default_value=0,
-        coerce=int,
+        deserialize=int,
     )
     drone_api_max_builds = ConfigProperty(
         "drone",
@@ -286,7 +286,7 @@ class Config(DataBag, metaclass=MetaConfig):
         "max_builds",
         fallback_env="DRONE_API_MAX_BUILDS",
         default_value=250000,
-        coerce=int,
+        deserialize=int,
     )
     elasticsearch_host = ConfigProperty(
         "elasticsearch",
@@ -299,14 +299,35 @@ class Config(DataBag, metaclass=MetaConfig):
         "port",
         fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_PORT",
         default_value=9200,
-        coerce=int,
+        deserialize=int,
     )
     elasticsearch_pool_size = ConfigProperty(
         "elasticsearch",
         "pool_size",
         fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_POOL_SIZE",
         default_value=multiprocessing.cpu_count(),
-        coerce=int,
+        deserialize=int,
+    )
+
+    elastic_search_logs_index = ConfigProperty(
+        "elasticsearch",
+        "logs_index",
+        fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_LOGS_INDEX",
+        default_value="drone_ci_butler_logs",
+    )
+
+    logging_level_default = ConfigProperty(
+        "logging",
+        "default_level",
+        fallback_env="DRONE_CI_BUTLER_DEFAULT_LOGLEVEL",
+        default_value="DEBUG",
+        deserialize=lambda x: str(x).upper(),
+    )
+    enable_json_logging = ConfigProperty(
+        "logging",
+        "enable_json",
+        fallback_env="DRONE_CI_BUTLER_ENABLE_JSON_LOGGING",
+        deserialize=bool,
     )
 
     @property
@@ -349,6 +370,22 @@ class Config(DataBag, metaclass=MetaConfig):
     @property
     def database_port(self) -> int:
         return make_url(self.sqlalchemy_uri).port or 5432
+
+    @property
+    def logging_mapping(self) -> Dict[str, str]:
+
+        try:
+            mapping = dict(self.traverse("logging", "mapping") or {})
+        except Exception as e:
+            raise UserFriendlyException(
+                f"Invalid logging mapping, not a dict: {repr(mapping)}"
+            )
+
+        if not isinstance(mapping, dict):
+            raise RuntimeError(f"Invalid logging mapping, not a dict: {repr(mapping)}")
+            return {}
+
+        return mapping
 
 
 config = Config()

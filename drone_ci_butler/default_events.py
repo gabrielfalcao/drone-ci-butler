@@ -17,8 +17,6 @@ from blinker import signal
 from requests import Request, Response
 from humanfriendly.text import pluralize
 
-from chemist import Model
-from chemist import MODEL_REGISTRY
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.sql.models.user import User, AccessToken
 from drone_ci_butler.drone_api.models import Build, Stage, Step, Output
@@ -27,14 +25,6 @@ from drone_ci_butler.slack import SlackClient
 
 
 logger = get_logger("system-events")
-
-
-def model(name) -> Model:
-    Model = MODEL_REGISTRY.get(name)
-    if not Model:
-        raise KeyError("Model {repr(name)} not declared in {MODEL_REGISTRY}")
-
-    return MODEL_REGISTRY[name]
 
 
 @github_event.connect
@@ -103,12 +93,15 @@ def log_get_builds(
     )
 
     for build in builds:
-        stored_build = DroneBuild.get_or_create_from_drone_api(
-            owner, repo, build_number=build.number, build=build
-        )
-        logger.debug(
-            f"stored updated build information for build {build.number} {build.link}: {stored_build}"
-        )
+        try:
+            stored_build = DroneBuild.get_or_create_from_drone_api(
+                owner, repo, build_number=build.number, build=build
+            )
+            logger.debug(
+                f"stored updated build information for build {build.number} {build.link}: {stored_build}"
+            )
+        except Exception:
+            pass
 
 
 # @get_build_info.connect

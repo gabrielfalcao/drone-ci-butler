@@ -1,9 +1,10 @@
 import json
 import yaml
+import logging
 from pathlib import Path
-from drone_ci_butler.logs import get_logger
 
-logger = get_logger(__name__)
+
+logger = logging.getLogger(__name__)
 
 
 def load_json(what, default=None) -> str:

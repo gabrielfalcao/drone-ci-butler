@@ -11,18 +11,18 @@ class ConfigProperty(UserFriendlyObject):
     path: List[str]
     fallback_env: str
     default_value: Any
-    coerce: callable
+    deserialize: callable
 
     def __init__(self, *path: List[str], **kw):
         name = kw.pop("name", None)
         fallback_env = kw.pop("fallback_env", None)
         default_value = kw.pop("default_value", None)
 
-        coerce = kw.pop("coerce", None)
-        if coerce:
-            self.coerce = coerce
+        deserialize = kw.pop("deserialize", None)
+        if deserialize:
+            self.deserialize = deserialize
         else:
-            self.coerce = lambda x: x
+            self.deserialize = lambda x: x
 
         if not path and not fallback_env:
             raise SyntaxError(
@@ -59,9 +59,11 @@ class ConfigProperty(UserFriendlyObject):
             )
 
         try:
-            return self.coerce(value)
+            return self.deserialize(value)
         except Exception as e:
-            logger.warning(f"failed to coerce value {value} with {self.coerce}: {e}")
+            logger.warning(
+                f"failed to deserialize value {value} with {self.deserialize}: {e}"
+            )
             return value
 
 

@@ -5,6 +5,7 @@ gevent.monkey.patch_all()
 import sys
 import time
 import socket
+import logging
 import json
 import click
 import multiprocessing
@@ -226,7 +227,7 @@ def get_builds(ctx, initial_page, rep_connect_address, max_builds, max_pages):
                 if "/pull/" not in build.link:
                     continue
 
-                logger.info(
+                logger.debug(
                     f"enqueing {build.link} (#{build.number} by {build.author_login})"
                 )
                 worker.send({"build_id": build.number, "ignore_filters": True})
@@ -310,8 +311,29 @@ def purge_elasticsearch():
     es = connect_to_elasticsearch()
     owner = config.drone_github_owner
     repo = config.drone_github_repo
-    for index in ("drone_builds", f"drone_ci_butler_builds-{owner}-{repo}"):
+    get_logger("elasticsearch").setLevel(logging.INFO)
+    for index in (
+        f"drone*_builds_{owner}_{repo}",
+        "drone_builds_{owner}_{repo}",
+        "drone_builds",
+        "drone*",
+        f"drone_ci_butler_builds-{owner}-{repo}",
+    ):
+
         try:
-            print(es.indices.delete(index=index))
+            es.indices.delete(index=index, ignore=[400, 404])
         except Exception as e:
-            logger.error(f'failed to purge index "{index}": {e}')
+            logger.warning(f'failed to purge index "{index}": {e}')
+
+
+@main.command("index")
+def index_builds_elasticsearch():
+    sql.setup_db()
+    es = connect_to_elasticsearch()
+    owner = config.drone_github_owner
+    repo = config.drone_github_repo
+    get_logger("elasticsearch").setLevel(logging.INFO)
+    for build in DroneBuild.all():
+        es.index(
+            f"drone_builds_{owner}_{repo}", id=build.number, body=build.to_document()
+        )

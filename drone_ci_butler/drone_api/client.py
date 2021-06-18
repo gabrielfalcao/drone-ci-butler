@@ -1,3 +1,4 @@
+from redis import Redis
 import logging
 from urllib.parse import urljoin
 from pathlib import Path
@@ -15,21 +16,21 @@ from drone_ci_butler.drone_api.exceptions import invalid_response, ClientError, 
 
 logger = get_logger(__name__)
 
-ALLOWED_GITHUB_USERS = (
-    "Emmawaterman",
-    "caiogondim",
-    "coolov",
-    "delambo",
-    "fesebuv",
-    "gabrielfalcao",
-    "ilyaGurevich",
-    "iocedano",
-    "kmnaid",
-    "marzagao",
-    "montmanu",
-    "staylor",
-    "woodb",
-)
+# ALLOWED_GITHUB_USERS = (
+#     "Emmawaterman",
+#     "caiogondim",
+#     "coolov",
+#     "delambo",
+#     "fesebuv",
+#     "gabrielfalcao",
+#     "ilyaGurevich",
+#     "iocedano",
+#     "kmnaid",
+#     "marzagao",
+#     "montmanu",
+#     "staylor",
+#     "woodb",
+# )
 
 
 class DroneAPIClient(object):
@@ -46,6 +47,7 @@ class DroneAPIClient(object):
         self.max_pages = max_pages
         self.max_builds = max_builds
         self.cache = HttpCache()
+        self.redis = Redis
 
     def make_url(self, path) -> str:
         return urljoin(self.api_url, path)
@@ -75,7 +77,6 @@ class DroneAPIClient(object):
             return response
 
         interaction = self.cache.set(response.request, response)
-        # print(f'\033[1;31mcache miss \033[2m{method} {path}\033[0m')
         return interaction.response()
 
     def get_builds(
@@ -107,7 +108,7 @@ class DroneAPIClient(object):
         )
 
         total_builds = len(builds) + count
-        logger.info(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
+        logger.debug(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
         if total_builds < self.max_builds and page < max_pages:
             next_page = self.get_builds(
                 owner, repo, limit, page + 1, count=total_builds, max_pages=max_pages
@@ -155,7 +156,7 @@ class DroneAPIClient(object):
         )
 
         total_builds = len(builds) + count
-        logger.info(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
+        logger.debug(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
         if total_builds < self.max_builds and page < max_pages:
             yield from self.iter_builds_by_page(
                 owner, repo, limit, page + 1, count=total_builds, max_pages=max_pages

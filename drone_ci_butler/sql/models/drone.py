@@ -8,7 +8,14 @@ from uiclasses import UserFriendlyObject
 from drone_ci_butler.drone_api.models import Build, Output
 from .base import metadata
 from .exceptions import BuildNotFound
+from drone_ci_butler.es import connect_to_elasticsearch
+from drone_ci_butler.config import config
+from drone_ci_butler.logs import get_logger
 from drone_ci_butler.util import load_json
+
+es = connect_to_elasticsearch()
+
+logger = get_logger(__name__)
 
 
 class DroneBuild(Model):
@@ -35,14 +42,29 @@ class DroneBuild(Model):
         db.Column("matches_json", db.UnicodeText),
     )
 
+    def save(self, *args, **kw):
+        result = super().save(*args, **kw)
+
+        try:
+            es.index(
+                f"drone_builds_{config.drone_github_owner}_{config.drone_github_repo}",
+                id=self.number,
+                body=self.to_document(),
+            )
+        except Exception:
+            pass
+
+        return result
+
     def to_document(self):
         data = self.to_dict()
 
         data["matches"] = load_json(data.pop("matches_json", None))
+        data["build"] = load_json(data.pop("drone_api_data", None))
         return data
 
     def update_matches(self, matches: List[UserFriendlyObject]):
-        matches_json = json.dumps([m.to_dict() for m in matches], default=str)
+        matches_json = json.dumps([m.to_description() for m in matches], default=str)
         return self.update_and_save(
             matches_json=matches_json, last_ruleset_processed_at=datetime.utcnow()
         )

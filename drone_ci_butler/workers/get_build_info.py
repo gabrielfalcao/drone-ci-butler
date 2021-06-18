@@ -60,29 +60,49 @@ class GetBuildInfoWorker(PullerWorker):
     def fetch_data(
         self, owner: str, repo: str, build_id: int, ignore_filters: bool = False
     ):
+        logmeta = dict(
+            owner=owner,
+            repo=repo,
+            build_id=build_id,
+        )
         try:
             build = self.api.get_build_info(owner, repo, build_id)
+            logmeta.update(
+                dict(
+                    build_number=build.number,
+                    build_link=build.number,
+                    build_status=build.status,
+                    author_login=build.author_login,
+                    build=build and build.to_dict() or {},
+                )
+            )
         except Exception as e:
-            self.logger.exception(f"failed to retrieve build {owner}/{repo} {build_id}")
+            self.logger.exception(
+                f"failed to retrieve build {owner}/{repo} {build_id}",
+                extra=dict(logmeta),
+            )
             return
 
         # if the build has been already stored, is not running and has not been updated in postgres then we proceed
         stored = DroneBuild.find_one_by(owner=owner, repo=repo, link=build.link)
         if stored and stored.last_ruleset_processed_at:
             self.logger.warning(
-                f"{build.author_login}'s build ({build.link}) has already been processed and will not be processed: {stored.status}"
+                f"{build.author_login}'s build ({build.link}) has already been processed and will not be processed: {stored.status}",
+                extra=dict(logmeta),
             )
             return
 
         if not ignore_filters:
             if stored and not stored.is_running() and not stored.requires_processing():
                 self.logger.warning(
-                    f"{build.author_login}'s build ({build.link}) has already been processed and will not be processed: {stored.status}"
+                    f"{build.author_login}'s build ({build.link}) has already been processed and will not be processed: {stored.status}",
+                    extra=dict(logmeta),
                 )
                 return
 
-        self.logger.info(
-            f"storing build {build.number} from {build.link} by {build.author_login}: {build.status}"
+        self.logger.debug(
+            f"storing build {build.number} from {build.link} by {build.author_login}: {build.status}",
+            extra=dict(logmeta),
         )
         # otherwise we store the build, even if it
         stored = DroneBuild.get_or_create_from_drone_api(
@@ -92,22 +112,32 @@ class GetBuildInfoWorker(PullerWorker):
         pr_number = try_parse_github_pull_request_number(build.link)
         user = User.find_one_by(github_username=build.author_login)
 
+        logmeta.update(
+            {
+                "user": user and user.to_dict() or {},
+                "pr_number": pr_number,
+            }
+        )
+
         if not pr_number:
             self.logger.debug(
-                f"ignoring build that is not from a Github PR: {build.link} by {repr(build.author_login)}"
+                f"ignoring build that is not from a Github PR: {build.link} by {repr(build.author_login)}",
+                extra=logmeta,
             )
             return
 
         if not ignore_filters:
             if not user:
                 self.logger.warning(
-                    f"ignoring build from a user that has not opted in: {build.author_login}"
+                    f"ignoring build from a user that has not opted in: {build.author_login}",
+                    extra=logmeta,
                 )
                 return
 
             if build.status not in ("running", "failure"):
                 self.logger.warning(
-                    f"ignoring {build.status} build {build.number} of PR #{pr_number} by {build.author_name}"
+                    f"ignoring {build.status} build {build.number} of PR #{pr_number} by {build.author_name}",
+                    extra=dict(logmeta),
                 )
                 return
 
@@ -118,43 +148,66 @@ class GetBuildInfoWorker(PullerWorker):
             build=build,
         )
 
-        self.process_rulesets(build, stored, user, owner, repo)
+        self.process_rulesets(build, stored, user, owner, repo, extra=dict(logmeta))
 
     def process_rulesets(
-        self, build: Build, stored: DroneBuild, user: User, owner: str, repo: str
+        self,
+        build: Build,
+        stored: DroneBuild,
+        user: User,
+        owner: str,
+        repo: str,
+        **logmeta,
     ):
+
         try:
             es = connect_to_elasticsearch()
         except Exception as e:
-            self.logger.error(f"failed to connect to elasticsearch: {e}")
+            self.logger.error(
+                f"failed to connect to elasticsearch: {e}",
+                extra=dict(logmeta),
+            )
             es = None
 
         for stage in build.failed_stages():
+            logmeta.update({"stage": stage and stage.to_dict() or {}})
             for step in stage.failed_steps():
+                logmeta.update({"step": step and step.to_dict() or {}})
                 context = BuildContext(
                     build=build,
                     stage=stage,
                     step=step,
                 )
-                self.logger.info(
-                    f"processing ruleset {wf_project_vi} against {context}"
+                self.logger.debug(
+                    f"processing ruleset {wf_project_vi} against {context}",
+                    extra=dict(logmeta),
                 )
 
                 matches = wf_project_vi.apply(context)
-
+                described_matches = [m.to_description() for m in matches]
+                logmeta.update({"matched_rules": described_matches})
                 if matches and user:
                     stored.update_matches(matches)
+                    self.logger.info(
+                        f"ruleset matches for step {step}",
+                        extra=dict(logmeta),
+                    )
+
                     if es:
                         try:
                             document = stored.to_document()
+                            document["build"] = build.to_dict()
+                            document["stage"] = stage.to_dict()
+                            document["step"] = step.to_dict()
                             es.index(
-                                index=f"drone_ci_butler_builds-{owner}-{repo}",
+                                index=f"drone_ci_butler_builds_{owner}_{repo}",
                                 id=stored.id,
                                 body=document,
                             )
                         except Exception as e:
                             self.logger.warning(
-                                f"failed to index {stored} in elasticsearch: {e}"
+                                f"failed to index {stored} in elasticsearch: {e}",
+                                extra=dict(logmeta),
                             )
 
                     user.notify_ruleset_matches(context, matches)
@@ -166,9 +219,15 @@ class GetBuildInfoWorker(PullerWorker):
                     and "🖤 404" in str(output.lines)
                 ):
                     message = "**http-status-check** failed for {step.to_markdown()}"
+                    self.logger.info(
+                        message,
+                        extra=dict(logmeta),
+                    )
+
                     user.notify_error(message, context, matches)
                     continue
                 elif user:
                     self.logger.warning(
-                        "no ruleset matches for build {build.number} {build.link} by {build.author_login}"
+                        "no ruleset matches for build {build.number} {build.link} by {build.author_login}",
+                        extra=dict(logmeta),
                     )
