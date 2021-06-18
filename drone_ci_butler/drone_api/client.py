@@ -125,6 +125,42 @@ class DroneAPIClient(object):
             )
         return all_builds
 
+    def iter_builds_by_page(
+        self, owner: str, repo: str, limit=10000, page=0, count=0, max_pages=None
+    ) -> Build.List:
+        result = self.request(
+            "GET",
+            f"/api/repos/{owner}/{repo}/builds",
+            params={"page": page, "limit": limit},
+            skip_cache=True,
+        )
+        all_builds = Build.List(result.json())
+        max_pages = max_pages or self.max_pages + page
+        builds = Build.List(
+            map(
+                lambda build: build.with_headers(result.headers),
+                all_builds,
+            )
+        )
+        yield builds, page, max_pages
+        events.iter_builds_by_page.send(
+            self,
+            owner=owner,
+            repo=repo,
+            limit=limit,
+            page=page,
+            builds=all_builds,
+            max_builds=self.max_builds,
+            max_pages=max_pages,
+        )
+
+        total_builds = len(builds) + count
+        logger.info(f"Retrieved {total_builds} builds for {owner}/{repo} page {page}")
+        if total_builds < self.max_builds and page < max_pages:
+            yield from self.iter_builds_by_page(
+                owner, repo, limit, page + 1, count=total_builds, max_pages=max_pages
+            )
+
     def get_build_info(self, owner: str, repo: str, build_number: str) -> Build:
         result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_number}")
         build = Build(result.json()).with_headers(result.headers)

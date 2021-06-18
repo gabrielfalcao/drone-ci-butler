@@ -2,6 +2,8 @@ import os
 import yaml
 import json
 import redis
+import multiprocessing
+from sqlalchemy.engine.url import make_url
 from typing import Optional, List, Any, Dict
 from functools import lru_cache
 from pathlib import Path
@@ -9,75 +11,11 @@ from collections import defaultdict
 from uiclasses import DataBag, DataBagChild, UserFriendlyObject
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.exceptions import ConfigMissing
+from drone_ci_butler.meta import MetaConfig, ConfigProperty
+from drone_ci_butler.util import load_yaml
+
 
 logger = get_logger(__name__)
-
-
-def load_yaml(path: Path) -> dict:
-    try:
-        path = path.expanduser().absolute()
-        with path.open() as fd:
-            return yaml.load(fd, Loader=yaml.FullLoader)
-    except Exception as e:
-        logger.warning(f"failed to load path {path}: {e}")
-        return {}
-
-
-class ConfigProperty(UserFriendlyObject):
-    name: str
-    path: List[str]
-    fallback_env: str
-    default_value: Any
-
-    def __init__(self, *path: List[str], **kw):
-        name = kw.pop("name", None)
-        fallback_env = kw.pop("fallback_env", None)
-        default_value = kw.pop("default_value", None)
-
-        if not path and not fallback_env:
-            raise SyntaxError(
-                f"ConfigProperty requires at least one path name, or a fallback_env keyword-arg"
-            )
-        for k, v in dict(
-            name=name or fallback_env,
-            path=list(path),
-            fallback_env=fallback_env,
-            default_value=default_value,
-            **kw,
-        ).items():
-            setattr(self, k, v)
-
-    def resolve(self, config: DataBag, file_path: Optional[Path]):
-        name = self.name or self.fallback_env
-        attr = ".".join(self.path)
-        value = None
-        if self.path:
-            value = config.traverse(*self.path)
-
-        if not value and self.fallback_env:
-            value = os.getenv(self.fallback_env)
-
-        if not value and self.default_value is not None:
-            value = self.default_value
-
-        if value is None:
-            raise ConfigMissing(
-                attr,
-                file_path,
-                self.fallback_env,
-            )
-
-        return value
-
-
-class MetaConfig(type):
-    def __new__(cls, name, bases, attributes):
-        config_properties = dict(
-            [(k, v) for k, v in attributes.items() if isinstance(v, ConfigProperty)]
-        )
-        attributes["__fields__"] = config_properties
-        return type.__new__(cls, name, bases, attributes)
-        return cls
 
 
 class Config(DataBag, metaclass=MetaConfig):
@@ -102,19 +40,35 @@ class Config(DataBag, metaclass=MetaConfig):
                 env[field.fallback_env] = self.resolve_property(field, data=dict(self))
         return env
 
-    def to_env_declaration(self) -> str:
+    def to_shell_env_declaration(self) -> str:
         parts = [
             f"{key}={value}"
             for key, value in sorted(self.to_env_vars().items(), key=lambda kv: kv[0])
         ]
         return "\n".join(parts)
 
+    def to_docker_env_declaration(self) -> str:
+        parts = [
+            f"ENV {key} {value}"
+            for key, value in sorted(self.to_env_vars().items(), key=lambda kv: kv[0])
+        ]
+        return "\n".join(parts)
+
     def resolve_property(
-        self, field: ConfigProperty, name: Optional[str] = None, data: DataBag = None
+        self,
+        field: ConfigProperty,
+        name: Optional[str] = None,
+        data: DataBag = None,
+        fail: bool = False,
     ) -> Any:
         name = name or field.name
         container = DataBag(data or {})
-        value = field.resolve(container, file_path=self.path)
+        try:
+            value = field.resolve(container, file_path=self.path)
+        except Exception as e:
+            if fail:
+                raise
+            value = field.default_value
         if name:
             container[name] = value
 
@@ -208,6 +162,20 @@ class Config(DataBag, metaclass=MetaConfig):
         "app_user_token",
         fallback_env="SLACK_APP_USER_TOKEN",
     )
+    slack_state_path = ConfigProperty(
+        "slack",
+        "store",
+        "state_path",
+        fallback_env="SLACK_STORE_STATE_PATH",
+        default_value=".slack/state",
+    )
+    slack_installation_path = ConfigProperty(
+        "slack",
+        "store",
+        "installation_path",
+        fallback_env="SLACK_STORE_INSTALLATION_PATH",
+        default_value=".slack/installation",
+    )
 
     sqlalchemy_uri = ConfigProperty(
         "sqlalchemy",
@@ -276,6 +244,63 @@ class Config(DataBag, metaclass=MetaConfig):
         default_value="tcp://127.0.0.1:5002",
     )
 
+    web_host = ConfigProperty(
+        "web",
+        "hostname",
+        fallback_env="DRONE_CI_BUTLER_WEB_HOSTNAME",
+        default_value="0.0.0.0",
+    )
+    web_port = ConfigProperty(
+        "web",
+        "port",
+        fallback_env="DRONE_CI_BUTLER_WEB_PORT",
+        default_value=4000,
+    )
+
+    max_workers_per_process = ConfigProperty(
+        "workers",
+        "max_per_process",
+        fallback_env="DRONE_CI_BUTLER_MAX_GREENLETS_PER_PROCESS",
+        default_value=multiprocessing.cpu_count(),
+        coerce=int,
+    )
+    drone_api_max_pages = ConfigProperty(
+        "drone",
+        "api",
+        "max_pages",
+        fallback_env="DRONE_API_MAX_PAGES",
+        default_value=100000,
+        coerce=int,
+    )
+    drone_api_initial_page = ConfigProperty(
+        "drone",
+        "api",
+        "initial_page",
+        fallback_env="DRONE_API_INITIAL_PAGE",
+        default_value=0,
+        coerce=int,
+    )
+    drone_api_max_builds = ConfigProperty(
+        "drone",
+        "api",
+        "max_builds",
+        fallback_env="DRONE_API_MAX_BUILDS",
+        default_value=250000,
+        coerce=int,
+    )
+    elasticsearch_host = ConfigProperty(
+        "elasticsearch",
+        "hostname",
+        fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_HOSTNAME",
+        default_value="localhost",
+    )
+    elasticsearch_port = ConfigProperty(
+        "elasticsearch",
+        "port",
+        fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_PORT",
+        default_value=9200,
+    )
+
     @property
     @lru_cache()
     def SESSION_REDIS(self):
@@ -299,28 +324,23 @@ class Config(DataBag, metaclass=MetaConfig):
 
     @property
     def slack_installation_store_path(self) -> Path:
-        p = (
-            Path(self.traverse("slack", "store", "installation_path"))
-            .expanduser()
-            .absolute()
-        )
+        p = Path(self.slack_installation_path).expanduser().absolute()
         p.mkdir(exist_ok=True, parents=True)
         return p
 
     @property
     def slack_state_store_path(self) -> Path:
-        p = Path(self.traverse("slack", "store", "state_path")).expanduser().absolute()
+        p = Path(self.slack_state_path).expanduser().absolute()
         p.mkdir(exist_ok=True, parents=True)
         return p
 
-    def to_flask(self):
-        for name in dir(self):
-            if name == name.upper():
-                try:
-                    os.environ[name] = str(getattr(self, name) or "")
-                except Exception:
-                    pass
-        return self
+    @property
+    def database_hostname(self) -> str:
+        return make_url(self.sqlalchemy_uri).host
+
+    @property
+    def database_port(self) -> int:
+        return make_url(self.sqlalchemy_uri).port or 5432
 
 
 config = Config()

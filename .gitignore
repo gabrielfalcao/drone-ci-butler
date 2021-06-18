@@ -67,3 +67,5 @@ drone_ci_butler/web/public/static/
 drone_ci_butler/web/public/
 *#*
 *.#*
+postgres-data
+redis-data

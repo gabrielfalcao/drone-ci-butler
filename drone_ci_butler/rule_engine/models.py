@@ -514,8 +514,7 @@ class RuleSet(Model):
     #     return cls(**data)
 
     def __str__(self):
-        rules = [r.name for r in self.rules or []]
-        return f"<RuleSet {self.name} rules={rules}>"
+        return f"<RuleSet {self.name}>"
 
     def apply(self, context: BuildContext) -> MatchedRule.List:
         required_conditions = self.required_conditions or []

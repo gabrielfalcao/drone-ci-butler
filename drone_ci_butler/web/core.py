@@ -39,7 +39,7 @@ class Application(Flask):
         self.setup_app()
 
     def setup_app(self):
-        self.config.from_object(config.to_flask())
+        self.config.from_object(config)
         self.setup_routes()
         self.setup_cors()
         self.setup_session()

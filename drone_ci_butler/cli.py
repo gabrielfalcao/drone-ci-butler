@@ -2,10 +2,19 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
+import sys
 import time
+import socket
 import json
 import click
 import multiprocessing
+
+# enable default event handlers
+import drone_ci_butler.default_events
+
+from alembic.config import Config as AlembicConfig
+from alembic import command as alembic_command
+
 from gevent.pool import Pool
 from typing import Optional
 from uiclasses import Model
@@ -13,10 +22,11 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from zmq.devices import ProxySteerable
 
+from drone_ci_butler.version import version
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
 from drone_ci_butler.slack import SlackClient
-from drone_ci_butler.logs import logger
+from drone_ci_butler.logs import get_logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 from drone_ci_butler.web import webapp
 from drone_ci_butler.config import config
@@ -24,12 +34,10 @@ from drone_ci_butler.sql.models.slack import SlackMessage
 from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
+from drone_ci_butler.exceptions import ConfigMissing
 
-DEFAULT_QUEUE_ADDRESS = "tcp://127.0.0.1:5555"
-DEFAULT_PUSH_ADDRESS = "tcp://127.0.0.1:6666"
-DEFAULT_PULL_ADDRESS = "tcp://127.0.0.1:7777"
-DEFAULT_PUB_MONITOR_ADDRESS = "tcp://127.0.0.1:7765"
-DEFAULT_CONTROL_BIND_ADDRESS = "tcp://127.0.0.1:6556"
+
+alembic_ini_path = Path(__file__).parent.joinpath("alembic.ini").absolute()
 
 
 class Context(Model):
@@ -39,21 +47,37 @@ class Context(Model):
     repo: str
 
 
+logger = get_logger(__name__)
+
+
+def command_line_tool():
+    try:
+        main()
+    except ConfigMissing as e:
+        print_error(f"{e}")
+        raise SystemExit(1)
+
+
 @click.group()
-@click.option("-t", "--drone-access-token", default="VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy")
-@click.option("-u", "--drone-url", default="https://drone.dv.nyt.net/")
-@click.option("-o", "--owner", default="nytm")
-@click.option("-r", "--repo", default="wf-project-vi")
+@click.option("-u", "--drone-url", default=config.drone_url)
+@click.option("-t", "--drone-access-token", default=config.drone_access_token)
+@click.option("-o", "--owner", default=config.drone_github_owner)
+@click.option("-r", "--repo", default=config.drone_github_repo)
 @click.pass_context
-def main(ctx, drone_access_token, drone_url, owner, repo):
-    print("DroneCI Butler")
-    sql.setup_db()
+def main(ctx, drone_url, drone_access_token, owner, repo):
+    if sys.stdout.isatty():
+        print(f"\033[2;32mDroneCI Butler \033[1mv{version}\033[0m")
     ctx.obj = {
         "drone_url": drone_url,
         "access_token": drone_access_token,
         "github_owner": owner,
         "github_repo": repo,
     }
+
+
+@main.command("check")
+def healthcheck():
+    print("Python modules were installed properly 🎉\n")
 
 
 @main.command("slack")
@@ -99,26 +123,37 @@ def slack_test():
 
 
 @main.command("web")
-@click.option("-H", "--host", default="0.0.0.0")
-@click.option("-P", "--port", default=4000, type=int)
+@click.option("-H", "--host", default=config.web_host)
+@click.option("-P", "--port", default=config.web_port, type=int)
 @click.option("-D", "--debug", is_flag=True)
 @click.pass_context
-def workers(ctx, host, port, debug):
+def web(ctx, host, port, debug):
+    sql.setup_db()
     webapp.run(debug=debug, port=port, host=host)
 
 
 @main.command("workers")
-@click.option("-s", "--queue-address", default=DEFAULT_QUEUE_ADDRESS)
-@click.option("-m", "--max-workers", default=multiprocessing.cpu_count(), type=int)
+@click.option("-s", "--queue-address", default=config.worker_queue_address)
+@click.option("-m", "--max-workers", default=config.max_workers_per_process, type=int)
 @click.pass_context
 def workers(ctx, queue_address, max_workers):
-    pool = Pool()
+    sql.setup_db()
+    if max_workers < 2:
+        logger.error(f"{' '.join(sys.argv)}")
+        logger.error(f"the setting -m/--max-workers cannot be lower than 2")
+        raise SystemExit(1)
+
+    pool_size = max_workers
+    pool = Pool(pool_size)
     queue_server = QueueServer(queue_address, "inproc://build-info")
 
+    # the +1 from pool_size
     pool.spawn(queue_server.run)
-    for worker_id in range(max_workers):
+
+    for worker_id in range(pool_size - 1):
         build_info_worker = GetBuildInfoWorker(
-            "inproc://build-info", worker_id, **ctx.obj
+            "inproc://build-info",
+            worker_id,
         )
         pool.spawn(build_info_worker.run)
 
@@ -131,22 +166,24 @@ def workers(ctx, queue_address, max_workers):
 
 
 @main.command("worker:get_build_info")
-@click.option("-c", "--pull-connect-address", default=DEFAULT_PUSH_ADDRESS)
+@click.option("-c", "--pull-connect-address", default=config.worker_push_address)
 @click.pass_context
 def worker_get_build_info(ctx, pull_connect_address):
+    sql.setup_db()
     worker = GetBuildInfoWorker(pull_connect_address)
     worker.run()
 
 
-@main.command("worker:queue")
-@click.option("-s", "--pull-bind-address", default=DEFAULT_PULL_ADDRESS)
-@click.option("-p", "--push-bind-address", default=DEFAULT_PUSH_ADDRESS)
-@click.option("-P", "--pub-bind-address", default=DEFAULT_PUB_MONITOR_ADDRESS)
-@click.option("-C", "--control-bind-address", default=DEFAULT_CONTROL_BIND_ADDRESS)
+@main.command("queue")
+@click.option("-s", "--pull-bind-address", default=config.worker_pull_address)
+@click.option("-p", "--push-bind-address", default=config.worker_push_address)
+@click.option("-P", "--pub-bind-address", default=config.worker_monitor_address)
+@click.option("-C", "--control-bind-address", default=config.worker_control_address)
 @click.pass_context
 def worker_queue(
     ctx, pull_bind_address, push_bind_address, pub_bind_address, control_bind_address
 ):
+    sql.setup_db()
     device = ProxySteerable(
         frontend=zmq.PULL, backend=zmq.PUSH, capture=zmq.PUB, control=zmq.PULL
     )
@@ -158,68 +195,110 @@ def worker_queue(
 
 
 @main.command("builds")
-@click.option("-d", "--days", default=30, type=int)
-@click.option("-P", "--max-pages", default=1000, type=int)
-@click.option("-m", "--max-builds", default=1000000, type=int)
-@click.option("-c", "--rep-connect-address", default=DEFAULT_QUEUE_ADDRESS)
+@click.option("-p", "--initial-page", default=config.drone_api_initial_page, type=int)
+@click.option("-P", "--max-pages", default=config.drone_api_max_pages, type=int)
+@click.option("-m", "--max-builds", default=config.drone_api_max_builds, type=int)
+@click.option("-c", "--rep-connect-address", default=config.worker_queue_address)
 @click.pass_context
-def get_builds(ctx, rep_connect_address, days, max_builds, max_pages):
+def get_builds(ctx, initial_page, rep_connect_address, max_builds, max_pages):
+    sql.setup_db()
     client = DroneAPIClient(
-        url=ctx.obj["drone_url"],
-        access_token=ctx.obj["access_token"],
+        ctx.obj["drone_url"],
+        ctx.obj["access_token"],
         max_builds=max_builds,
         max_pages=max_pages,
     )
-    # builds = client.get_builds(ctx.obj["github_owner"], ctx.obj["github_repo"])
-    # builds = builds.filter(
-    #     lambda b: b.finished_at > datetime.utcnow() - timedelta(days=days)
-    #     and b.author_login == "gabrielfalcao"
-    # )
 
-    b = client.get_build_info("nytm", "wf-project-vi", 139181)
-    builds = Build.List([b])
-    count = len(builds)
-    print(f"found {count} failed builds in the last {days} days")
-    for i, build in enumerate(builds, start=1):
-        worker = QueueClient(rep_connect_address)
-        worker.connect()
-        print(
-            f" -> enqueing build {i} of {count} for output analysis (#{build.number} by {build.author_login})"
-        )
-        worker.send({"build_id": build.number})
-        worker.close()
-    return
+    worker = QueueClient(rep_connect_address)
+    worker.connect()
 
+    for builds, page, total_pages in client.iter_builds_by_page(
+        ctx.obj["github_owner"], ctx.obj["github_repo"], page=initial_page
+    ):
+        try:
+            count = len(builds)
+            logger.info(
+                f"enqueing the {count} builds found (page {page}/{total_pages})"
+            )
 
-@click.option("-f", "--filter-status", default="failure")
-def filter_builds(builds):
-    if filter_status:
-        builds = builds.filter(
-            lambda build: build.status != filter_status and build.sender
-        )
+            for i, build in enumerate(builds, start=1):
+                if "/pull/" not in build.link:
+                    continue
 
-    for build in builds:
-        build = ctx.obj.client.get_build_with_logs(
-            ctx.obj.owner, ctx.obj.repo, build.number
-        )
-        stored = DroneBuild.get_or_create_from_drone_api(
-            build.owner, build.repo, build.number, build
-        )
-        if stored:
-            print(f"Stored build {stored}")
-        failed_steps = build.failed_steps()
-        finished = datetime.fromtimestamp(build.finished)
-        status_color = build.status == "success" and "\033[1;32m" or "\033[1;31m"
-        if len(failed_steps) == 0:
-            continue
-        print(
-            f"Build {status_color}{build.number}\033[0m by \033[1;37m{build.author_name or build.sender} <{build.author_email or build.sender}> {status_color}{build.status}\033[1;37m at {finished}\033[0m"
-        )
-        for step in failed_steps:
-            output = step.to_string(prefix="             ")
-
-            if output:
-                print(
-                    f"         In Step: \033[1;33m{step.name} ({step.number}) failed with code {step.exit_code}\033[0m"
+                logger.info(
+                    f"enqueing {build.link} (#{build.number} by {build.author_login})"
                 )
-                print(f"\033[1;31m{output}\033[0m")
+                worker.send({"build_id": build.number, "ignore_filters": True})
+        except Exception as e:
+            logger.error(f"failed to process builds")
+            worker.close()
+            gevent.sleep(1)
+            worker.connect()
+        finally:
+            # worker.close()
+            pass
+
+    worker.close()
+
+
+@main.command("env")
+@click.option("-d", "--docker", is_flag=True)
+@click.pass_context
+def print_env_declaration(ctx, docker):
+    if docker:
+        print(config.to_docker_env_declaration())
+    else:
+        print(config.to_shell_env_declaration())
+
+
+def check_db_connection(engine):
+    url = engine.url
+    logger.info(f"Trying to connect to DB: {str(url)!r}")
+    result = engine.connect()
+    logger.info(f"SUCCESS: {url}")
+    result.close()
+
+
+def check_database_dns():
+    try:
+        logger.info(f"Check ability to resolve name: {config.database_hostname}")
+        host = socket.gethostbyname(config.database_hostname)
+        logger.info(f"SUCCESS: {config.database_hostname!r} => {host!r}")
+    except Exception as e:
+        return e
+
+    if not config.database_port:
+        return
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        logger.info(f"Checking TCP connection to {host!r}")
+        sock.connect((host, config.database_port))
+        logger.info(f"SUCCESS: TCP connection to database works!!")
+    except Exception as e:
+        return e
+    finally:
+        sock.close()
+
+
+@main.command("migrate-db")
+@click.option("--target", default="head")
+@click.option("--alembic-ini", default=alembic_ini_path)
+@click.pass_context
+def migrate_db(ctx, target, alembic_ini):
+    "runs the migrations"
+
+    error = check_database_dns()
+    if error:
+        logger.error(f"could not resolve {config.database_hostname!r}: {error}")
+        raise SystemExit(1)
+
+    alembic_ini_path = Path(alembic_ini).expanduser().absolute()
+    alembic_cfg = AlembicConfig(str(alembic_ini_path))
+    alembic_cfg.set_section_option("alembic", "sqlalchemy.url", config.sqlalchemy_uri)
+    alembic_cfg.set_section_option(
+        "alembic",
+        "script_location",
+        str(alembic_ini_path.parent.joinpath("migrations")),
+    )
+    alembic_command.upgrade(alembic_cfg, target)

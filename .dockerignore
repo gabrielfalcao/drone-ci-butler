@@ -1,0 +1,17 @@
+/**/__pycache__/
+/*.egg-info/
+/.coverage
+/.mypy_cache/
+/.venv
+/.venv/
+/flask_session/
+/frontend/build
+/frontend/build/
+/frontend/node_modules
+/frontend/node_modules/
+/tests/__pycache__/
+/tests/functional/__pycache__/
+/tests/unit/__pycache__/
+/.drone-butler-slack/
+/redis-data
+/postgres-data

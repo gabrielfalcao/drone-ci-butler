@@ -22,6 +22,10 @@ export PUBLIC_URL	:= https://drone-ci-butler.ngrok.io/
 export NODE_ENV		:= production
 
 ######################################################################
+# tool env vars
+export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
+
+######################################################################
 # Phony targets (only exist for typing convenience and don't represent
 #                real paths as Makefile expects)
 ######################################################################
@@ -37,7 +41,7 @@ drone-db-create:
 
 db-migrate: | $(VENV)/bin/alembic
 	@echo "running migrations"
-	@(cd $(PACKAGE_PATH) && $(VENV)/bin/alembic upgrade head)
+	$(MAIN_CLI_PATH) db-migrate --target head
 
 tunnel:
 	ngrok http --subdomain drone-ci-butler $(WEB_PORT)
@@ -79,7 +83,7 @@ tdd: | $(VENV)/bin/nosetests  # runs only unit tests
 
 
 # run main command-line tool
-builds workers: | $(MAIN_CLI_PATH)
+workers builds: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 # run webapp
