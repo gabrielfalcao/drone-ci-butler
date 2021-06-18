@@ -1,6 +1,8 @@
 import os
 import logging
 import colorlog
+from pythonjsonlogger import jsonlogger
+
 from cmreslogging.handlers import CMRESHandler
 
 
@@ -28,7 +30,7 @@ eshandler = CMRESHandler(
     auth_type=CMRESHandler.AuthType.NO_AUTH,
     es_index_name="logs-drone-ci-butler",
 )
-
+eshandler.setFormatter(jsonlogger.JsonFormatter())
 logger.handlers = [handler, eshandler]
 
 
