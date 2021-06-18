@@ -20,13 +20,12 @@ from drone_ci_butler.es import connect_to_elasticsearch
 #      then publish zmq event "build succeeded" which will store this information to the db to prevent emitting the event twice
 
 GITHUB_PULL_REQUEST_REGEX = re.compile(
-    r"github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/pull/(?P<pr_number>\d+)"
+    r"github.com[/](?P<owner>[^/]+)[/](?P<repo>[^/]+)[/]pull[/](?P<pr_number>\d+)"
 )
 
 
 def try_parse_github_pull_request_url(url) -> Dict[str, str]:
-    parsed = urlparse(url)
-    found = GITHUB_PULL_REQUEST_REGEX.search(parsed.path)
+    found = GITHUB_PULL_REQUEST_REGEX.search(url)
     if found:
         return found.groupdict()
     return {}

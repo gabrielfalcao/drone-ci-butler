@@ -3,7 +3,10 @@ import gevent
 from unittest.mock import patch, Mock, call
 
 
-from drone_ci_butler.workers.get_build_info import GetBuildInfoWorker
+from drone_ci_butler.workers.get_build_info import (
+    GetBuildInfoWorker,
+    try_parse_github_pull_request_url,
+)
 
 
 @patch("drone_ci_butler.workers.get_build_info.GetBuildInfoWorker.fetch_data")
@@ -30,4 +33,15 @@ def test_process_job_fetches_data(fetch_data):
                 "done processing job {'build_id': 1234, 'ignore_filters': True}"
             ),
         ]
+    )
+
+
+def test_try_parse_github_pull_request_url_ok():
+
+    link = "https://github.com/nytm/wf-project-vi/pull/12870"
+
+    result = try_parse_github_pull_request_url(link)
+
+    result.should.equal(
+        {"pr_number": "12870", "owner": "nytm", "repo": "wf-project-vi"}
     )

@@ -312,14 +312,7 @@ def purge_elasticsearch():
     owner = config.drone_github_owner
     repo = config.drone_github_repo
     get_logger("elasticsearch").setLevel(logging.INFO)
-    for index in (
-        f"drone*_builds_{owner}_{repo}",
-        "drone_builds_{owner}_{repo}",
-        "drone_builds",
-        "drone*",
-        f"drone_ci_butler_builds-{owner}-{repo}",
-    ):
-
+    for index in ("drone*",):
         try:
             es.indices.delete(index=index, ignore=[400, 404])
         except Exception as e:
