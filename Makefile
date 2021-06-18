@@ -41,7 +41,7 @@ drone-db-create:
 
 db-migrate: | $(VENV)/bin/alembic
 	@echo "running migrations"
-	$(MAIN_CLI_PATH) db-migrate --target head
+	$(MAIN_CLI_PATH) migrate-db --target head
 
 tunnel:
 	ngrok http --subdomain drone-ci-butler $(WEB_PORT)
@@ -83,7 +83,7 @@ tdd: | $(VENV)/bin/nosetests  # runs only unit tests
 
 
 # run main command-line tool
-workers builds: | $(MAIN_CLI_PATH)
+purge workers builds: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 # run webapp
@@ -188,6 +188,7 @@ $(REQUIREMENTS_PATH):
 	react-app \
 	tunnel \
 	tdd \
-	web
+	purge \
+	web \
 	docker-base \
 	docker-k8s

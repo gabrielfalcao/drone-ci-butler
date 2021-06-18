@@ -8,7 +8,7 @@ from drone_ci_butler.sql.models.user import User
 from drone_ci_butler.drone_api.models import BuildContext
 from drone_ci_butler.rule_engine.default_rules import wf_project_vi
 from .puller import PullerWorker
-
+from drone_ci_butler.es import connect_to_elasticsearch
 
 # 1. Poll zmq for job with build_id
 # 2. Iterate over failed stages
@@ -68,6 +68,11 @@ class GetBuildInfoWorker(PullerWorker):
 
         # if the build has been already stored, is not running and has not been updated in postgres then we proceed
         stored = DroneBuild.find_one_by(owner=owner, repo=repo, link=build.link)
+        if stored and stored.last_ruleset_processed_at:
+            self.logger.warning(
+                f"{build.author_login}'s build ({build.link}) has already been processed and will not be processed: {stored.status}"
+            )
+            return
 
         if not ignore_filters:
             if stored and not stored.is_running() and not stored.requires_processing():
@@ -87,20 +92,16 @@ class GetBuildInfoWorker(PullerWorker):
         pr_number = try_parse_github_pull_request_number(build.link)
         user = User.find_one_by(github_username=build.author_login)
 
-        self.logger.warning(
-            f"{build.number} by {build.author_login}is not a PR: {build.link}"
-        )
+        if not pr_number:
+            self.logger.debug(
+                f"ignoring build that is not from a Github PR: {build.link} by {repr(build.author_login)}"
+            )
+            return
 
         if not ignore_filters:
             if not user:
                 self.logger.warning(
                     f"ignoring build from a user that has not opted in: {build.author_login}"
-                )
-                return
-
-            if not pr_number:
-                self.logger.warning(
-                    f"ignoring build that is not from a Github PR: {build.link} by {repr(build.author_login)}"
                 )
                 return
 
@@ -117,9 +118,17 @@ class GetBuildInfoWorker(PullerWorker):
             build=build,
         )
 
-        self.process_rulesets(build, stored, user)
+        self.process_rulesets(build, stored, user, owner, repo)
 
-    def process_rulesets(self, build: Build, stored: DroneBuild, user: User):
+    def process_rulesets(
+        self, build: Build, stored: DroneBuild, user: User, owner: str, repo: str
+    ):
+        try:
+            es = connect_to_elasticsearch()
+        except Exception as e:
+            self.logger.error(f"failed to connect to elasticsearch: {e}")
+            es = None
+
         for stage in build.failed_stages():
             for step in stage.failed_steps():
                 context = BuildContext(
@@ -134,6 +143,20 @@ class GetBuildInfoWorker(PullerWorker):
                 matches = wf_project_vi.apply(context)
 
                 if matches and user:
+                    stored.update_matches(matches)
+                    if es:
+                        try:
+                            document = stored.to_document()
+                            es.index(
+                                index=f"drone_ci_butler_builds-{owner}-{repo}",
+                                id=stored.id,
+                                body=document,
+                            )
+                        except Exception as e:
+                            self.logger.warning(
+                                f"failed to index {stored} in elasticsearch: {e}"
+                            )
+
                     user.notify_ruleset_matches(context, matches)
                     print(message, stage, step, step.to_markdown())
 

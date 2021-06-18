@@ -35,6 +35,7 @@ from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient
 from drone_ci_butler.exceptions import ConfigMissing
+from drone_ci_butler.es import connect_to_elasticsearch
 
 
 alembic_ini_path = Path(__file__).parent.joinpath("alembic.ini").absolute()
@@ -302,3 +303,15 @@ def migrate_db(ctx, target, alembic_ini):
         str(alembic_ini_path.parent.joinpath("migrations")),
     )
     alembic_command.upgrade(alembic_cfg, target)
+
+
+@main.command("purge")
+def purge_elasticsearch():
+    es = connect_to_elasticsearch()
+    owner = config.drone_github_owner
+    repo = config.drone_github_repo
+    for index in ("drone_builds", f"drone_ci_butler_builds-{owner}-{repo}"):
+        try:
+            print(es.indices.delete(index=index))
+        except Exception as e:
+            logger.error(f'failed to purge index "{index}": {e}')

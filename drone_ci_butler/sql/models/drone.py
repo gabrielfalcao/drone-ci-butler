@@ -1,12 +1,14 @@
 import json
 import io
 import requests
+from typing import List, Optional, Any
 from chemist import Model, db
 from datetime import datetime
-
+from uiclasses import UserFriendlyObject
 from drone_ci_butler.drone_api.models import Build, Output
 from .base import metadata
 from .exceptions import BuildNotFound
+from drone_ci_butler.util import load_json
 
 
 class DroneBuild(Model):
@@ -28,7 +30,22 @@ class DroneBuild(Model):
         db.Column("finished_at", db.DateTime),
         db.Column("updated_at", db.DateTime),
         db.Column("output_retrieved_at", db.DateTime),
+        db.Column("last_ruleset_processed_at", db.DateTime),
+        db.Column("error_type", db.Unicode(100)),
+        db.Column("matches_json", db.UnicodeText),
     )
+
+    def to_document(self):
+        data = self.to_dict()
+
+        data["matches"] = load_json(data.pop("matches_json", None))
+        return data
+
+    def update_matches(self, matches: List[UserFriendlyObject]):
+        matches_json = json.dumps([m.to_dict() for m in matches], default=str)
+        return self.update_and_save(
+            matches_json=matches_json, last_ruleset_processed_at=datetime.utcnow()
+        )
 
     def drone_api_data_to_dict(self):
         return json.loads(self.drone_api_data)

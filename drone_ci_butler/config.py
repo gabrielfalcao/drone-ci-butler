@@ -299,6 +299,14 @@ class Config(DataBag, metaclass=MetaConfig):
         "port",
         fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_PORT",
         default_value=9200,
+        coerce=int,
+    )
+    elasticsearch_pool_size = ConfigProperty(
+        "elasticsearch",
+        "pool_size",
+        fallback_env="DRONE_CI_BUTLER_ELASTICSEARCH_POOL_SIZE",
+        default_value=multiprocessing.cpu_count(),
+        coerce=int,
     )
 
     @property
