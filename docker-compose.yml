@@ -1,37 +1,37 @@
 version: '3'
 
 services:
-  # elasticsearch:
-  #   container_name: elasticsearch-butler
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
-  #   env_file:
-  #     - ./tools/butler.env
-  #   # ports:
-  #   #   - 0.0.0.0:9201:9200
-  #   #   - 0.0.0.0:9301:9300
-  #   environment:
-  #     discovery.type: single-node
+  elasticsearch:
+    container_name: elasticsearch-butler
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    env_file:
+      - ./tools/butler.env
+    # ports:
+    #   - 0.0.0.0:9201:9200
+    #   - 0.0.0.0:9301:9300
+    environment:
+      discovery.type: single-node
 
-  # kibana:
-  #   container_name: kibana-butler
-  #   image: docker.elastic.co/kibana/kibana:7.13.2
-  #   env_file:
-  #     - ./tools/butler.env
-  #   ports:
-  #     - 0.0.0.0:5602:5601
-  #   environment:
-  #     discovery.type: single-node
-  #     ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
-  #   depends_on:
-  #     - elasticsearch
-  # redis:
-  #   container_name: redis-butler
-  #   image: redis:6.2.4-alpine
-  #   env_file:
-  #     - ./tools/butler.env
-  #   volumes:
-  #     - ./redis-data:/data
-  #   command: redis-server --appendonly yes
+  kibana:
+    container_name: kibana-butler
+    image: docker.elastic.co/kibana/kibana:7.13.2
+    env_file:
+      - ./tools/butler.env
+    ports:
+      - 0.0.0.0:5602:5601
+    environment:
+      discovery.type: single-node
+      ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
+    depends_on:
+      - elasticsearch
+  redis:
+    container_name: redis-butler
+    image: redis:6.2.4-alpine
+    env_file:
+      - ./tools/butler.env
+    volumes:
+      - ./redis-data:/data
+    command: redis-server --appendonly yes
 
   postgres:
     container_name: postgres-butler
@@ -42,32 +42,13 @@ services:
       - ./postgres-data:/var/lib/postgresql
 
 
-  butler_web:
-    container_name: butler-web
-    depends_on:
-      - postgres
-      # - elasticsearch
-      # - kibana
-      # - redis
-
-    image: gabrielfalcao/drone-ci-butler
-    ports:
-      - 0.0.0.0:5000:5000
-    volumes:
-      - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
-    restart: always
-    env_file:
-      - ./tools/butler.env
-
-    command: drone-ci-butler web
-
   butler_workers:
     container_name: butler-workers
     image: gabrielfalcao/drone-ci-butler
     depends_on:
       - postgres
-      # - elasticsearch
-      # - redis
+      - elasticsearch
+      - redis
     ports:
       - 0.0.0.0:5001:5001
       - 0.0.0.0:5002:5002
@@ -92,8 +73,8 @@ services:
     depends_on:
       - postgres
       - butler_workers
-      # - elasticsearch
-      # - redis
+      - elasticsearch
+      - redis
 
     volumes:
       - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
@@ -105,3 +86,24 @@ services:
       - ./tools/butler.env
 
     command: sh -c 'sleep 10 && drone-ci-butler builds'
+
+  butler_web:
+    container_name: butler-web
+    depends_on:
+      - postgres
+      - elasticsearch
+      - kibana
+      - redis
+      - butler_workers
+      - butler_builds
+
+    image: gabrielfalcao/drone-ci-butler
+    ports:
+      - 0.0.0.0:5000:5000
+    volumes:
+      - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
+    restart: always
+    env_file:
+      - ./tools/butler.env
+
+    command: drone-ci-butler web
