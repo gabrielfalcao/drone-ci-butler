@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "https://drone-ci-butler.ngrok.io/static/js/main.7e33fc76.chunk.js",
-    "main.js.map": "https://drone-ci-butler.ngrok.io/static/js/main.7e33fc76.chunk.js.map",
+    "main.js": "https://drone-ci-butler.ngrok.io/static/js/main.e56c4a81.chunk.js",
+    "main.js.map": "https://drone-ci-butler.ngrok.io/static/js/main.e56c4a81.chunk.js.map",
     "runtime-main.js": "https://drone-ci-butler.ngrok.io/static/js/runtime-main.791f680b.js",
     "runtime-main.js.map": "https://drone-ci-butler.ngrok.io/static/js/runtime-main.791f680b.js.map",
     "static/css/2.4c97ca4f.chunk.css": "https://drone-ci-butler.ngrok.io/static/css/2.4c97ca4f.chunk.css",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.791f680b.js",
     "static/css/2.4c97ca4f.chunk.css",
     "static/js/2.11d04944.chunk.js",
-    "static/js/main.7e33fc76.chunk.js"
+    "static/js/main.e56c4a81.chunk.js"
   ]
 }
