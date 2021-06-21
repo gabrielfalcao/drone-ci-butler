@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: ci_butler-secrets
+  namespace: github
+data:
+  ci_butler-app-id: {{.SECRET_CI_BUTLER_APP_ID}}
+  ci_butler-webhook-secret: {{.SECRET_CI_BUTLER_WEBHOOK_SECRET}}
+  ci_butler-private-key: {{.SECRET_CI_BUTLER_PRIVATE_KEY}}

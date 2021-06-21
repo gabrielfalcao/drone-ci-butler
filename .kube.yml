@@ -1,0 +1,210 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: github
+  labels:
+    name: github
+    revision: '{{printf "%.7s" .COMMIT}}'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci_butler
+  namespace: github
+  labels:
+    namespace: github
+    app: ci_butler
+    env: prd
+    revision: '{{printf "%.7s" .COMMIT}}'
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0
+  minReadySeconds: 10
+  progressDeadlineSeconds: 180
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: ci_butler
+  template:
+    metadata:
+      namespace: github
+      labels:
+        namespace: github
+        app: ci_butler
+        env: prd
+        revision: '{{printf "%.7s" .COMMIT}}'
+      # TODO Enable annotations
+      #
+      # annotations:
+      #   ad.datadoghq.com/ci_butler.check_names: '["openmetrics"]'
+      #   ad.datadoghq.com/ci_butler.init_configs: '[{}]'
+      #   ad.datadoghq.com/ci_butler.instances: |
+      #     [
+      #       {
+      #         "prometheus_url": "http://%%host%%:%%port_http-app%%/_/metrics",
+      #         "namespace": "prometheus",
+      #         "metrics": ["webhook_*", "code_review_*", "event_*", "http_*", "nodejs_*", "process_*"],
+      #         "send_distribution_buckets": true
+      #       }
+      #     ]
+    spec:
+      containers:
+        # Application container definition
+        - name: ci_butler
+          image: {{.IMAGE}}
+          ports:
+            - name: http-app
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          # Quote all environment variable values
+          env:
+            - name: LOG_LEVEL
+              value: "{{.LOG_LEVEL}}"
+            - name: LOG_FORMAT
+              value: "json"
+            - name: NODE_ENV
+              value: "{{.NODE_ENV}}"
+            - name: APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ci_butler-secrets
+                  key: ci_butler-app-id
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ci_butler-secrets
+                  key: ci_butler-private-key
+            - name: WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ci_butler-secrets
+                  key: ci_butler-webhook-secret
+          readinessProbe:
+            httpGet:
+              path: /.readiness
+              port: 3000
+            failureThreshold: 2
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ci_butler
+  namespace: github
+  labels:
+    namespace: github
+    app: ci_butler
+    revision: '{{printf "%.7s" .COMMIT}}'
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ci_butler
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: ci_butler
+  namespace: github
+  labels:
+    app: ci_butler
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ci_butler
+  updatePolicy:
+    updateMode: "Off"
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ci_butler
+  namespace: github
+spec:
+  healthCheck:
+    requestPath: /.readiness
+    checkIntervalSec: 30
+    timeoutSec: 2
+    healthyThreshold: 1
+    unhealthyThreshold: 2
+    type: HTTP
+    port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ci_butler
+  namespace: github
+  labels:
+    namespace: github
+    app: ci_butler
+    revision: '{{printf "%.7s" .COMMIT}}'
+  annotations:
+    cloud.google.com/backend-config: '{"default": "ci_butler"}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: ClusterIP
+  selector:
+    app: ci_butler
+  ports:
+    - port: 80
+      name: http-svc
+      targetPort: http-app
+      protocol: TCP
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: ci_butler
+  namespace: github
+spec:
+  secretName: ci_butler-tls
+  commonName: {{.DNS_NAME}}
+  dnsNames:
+    - {{.DNS_NAME}}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ci_butler
+  namespace: github
+  labels:
+    namespace: github
+    app: ci_butler
+    revision: '{{printf "%.7s" .COMMIT}}'
+spec:
+  tls:
+  - hosts:
+      - {{.DNS_NAME}}
+    secretName: ci_butler-tls
+  rules:
+  - host: {{.DNS_NAME}}
+    http:
+      paths:
+      - backend:
+          serviceName: ci_butler
+          servicePort: http-svc
