@@ -20,12 +20,16 @@ services:
     restart: always
     env_file:
       - ./drone.env
+    depends_on:
+      - postgres
 
   runner1:
     container_name: runner1
     image: drone/drone-runner-docker:1
     environment:
       DRONE_HTTP_BIND: 3033
+    depends_on:
+      - drone
     ports:
       - 127.0.0.1:3033:3033
     volumes:
@@ -38,6 +42,8 @@ services:
   runner2:
     container_name: runner2
     image: drone/drone-runner-docker:1
+    depends_on:
+      - drone
     environment:
       DRONE_HTTP_BIND: 3031
     ports:
