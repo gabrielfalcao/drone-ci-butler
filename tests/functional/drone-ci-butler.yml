@@ -1,0 +1,139 @@
+rulesets:
+  drone-ci-monitor:
+    default-conditions:
+      - build.link:
+          contains_string: "drone-ci-monitor/drone-ci-monitor"
+      - step.status: failed
+      - step.exit_code:
+          is_not:  0
+
+    default_action: NEXT_RULE # default to continue analysis onto next step after matching a rule
+    default_notify:
+      - slack
+
+    rules:
+      - name: ValidateDocsPrettified
+        when:
+          - step.output:
+              matches_regex: "prettier:docs"
+        action: NEXT_RULE
+
+      - name: SlackServerError
+        when:
+          - step.name:
+              contains_string: "slack"
+          - step.output:
+              contains_string: "server error"
+        action: NEXT_RULE
+
+      # skip build (and cancel it if still running)
+      - name: GitBranchNameInvalidForGKEDeploy
+        when:
+          - step.output:
+              matches_regex: "prettier:docs"
+        action: SKIP_ANALYSIS
+
+      - name: GitMergeConflict
+        when:
+          - step.output:
+              matches_regex: "(not something we can merge|Automatic merge failed; fix conflicts)"
+
+        action: SKIP_ANALYSIS
+
+      - name: SamizdatConnectionError
+        when:
+          - step.output:
+              contains_string:
+                - "ECONNREFUSED"
+                - "samizdat"
+        action: SKIP_ANALYSIS
+        notify:
+          - slack
+          - github
+
+      - name: YarnDependencyNotResolved
+        when:
+          - step.name:
+              contains_string: "node_modules"
+          - step.output:
+              contains_string: "Couldn't find any versions for"
+
+        action: SKIP_ANALYSIS
+        notify:
+          - slack
+          - github
+
+auth:
+  jwt_secret: "$2b$12$S0Kds3H4n4chpla0RUjIDe2fr/W0idWOWvYbIrBDjzWcDjQa/3ZKG"
+  flask_secret: "AHNf1M7L/XSnYOk}2b9JGWTPg@ruK.<3:o$tIa5p|FiejmDz"
+
+sqlalchemy:
+  uri: "postgresql://drone_ci_butler@localhost/drone_ci_butler"
+
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+
+session:
+  # type: "redis"
+  type: "filesystem"
+  file_dir: /tmp/flask-session
+
+github:
+  app:
+    webhook_secret: "github-dummy-webhook-secret"
+    app_id: "github-dummy-app-id"
+    client_id: "github-dummy-client-id"
+    client_secret: "github-dummy-client-secret"
+    secret_key: github-dummy-secret-key
+
+slack:
+  store:
+    state_path: /tmp/.drone-butler-slack/state
+    installation_path: /tmp/.drone-butler-slack/installation
+
+  oauth:
+    app-id: "slack-dummy-oauth-app-id"
+    app-user-token: "slack-dummy-app-user-token"
+    bot-token: "slack-dummy-bot-token"
+    client-id: "slack-dummy-client-id"
+    client-secret: "slack-dummy-client-secret"
+    signing-secret: "slack-dummy-signing-secret"
+    verification-token: "slack-dummy-verification-token"
+
+drone:
+  server: "https://drone-ci-server.ngrok.io"
+  access_token: "4kzliojbH87KTGeZHsPFx05Xb79G5kM0" # deliberately added to version control
+  api:
+    owner: drone-ci-monitor
+    repo: drone-ci-monitor
+    max_builds: 10
+    max_pages: 1
+    initial_page: 0
+
+web:
+  host: 0.0.0.0
+  port: 4000
+
+workers:
+  queue_address: tcp://127.0.0.1:5555
+  push_address: tcp://127.0.0.1:6666
+  pull_address: tcp://127.0.0.1:7777
+  monitor_address: tcp://127.0.0.1:5001
+  control_address: tcp://127.0.0.1:5002
+  # max_per_process: 17
+
+elasticsearch:
+  host: localhost
+  port: 9200
+
+
+logging:
+  default_level: DEBUG
+  mapping:
+    elasticsearch: WARNING
+    redis: WARNING
+    sqlalchemy: WARNING
+    urllib3.connectionpool: ERROR
+    system.events: WARNING

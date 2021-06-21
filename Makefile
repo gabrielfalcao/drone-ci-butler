@@ -20,10 +20,9 @@ STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.js
 export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
 export PUBLIC_URL	:= https://drone-ci-butler.ngrok.io/
 export NODE_ENV		:= production
-
 ######################################################################
 # tool env vars
-export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
+export DRONE_CI_BUTLER_CONFIG_PATH := $(GIT_ROOT)/tests/functional/drone-ci-butler.yml
 
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent

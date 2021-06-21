@@ -1,13 +1,14 @@
-from redis import Redis
 import logging
+from redis import Redis
 from urllib.parse import urljoin
 from pathlib import Path
-from typing import NoReturn, Optional
+from typing import NoReturn, Optional, Type, TypeVar
 
 from datetime import datetime, timedelta
 from requests import Response, Session
 from drone_ci_butler import events
 from drone_ci_butler.logs import get_logger
+from drone_ci_butler.config import Config
 from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
 from drone_ci_butler.drone_api.cache import HttpCache
@@ -32,10 +33,18 @@ logger = get_logger(__name__)
 #     "woodb",
 # )
 
+DroneAPIClient = TypeVar("DroneAPIClient")
+
 
 class DroneAPIClient(object):
     def __init__(
-        self, url: str, access_token: str, max_pages: int = 100, max_builds: int = 100
+        self,
+        url: str,
+        access_token: str,
+        max_pages: int = 100,
+        max_builds: int = 100,
+        owner: str = None,
+        repo: str = None,
     ):
         self.api_url = url
         self.access_token = access_token
@@ -45,9 +54,22 @@ class DroneAPIClient(object):
             "User-Agent": f"DroneCI Butler v{version}",
         }
         self.max_pages = max_pages
+        self.owner = owner
+        self.repo = repo
         self.max_builds = max_builds
         self.cache = HttpCache()
         self.redis = Redis
+
+    @classmethod
+    def from_config(cls: DroneAPIClient, config: Config) -> DroneAPIClient:
+        return cls(
+            config.drone_url,
+            config.drone_access_token,
+            max_builds=config.drone_api_max_builds,
+            max_pages=config.drone_api_max_pages,
+            owner=config.drone_api_owner,
+            repo=config.drone_api_repo,
+        )
 
     def make_url(self, path) -> str:
         return urljoin(self.api_url, path)
@@ -80,8 +102,17 @@ class DroneAPIClient(object):
         return interaction.response()
 
     def get_builds(
-        self, owner: str, repo: str, limit=10000, page=0, count=0, max_pages=None
+        self,
+        owner: str = None,
+        repo: str = None,
+        limit=10000,
+        page=0,
+        count=0,
+        max_pages: int = None,
     ) -> Build.List:
+        owner = owner or self.owner
+        repo = repo or self.repo
+
         result = self.request(
             "GET",
             f"/api/repos/{owner}/{repo}/builds",
@@ -183,7 +214,7 @@ class DroneAPIClient(object):
                 "GET",
                 f"/api/repos/{owner}/{repo}/builds/{build_number}/logs/{stage_number}/{step_number}",
             )
-        except NotFound:
+        except NotFound as e:
             logger.error(
                 f"failed to retrieve drone step output of build {build_number}: {e}"
             )

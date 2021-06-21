@@ -264,6 +264,21 @@ class Config(DataBag, metaclass=MetaConfig):
         default_value=multiprocessing.cpu_count(),
         deserialize=int,
     )
+    drone_api_owner = ConfigProperty(
+        "drone",
+        "api",
+        "owner",
+        fallback_env="DRONE_API_OWNER",
+        deserialize=str,
+    )
+    drone_api_repo = ConfigProperty(
+        "drone",
+        "api",
+        "repo",
+        fallback_env="DRONE_API_REPO",
+        deserialize=str,
+    )
+
     drone_api_max_pages = ConfigProperty(
         "drone",
         "api",

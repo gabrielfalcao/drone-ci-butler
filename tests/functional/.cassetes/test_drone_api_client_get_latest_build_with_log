@@ -3,25 +3,27 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/latest?branch=deprecate-e2e-and-introduce-acceptance-tests
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/latest?branch=main
   response:
     body:
-      string: "{\"id\":1129700,\"repo_id\":117,\"trigger\":\"@hook\",\"number\":138179,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/nytm/wf-project-vi/compare/d6c3747e8a47...4fcb2a3a1060\",\"timestamp\":0,\"message\":\"Merge
-        branch 'main' of github.com:nytm/wf-project-vi into deprecate-e2e-and-introduce-acceptance-tests\",\"before\":\"d6c3747e8a47e804d0a2f711c74ec3e13cb8ed7d\",\"after\":\"4fcb2a3a106092213307f605aab07254d76512f9\",\"ref\":\"refs/heads/deprecate-e2e-and-introduce-acceptance-tests\",\"source_repo\":\"\",\"source\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"target\":\"deprecate-e2e-and-introduce-acceptance-tests\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"Gabriel
-        Falc\xE3o (he/him/his)\",\"author_email\":\"gabriel.falcao@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/54914?v=4\",\"sender\":\"gabrielfalcao\",\"started\":1622110209,\"finished\":1622110661,\"created\":1622110208,\"updated\":1622110209,\"version\":3,\"stages\":[{\"id\":5237506,\"repo_id\":117,\"build_id\":1129700,\"number\":1,\"name\":\"test\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"failure\",\"errignore\":false,\"exit_code\":0,\"machine\":\"agent_prd-1_i-09fa8f8f6096abbc1\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110209,\"stopped\":1622110343,\"created\":1622110208,\"updated\":1622110343,\"version\":4,\"on_success\":true,\"on_failure\":false,\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"},\"steps\":[{\"id\":7930440,\"step_id\":5237506,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110209,\"stopped\":1622110235,\"version\":4},{\"id\":7930442,\"step_id\":5237506,\"number\":2,\"name\":\"check_for_pr\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110235,\"stopped\":1622110243,\"version\":4},{\"id\":7930444,\"step_id\":5237506,\"number\":3,\"name\":\"validate_drone_configs_in_sync\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110235,\"stopped\":1622110237,\"version\":4},{\"id\":7930446,\"step_id\":5237506,\"number\":4,\"name\":\"node_modules\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110237,\"stopped\":1622110338,\"version\":4},{\"id\":7930448,\"step_id\":5237506,\"number\":5,\"name\":\"validate_docs_prettified\",\"status\":\"failure\",\"exit_code\":1,\"started\":1622110338,\"stopped\":1622110343,\"version\":4}]},{\"id\":5237507,\"repo_id\":117,\"build_id\":1129700,\"number\":2,\"name\":\"build\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"agent_prd-1_i-0d7e99904e65eca86\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110209,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110583,\"version\":4,\"on_success\":true,\"on_failure\":false,\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"},\"steps\":[{\"id\":7930441,\"step_id\":5237507,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110209,\"stopped\":1622110235,\"version\":4},{\"id\":7930443,\"step_id\":5237507,\"number\":2,\"name\":\"check_for_pr\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110235,\"stopped\":1622110243,\"version\":4},{\"id\":7930445,\"step_id\":5237507,\"number\":3,\"name\":\"validate_drone_configs_in_sync\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110235,\"stopped\":1622110237,\"version\":4},{\"id\":7930447,\"step_id\":5237507,\"number\":4,\"name\":\"node_modules\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110237,\"stopped\":1622110337,\"version\":4},{\"id\":7930449,\"step_id\":5237507,\"number\":5,\"name\":\"build_app\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110337,\"stopped\":1622110574,\"version\":4},{\"id\":7930450,\"step_id\":5237507,\"number\":6,\"name\":\"sentry_create_release\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110574,\"stopped\":1622110583,\"version\":4}]},{\"id\":5237508,\"repo_id\":117,\"build_id\":1129700,\"number\":3,\"name\":\"acceptance_tests\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110208,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"build\"],\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"}},{\"id\":5237509,\"repo_id\":117,\"build_id\":1129700,\"number\":4,\"name\":\"performance_test\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110208,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"build\"]},{\"id\":5237510,\"repo_id\":117,\"build_id\":1129700,\"number\":5,\"name\":\"pre_deployment_check\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110208,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"build\"],\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"}},{\"id\":5237511,\"repo_id\":117,\"build_id\":1129700,\"number\":6,\"name\":\"deployment\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110208,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"build\",\"test\",\"pre_deployment_check\"],\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"}},{\"id\":5237512,\"repo_id\":117,\"build_id\":1129700,\"number\":7,\"name\":\"post_deployment_check\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110583,\"created\":1622110208,\"updated\":1622110208,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"deployment\"],\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"}},{\"id\":5237513,\"repo_id\":117,\"build_id\":1129700,\"number\":8,\"name\":\"metrics\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"agent_prd-1_i-00e2d143e4c9b692e\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1622110583,\"stopped\":1622110661,\"created\":1622110208,\"updated\":1622110661,\"version\":5,\"on_success\":true,\"on_failure\":true,\"depends_on\":[\"test\",\"pre_deployment_check\",\"acceptance_tests\",\"build\",\"deployment\"],\"labels\":{\"poolhash\":\"agentpool-2-3a513e6792fd9b3d\"},\"steps\":[{\"id\":7930477,\"step_id\":5237513,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110583,\"stopped\":1622110608,\"version\":4},{\"id\":7930478,\"step_id\":5237513,\"number\":2,\"name\":\"general_metrics\",\"status\":\"success\",\"exit_code\":0,\"started\":1622110608,\"stopped\":1622110661,\"version\":4}]}]}\n"
+      string: "{\"id\":2,\"repo_id\":2407,\"trigger\":\"@hook\",\"number\":2,\"status\":\"success\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/drone-ci-monitor/drone-ci-monitor/compare/294581d92934...96024d60a801\",\"timestamp\":0,\"message\":\"update
+        drone.yml\",\"before\":\"294581d92934d9ee7d965e6fed3dcc0eb6fdbba0\",\"after\":\"96024d60a80148302ce0e192059d0872bbeb98a4\",\"ref\":\"refs/heads/main\",\"source_repo\":\"\",\"source\":\"main\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"Gabriel
+        Falc\xE3o (he/him/his)\",\"author_email\":\"gabriel.falcao@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/85517645?v=4\",\"sender\":\"drone-ci-monitor\",\"started\":1624316868,\"finished\":1624317188,\"created\":1624316866,\"updated\":1624316868,\"version\":3,\"stages\":[{\"id\":3,\"repo_id\":2407,\"build_id\":2,\"number\":1,\"name\":\"test\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"c1b22df4dd9c\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624316867,\"stopped\":1624316915,\"created\":1624316866,\"updated\":1624316915,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":9,\"step_id\":3,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316872,\"stopped\":1624316877,\"version\":4},{\"id\":10,\"step_id\":3,\"number\":2,\"name\":\"build\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316877,\"stopped\":1624316886,\"version\":4},{\"id\":11,\"step_id\":3,\"number\":3,\"name\":\"unit
+        test\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316877,\"stopped\":1624316886,\"version\":4},{\"id\":12,\"step_id\":3,\"number\":4,\"name\":\"integration
+        test\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316877,\"stopped\":1624316891,\"version\":4},{\"id\":14,\"step_id\":3,\"number\":5,\"name\":\"component
+        test\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316877,\"stopped\":1624316901,\"version\":4},{\"id\":16,\"step_id\":3,\"number\":6,\"name\":\"e2e
+        test\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316877,\"stopped\":1624316914,\"version\":4}]},{\"id\":4,\"repo_id\":2407,\"build_id\":2,\"number\":2,\"name\":\"webhook\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"0a20ac1f36fb\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624316867,\"stopped\":1624317188,\"created\":1624316866,\"updated\":1624317188,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":13,\"step_id\":4,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624316876,\"stopped\":1624316881,\"version\":4},{\"id\":15,\"step_id\":4,\"number\":2,\"name\":\"webhook\",\"status\":\"failure\",\"errignore\":true,\"exit_code\":1,\"started\":1624316881,\"stopped\":1624317188,\"version\":4}]}]}\n"
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:34 GMT
+      - Mon, 21 Jun 2021 23:15:24 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
@@ -39,33 +41,30 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/1/1
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/1
   response:
     body:
-      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":0},{"pos":1,"out":"+
-        git fetch origin +refs/heads/deprecate-e2e-and-introduce-acceptance-tests:\n","time":0},{"pos":2,"out":"From
-        https://github.com/nytm/wf-project-vi\n","time":23},{"pos":3,"out":" * branch                deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e FETCH_HEAD\n","time":23},{"pos":4,"out":" * [new branch]          deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e origin/deprecate-e2e-and-introduce-acceptance-tests\n","time":23},{"pos":5,"out":"+
-        git checkout 4fcb2a3a106092213307f605aab07254d76512f9 -b deprecate-e2e-and-introduce-acceptance-tests\n","time":23},{"pos":6,"out":"Switched
-        to a new branch ''deprecate-e2e-and-introduce-acceptance-tests''\n","time":25}]
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":2},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":2},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-ci-monitor\n","time":3},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":3},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":3},{"pos":5,"out":"+
+        git checkout 96024d60a80148302ce0e192059d0872bbeb98a4 -b main\n","time":3},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":3}]
 
         '
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '778'
+      - '552'
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:35 GMT
+      - Mon, 21 Jun 2021 23:15:25 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
@@ -78,49 +77,41 @@ interactions:
       code: 200
       message: OK
 - request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/1/2
-  response:
-    body:
-      string: '[{"pos":0,"out":"us.gcr.io/nyt-wfvi-dev/check-for-pr@sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c:
-        Pulling from nyt-wfvi-dev/check-for-pr\n","time":0},{"pos":1,"out":"Digest:
-        sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c\n","time":2},{"pos":2,"out":"Status:
-        Downloaded newer image for us.gcr.io/nyt-wfvi-dev/check-for-pr@sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c\n","time":2},{"pos":3,"out":"request
-        { method: ''GET'',\n","time":5},{"pos":4,"out":"  baseUrl: ''https://api.github.com'',\n","time":5},{"pos":5,"out":"  headers:\n","time":5},{"pos":6,"out":"   {
-        accept: ''application/vnd.github.v3+json'',\n","time":5},{"pos":7,"out":"     ''user-agent'':\n","time":5},{"pos":8,"out":"      ''octokit-rest.js/17.1.3
-        octokit-core.js/2.4.3 Node.js/10.20.1 (Linux 3.10; x64)'' },\n","time":5},{"pos":9,"out":"  mediaType:
-        { format: '''', previews: [] },\n","time":5},{"pos":10,"out":"  request: {
-        hook: [Function: bound bound register] },\n","time":5},{"pos":11,"out":"  url:
-        ''/repos/{owner}/{repo}/pulls'',\n","time":5},{"pos":12,"out":"  owner: ''nytm'',\n","time":5},{"pos":13,"out":"  repo:
-        ''wf-project-vi'',\n","time":5},{"pos":14,"out":"  state: ''open'' }\n","time":5},{"pos":15,"out":"GET
-        /repos/nytm/wf-project-vi/pulls?state=open - 200 in 905ms\n","time":6}]
+    body: '{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
 
-        '
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.drone_api.client","msg":"Retrieved
+      2 builds for drone-ci-monitor/drone-ci-monitor page 0","args":[],"levelname":"DEBUG","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/drone_api/client.py","filename":"client.py","module":"client","exc_info":"","exc_text":"","stack_info":"","lineno":127,"funcName":"get_builds","thread":4574789056,"threadName":"MainThread","processName":"MainProcess","process":91663,"message":"Retrieved
+      2 builds for drone-ci-monitor/drone-ci-monitor page 0","timestamp":"2021-06-21T23:15:24.437Z"}
+
+      {"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.drone_api.client","msg":"Retrieved
+      4 builds for drone-ci-monitor/drone-ci-monitor page 1","args":[],"levelname":"DEBUG","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/drone_api/client.py","filename":"client.py","module":"client","exc_info":"","exc_text":"","stack_info":"","lineno":127,"funcName":"get_builds","thread":4574789056,"threadName":"MainThread","processName":"MainProcess","process":91663,"message":"Retrieved
+      4 builds for drone-ci-monitor/drone-ci-monitor page 1","timestamp":"2021-06-21T23:15:24.445Z"}
+
+      '
     headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '1330'
-      Content-Type:
+      - '1386'
+      content-type:
       - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:35 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
+      user-agent:
+      - elasticsearch-py/7.13.0 (Python 3.7.3)
+      x-elastic-client-meta:
+      - es=7.13.0,py=3.7.3,t=7.13.0,rq=2.25.1,h=bp
+    method: POST
+    uri: http://127.0.0.1:9200/_bulk
+  response:
+    body:
+      string: '{"took":49,"errors":false,"items":[{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"7V7bMHoBsRdhqtz1cNqZ","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":56,"_primary_term":1,"status":201}},{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"7l7bMHoBsRdhqtz1cNqZ","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":57,"_primary_term":1,"status":201}}]}'
+    headers:
+      Warning:
+      - 299 Elasticsearch-7.10.2-SNAPSHOT-unknown "[types removal] Specifying types
+        in bulk requests is deprecated."
+      content-length:
+      - '494'
+      content-type:
+      - application/json; charset=UTF-8
     status:
       code: 200
       message: OK
@@ -128,309 +119,26 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/1/3
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/2
   response:
     body:
-      string: '[{"pos":0,"out":"+ apk update \u0026\u0026 apk upgrade \u0026\u0026
-        apk add --no-cache git\n","time":0},{"pos":1,"out":"fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":2,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":3,"out":"v3.7.3-184-gffd32bfd09
-        [http://dl-cdn.alpinelinux.org/alpine/v3.7/main]\n","time":0},{"pos":4,"out":"v3.7.3-194-gcddd1b2302
-        [http://dl-cdn.alpinelinux.org/alpine/v3.7/community]\n","time":0},{"pos":5,"out":"OK:
-        9054 distinct packages available\n","time":0},{"pos":6,"out":"(1/2) Upgrading
-        musl (1.1.18-r3 -\u003e 1.1.18-r4)\n","time":0},{"pos":7,"out":"(2/2) Upgrading
-        musl-utils (1.1.18-r3 -\u003e 1.1.18-r4)\n","time":0},{"pos":8,"out":"Executing
-        busybox-1.27.2-r11.trigger\n","time":0},{"pos":9,"out":"OK: 5 MiB in 14 packages\n","time":0},{"pos":10,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":11,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":12,"out":"(1/5)
-        Installing libssh2 (1.9.0-r1)\n","time":0},{"pos":13,"out":"(2/5) Installing
-        libcurl (7.61.1-r3)\n","time":0},{"pos":14,"out":"(3/5) Installing expat (2.2.8-r0)\n","time":0},{"pos":15,"out":"(4/5)
-        Installing pcre2 (10.30-r0)\n","time":0},{"pos":16,"out":"(5/5) Installing
-        git (2.15.4-r0)\n","time":0},{"pos":17,"out":"Executing busybox-1.27.2-r11.trigger\n","time":0},{"pos":18,"out":"OK:
-        19 MiB in 19 packages\n","time":0},{"pos":19,"out":"+ echo ''If you see this
-        step fail, you have committed a change to the Drone YAML that is not reflected
-        in the jsonnet configuration. Please do not edit .drone.yml directly, but
-        instead update the respective jsonnet files and generate .drone.yml with the
-        Drone CLI tool.''\n","time":0},{"pos":20,"out":"If you see this step fail,
-        you have committed a change to the Drone YAML that is not reflected in the
-        jsonnet configuration. Please do not edit .drone.yml directly, but instead
-        update the respective jsonnet files and generate .drone.yml with the Drone
-        CLI tool.\n","time":0},{"pos":21,"out":"+ /bin/drone jsonnet --stream\n","time":0},{"pos":22,"out":"+
-        exit $(git diff | head -n1 | wc -l)\n","time":1}]
+      string: '[{"pos":0,"out":"+ echo \"sucessfully built\"\n","time":7},{"pos":1,"out":"sucessfully
+        built\n","time":7}]
 
         '
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:35 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/1/4
-  response:
-    body:
-      string: '[{"pos":0,"out":"docker.io/library/node@sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd:
-        Pulling from library/node\n","time":0},{"pos":1,"out":"Digest: sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd\n","time":14},{"pos":2,"out":"Status:
-        Downloaded newer image for node@sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd\n","time":14},{"pos":3,"out":"+
-        mkdir -p /etc/app/ssl\n","time":19},{"pos":4,"out":"+ echo $CERT | base64
-        --decode \u003e /etc/app/ssl/node.crt\n","time":19},{"pos":5,"out":"+ echo
-        $KEY | base64 --decode \u003e /etc/app/ssl/node.key\n","time":19},{"pos":6,"out":"+
-        make node_modules_ci\n","time":19},{"pos":7,"out":"rm -rf node_modules \u0026\u0026
-        yarn \\\n","time":79},{"pos":8,"out":"\t\u0026\u0026 /usr/bin/touch node_modules
-        \\\n","time":79},{"pos":9,"out":"\t|| (rm -rf node_modules \u0026\u0026 exit
-        1) # delete on error\n","time":79},{"pos":10,"out":"yarn install v1.22.4\n","time":79},{"pos":11,"out":"[1/5]
-        Validating package.json...\n","time":79},{"pos":12,"out":"[2/5] Resolving
-        packages...\n","time":79},{"pos":13,"out":"[3/5] Fetching packages...\n","time":79},{"pos":14,"out":"info
-        fsevents@2.3.2: The platform \"linux\" is incompatible with this module.\n","time":79},{"pos":15,"out":"info
-        \"fsevents@2.3.2\" is an optional dependency and failed compatibility check.
-        Excluding it from installation.\n","time":79},{"pos":16,"out":"info fsevents@1.2.13:
-        The platform \"linux\" is incompatible with this module.\n","time":79},{"pos":17,"out":"info
-        \"fsevents@1.2.13\" is an optional dependency and failed compatibility check.
-        Excluding it from installation.\n","time":79},{"pos":18,"out":"[4/5] Linking
-        dependencies...\n","time":79},{"pos":19,"out":"[5/5] Building fresh packages...\n","time":79},{"pos":20,"out":"Done
-        in 59.77s.\n","time":79},{"pos":21,"out":"warning Resolution field \"scheduler@0.19.1\"
-        is incompatible with requested version \"scheduler@^0.18.0\"\n","time":79},{"pos":22,"out":"warning
-        Resolution field \"scheduler@0.19.1\" is incompatible with requested version
-        \"scheduler@^0.18.0\"\n","time":79},{"pos":23,"out":"warning \" \u003e @nyt/programming@4.9.5\"
-        has unmet peer dependency \"@mdx-js/mdx@^1.6.22\".\n","time":79},{"pos":24,"out":"warning
-        \" \u003e apollo-link-persisted-queries@0.2.2\" has incorrect peer dependency
-        \"graphql@^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0\".\n","time":79},{"pos":25,"out":"warning
-        \" \u003e react-apollo@3.1.5\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":79},{"pos":26,"out":"warning
-        \"react-apollo \u003e @apollo/react-common@3.1.4\" has unmet peer dependency
-        \"apollo-utilities@^1.3.2\".\n","time":79},{"pos":27,"out":"warning \"react-apollo
-        \u003e @apollo/react-common@3.1.4\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":79},{"pos":28,"out":"warning
-        \"react-apollo \u003e @apollo/react-components@3.1.5\" has unmet peer dependency
-        \"apollo-cache@^1.3.2\".\n","time":79},{"pos":29,"out":"warning \"react-apollo
-        \u003e @apollo/react-components@3.1.5\" has unmet peer dependency \"apollo-utilities@^1.3.2\".\n","time":79},{"pos":30,"out":"warning
-        \"react-apollo \u003e @apollo/react-components@3.1.5\" has incorrect peer
-        dependency \"graphql@^14.3.1\".\n","time":79},{"pos":31,"out":"warning \"react-apollo
-        \u003e @apollo/react-hoc@3.1.5\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":79},{"pos":32,"out":"warning
-        \"react-apollo \u003e @apollo/react-hooks@3.1.5\" has incorrect peer dependency
-        \"graphql@^14.3.1\".\n","time":79},{"pos":33,"out":"warning \" \u003e @apollo/react-testing@3.1.4\"
-        has unmet peer dependency \"apollo-utilities@^1.3.2\".\n","time":79},{"pos":34,"out":"warning
-        \" \u003e @apollo/react-testing@3.1.4\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":79},{"pos":35,"out":"warning
-        \"apollo \u003e apollo-language-server \u003e @apollographql/graphql-language-service-interface@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":79},{"pos":36,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-parser@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":79},{"pos":37,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-types@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":79},{"pos":38,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-utils@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.12.0 || ^0.13.0 || ^14.0.0\".\n","time":79},{"pos":39,"out":"warning
-        \"jest-preset-kyt-enzyme \u003e jest-environment-jsdom-global@2.0.4\" has
-        unmet peer dependency \"jest-environment-jsdom@22.x || 23.x || 24.x || 25.x
-        || 26.x\".\n","time":79}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:35 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/1/5
-  response:
-    body:
-      string: '[{"pos":0,"out":"+ echo ''If you see this step fail, you have committed
-        a change to the docs that has not been prettified. To resolve the issue: yarn
-        prettier:docs. If this does not resolve the issue, then something else may
-        be changing version controlled code (e.g. yarn.lock)''\n","time":0},{"pos":1,"out":"If
-        you see this step fail, you have committed a change to the docs that has not
-        been prettified. To resolve the issue: yarn prettier:docs. If this does not
-        resolve the issue, then something else may be changing version controlled
-        code (e.g. yarn.lock)\n","time":0},{"pos":2,"out":"+ yarn prettier:docs\n","time":0},{"pos":3,"out":"yarn
-        run v1.22.4\n","time":0},{"pos":4,"out":"$ prettier --parser markdown --print-width
-        80 --prose-wrap always --write ''docs/**/*.md''\n","time":0},{"pos":5,"out":"docs/development-guides/a11y.md
-        194ms\n","time":1},{"pos":6,"out":"docs/development-guides/builds-and-development.md
-        20ms\n","time":1},{"pos":7,"out":"docs/development-guides/es6.md 118ms\n","time":1},{"pos":8,"out":"docs/development-guides/fonts.md
-        8ms\n","time":1},{"pos":9,"out":"docs/development-guides/kyt.md 24ms\n","time":1},{"pos":10,"out":"docs/development-guides/linking-shared-ui.md
-        12ms\n","time":1},{"pos":11,"out":"docs/development-guides/overview.md 11ms\n","time":1},{"pos":12,"out":"docs/development-guides/performance.md
-        14ms\n","time":1},{"pos":13,"out":"docs/development-guides/secrets-management.md
-        34ms\n","time":1},{"pos":14,"out":"docs/development-guides/shared-ui.md 7ms\n","time":1},{"pos":15,"out":"docs/development-guides/version-control.md
-        12ms\n","time":1},{"pos":16,"out":"docs/development-guides/web-school.md 55ms\n","time":1},{"pos":17,"out":"docs/features/ab-testing.md
-        89ms\n","time":1},{"pos":18,"out":"docs/features/ads.md 54ms\n","time":1},{"pos":19,"out":"docs/features/meter.md
-        2ms\n","time":1},{"pos":20,"out":"docs/features/metered-assets.md 23ms\n","time":1},{"pos":21,"out":"docs/features/mocker.md
-        14ms\n","time":1},{"pos":22,"out":"docs/features/overlay-manager.md 49ms\n","time":1},{"pos":23,"out":"docs/features/private-mode-detection.md
-        28ms\n","time":1},{"pos":24,"out":"docs/features/shared-components.md 6ms\n","time":1},{"pos":25,"out":"docs/features/swg.md
-        23ms\n","time":1},{"pos":26,"out":"docs/features/tracking.md 49ms\n","time":1},{"pos":27,"out":"docs/getting-started/building-features.md
-        8ms\n","time":1},{"pos":28,"out":"docs/getting-started/dev-setup.md 111ms\n","time":1},{"pos":29,"out":"docs/getting-started/vi-overview.md
-        21ms\n","time":1},{"pos":30,"out":"docs/graphql/apollo.md 62ms\n","time":1},{"pos":31,"out":"docs/graphql/basics.md
-        29ms\n","time":1},{"pos":32,"out":"docs/graphql/co-location.md 39ms\n","time":2},{"pos":33,"out":"docs/graphql/debugging.md
-        4ms\n","time":2},{"pos":34,"out":"docs/graphql/links.md 11ms\n","time":2},{"pos":35,"out":"docs/graphql/samizdat.md
-        2ms\n","time":2},{"pos":36,"out":"docs/graphql/testing.md 27ms\n","time":2},{"pos":37,"out":"docs/index.md
-        22ms\n","time":2},{"pos":38,"out":"docs/infrastructure/cloud-endpoints.md
-        36ms\n","time":2},{"pos":39,"out":"docs/infrastructure/docker.md 2ms\n","time":2},{"pos":40,"out":"docs/infrastructure/drone.md
-        14ms\n","time":2},{"pos":41,"out":"docs/infrastructure/environments-samizdat.md
-        5ms\n","time":2},{"pos":42,"out":"docs/infrastructure/environments-vi.md 14ms\n","time":2},{"pos":43,"out":"docs/infrastructure/fastly.md
-        24ms\n","time":2},{"pos":44,"out":"docs/infrastructure/gke.md 43ms\n","time":2},{"pos":45,"out":"docs/infrastructure/google-cloud-build.md
-        2ms\n","time":2},{"pos":46,"out":"docs/infrastructure/k8s-overview.md 27ms\n","time":2},{"pos":47,"out":"docs/infrastructure/overview.md
-        6ms\n","time":2},{"pos":48,"out":"docs/infrastructure/preview-environments.md
-        44ms\n","time":2},{"pos":49,"out":"docs/monitoring-stability/basics.md 2ms\n","time":2},{"pos":50,"out":"docs/monitoring-stability/performance.md
-        3ms\n","time":2},{"pos":51,"out":"docs/monitoring-stability/sentry.md 36ms\n","time":2},{"pos":52,"out":"docs/monitoring-stability/stackdriver.md
-        2ms\n","time":2},{"pos":53,"out":"docs/on-call/monitoring.md 11ms\n","time":2},{"pos":54,"out":"docs/on-call/p1.md
-        8ms\n","time":2},{"pos":55,"out":"docs/on-call/playbook.md 42ms\n","time":2},{"pos":56,"out":"docs/on-call/policy.md
-        5ms\n","time":2},{"pos":57,"out":"docs/on-call/responsibilities.md 5ms\n","time":2},{"pos":58,"out":"docs/other/submit-feedback.md
-        2ms\n","time":2},{"pos":59,"out":"docs/processes/bug-report.md 12ms\n","time":2},{"pos":60,"out":"docs/processes/code-review.md
-        15ms\n","time":2},{"pos":61,"out":"docs/processes/feature-lifecycle.md 22ms\n","time":2},{"pos":62,"out":"docs/processes/issues.md
-        4ms\n","time":2},{"pos":63,"out":"docs/processes/mini-rfc.md 12ms\n","time":2},{"pos":64,"out":"docs/processes/releases/monitor-deployment.md
-        5ms\n","time":2},{"pos":65,"out":"docs/processes/releases/production-release.md
-        12ms\n","time":2},{"pos":66,"out":"docs/processes/releases/production-rollback.md
-        19ms\n","time":2},{"pos":67,"out":"docs/react/basics.md 84ms\n","time":2},{"pos":68,"out":"docs/react/decorators.md
-        3ms\n","time":2},{"pos":69,"out":"docs/react/helmet.md 14ms\n","time":2},{"pos":70,"out":"docs/react/router.md
-        16ms\n","time":2},{"pos":71,"out":"docs/rfcs/abra-v12.md 43ms\n","time":2},{"pos":72,"out":"docs/rfcs/asset-templates.md
-        48ms\n","time":2},{"pos":73,"out":"docs/rfcs/assets-pipeline.md 12ms\n","time":2},{"pos":74,"out":"docs/rfcs/city-guides.md
-        36ms\n","time":2},{"pos":75,"out":"docs/rfcs/conditional-requests.md 20ms\n","time":2},{"pos":76,"out":"docs/rfcs/cross-fetch.md
-        8ms\n","time":2},{"pos":77,"out":"docs/rfcs/css-in-js.md 92ms\n","time":2},{"pos":78,"out":"docs/rfcs/cypress.md
-        45ms\n","time":3},{"pos":79,"out":"docs/rfcs/e2e-mocked-requests.md 24ms\n","time":3},{"pos":80,"out":"docs/rfcs/explainer.md
-        26ms\n","time":3},{"pos":81,"out":"docs/rfcs/feature-flags.md 23ms\n","time":3},{"pos":82,"out":"docs/rfcs/geolocation-provider.md
-        20ms\n","time":3},{"pos":83,"out":"docs/rfcs/github-deployments.md 37ms\n","time":3},{"pos":84,"out":"docs/rfcs/graphql-for-prototyping.md
-        41ms\n","time":3},{"pos":85,"out":"docs/rfcs/index.md 13ms\n","time":3},{"pos":86,"out":"docs/rfcs/interactive-standalone.md
-        30ms\n","time":3},{"pos":87,"out":"docs/rfcs/isolated-stories.md 23ms\n","time":3},{"pos":88,"out":"docs/rfcs/live-blog.md
-        17ms\n","time":3},{"pos":89,"out":"docs/rfcs/managing-pull-requests.md 12ms\n","time":3},{"pos":90,"out":"docs/rfcs/optional-chaining.md
-        23ms\n","time":3},{"pos":91,"out":"docs/rfcs/other-rfcs-index.md 7ms\n","time":3},{"pos":92,"out":"docs/rfcs/overlay-manager.md
-        23ms\n","time":3},{"pos":93,"out":"docs/rfcs/performance.md 41ms\n","time":3},{"pos":94,"out":"docs/rfcs/pretty-lights.md
-        73ms\n","time":3},{"pos":95,"out":"docs/rfcs/preview-environments.md 27ms\n","time":3},{"pos":96,"out":"docs/rfcs/prioritize-top-ad.md
-        37ms\n","time":3},{"pos":97,"out":"docs/rfcs/privacy-hub.md 25ms\n","time":3},{"pos":98,"out":"docs/rfcs/pseudo-responsive.md
-        38ms\n","time":3},{"pos":99,"out":"docs/rfcs/react-aria-live.md 8ms\n","time":3},{"pos":100,"out":"docs/rfcs/react-modal.md
-        8ms\n","time":3},{"pos":101,"out":"docs/rfcs/referral-route.md 29ms\n","time":3},{"pos":102,"out":"docs/rfcs/secrets-in-vault.md
-        19ms\n","time":3},{"pos":103,"out":"docs/rfcs/sentry-clientside-errors.md
-        20ms\n","time":3},{"pos":104,"out":"docs/rfcs/shared-cards-cms.md 22ms\n","time":3},{"pos":105,"out":"docs/rfcs/stackdriver-kubernetes-monitoring.md
-        37ms\n","time":3},{"pos":106,"out":"docs/rfcs/tracing.md 16ms\n","time":3},{"pos":107,"out":"docs/rfcs/use-cases-data-access.md
-        12ms\n","time":3},{"pos":108,"out":"docs/rfcs/vhs-sentry-logging.md 49ms\n","time":3},{"pos":109,"out":"docs/routes/adding-a-route/basics.md
-        35ms\n","time":3},{"pos":110,"out":"docs/routes/adding-a-route/steps.md 12ms\n","time":3},{"pos":111,"out":"docs/routes/ask.md
-        2ms\n","time":3},{"pos":112,"out":"docs/routes/audio.md 2ms\n","time":3},{"pos":113,"out":"docs/routes/coderedeem.md
-        34ms\n","time":3},{"pos":114,"out":"docs/routes/collections.md 2ms\n","time":3},{"pos":115,"out":"docs/routes/get-started.md
-        20ms\n","time":3},{"pos":116,"out":"docs/routes/home.md 93ms\n","time":4},{"pos":117,"out":"docs/routes/interactive.md
-        33ms\n","time":4},{"pos":118,"out":"docs/routes/newsletters.md 12ms\n","time":4},{"pos":119,"out":"docs/routes/paid-posts.md
-        1ms\n","time":4},{"pos":120,"out":"docs/routes/refer.md 20ms\n","time":4},{"pos":121,"out":"docs/routes/search.md
-        2ms\n","time":4},{"pos":122,"out":"docs/routes/slideshow.md 2ms\n","time":4},{"pos":123,"out":"docs/routes/story.md
-        47ms\n","time":4},{"pos":124,"out":"docs/routes/trending.md 12ms\n","time":4},{"pos":125,"out":"docs/routes/video.md
-        34ms\n","time":4},{"pos":126,"out":"docs/routes/weddings.md 17ms\n","time":4},{"pos":127,"out":"docs/styles/media-queries.md
-        8ms\n","time":4},{"pos":128,"out":"docs/styles/overview.md 48ms\n","time":4},{"pos":129,"out":"docs/styles/theming.md
-        23ms\n","time":4},{"pos":130,"out":"docs/testing/acceptance-testing/basics.md
-        4ms\n","time":4},{"pos":131,"out":"docs/testing/acceptance-testing/browser-driver.md
-        12ms\n","time":4},{"pos":132,"out":"docs/testing/acceptance-testing/developer-experience.md
-        3ms\n","time":4},{"pos":133,"out":"docs/testing/acceptance-testing/eslint.md
-        3ms\n","time":4},{"pos":134,"out":"docs/testing/acceptance-testing/mocker.md
-        11ms\n","time":4},{"pos":135,"out":"docs/testing/acceptance-testing/running.md
-        14ms\n","time":4},{"pos":136,"out":"docs/testing/functional-testing/basics.md
-        53ms\n","time":4},{"pos":137,"out":"docs/testing/functional-testing/test-reporting-system.md
-        22ms\n","time":4},{"pos":138,"out":"docs/testing/functional-testing/troubleshooting.md
-        22ms\n","time":4},{"pos":139,"out":"docs/testing/unit-testing-in-depth.md
-        44ms\n","time":4},{"pos":140,"out":"docs/testing/unit-testing.md 9ms\n","time":4},{"pos":141,"out":"docs/tools/lighthouse-test-runner.md
-        18ms\n","time":4},{"pos":142,"out":"docs/tools/overview.md 11ms\n","time":4},{"pos":143,"out":"docs/tools/puppet-theater/configuration.md
-        5ms\n","time":4},{"pos":144,"out":"docs/tools/puppet-theater/introduction.md
-        8ms\n","time":4},{"pos":145,"out":"docs/upstream-services/overview.md 9ms\n","time":4},{"pos":146,"out":"Done
-        in 4.01s.\n","time":4},{"pos":147,"out":"+ exit $(git diff | head -n1 | wc
-        -l)\n","time":4}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:35 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/1
-  response:
-    body:
-      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":0},{"pos":1,"out":"+
-        git fetch origin +refs/heads/deprecate-e2e-and-introduce-acceptance-tests:\n","time":0},{"pos":2,"out":"From
-        https://github.com/nytm/wf-project-vi\n","time":24},{"pos":3,"out":" * branch                deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e FETCH_HEAD\n","time":24},{"pos":4,"out":" * [new branch]          deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e origin/deprecate-e2e-and-introduce-acceptance-tests\n","time":24},{"pos":5,"out":"+
-        git checkout 4fcb2a3a106092213307f605aab07254d76512f9 -b deprecate-e2e-and-introduce-acceptance-tests\n","time":24},{"pos":6,"out":"Switched
-        to a new branch ''deprecate-e2e-and-introduce-acceptance-tests''\n","time":25}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '778'
+      - '107'
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:36 GMT
+      - Mon, 21 Jun 2021 23:15:25 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
@@ -446,38 +154,27 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/2
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/3
   response:
     body:
-      string: '[{"pos":0,"out":"us.gcr.io/nyt-wfvi-dev/check-for-pr@sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c:
-        Pulling from nyt-wfvi-dev/check-for-pr\n","time":0},{"pos":1,"out":"Digest:
-        sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c\n","time":2},{"pos":2,"out":"Status:
-        Downloaded newer image for us.gcr.io/nyt-wfvi-dev/check-for-pr@sha256:5b08f66ad63f037ab4ff9cbb09c09343ca383b55fd5dc42c36fdbeda2ace7c0c\n","time":2},{"pos":3,"out":"request
-        { method: ''GET'',\n","time":5},{"pos":4,"out":"  baseUrl: ''https://api.github.com'',\n","time":5},{"pos":5,"out":"  headers:\n","time":5},{"pos":6,"out":"   {
-        accept: ''application/vnd.github.v3+json'',\n","time":5},{"pos":7,"out":"     ''user-agent'':\n","time":5},{"pos":8,"out":"      ''octokit-rest.js/17.1.3
-        octokit-core.js/2.4.3 Node.js/10.20.1 (Linux 3.10; x64)'' },\n","time":5},{"pos":9,"out":"  mediaType:
-        { format: '''', previews: [] },\n","time":5},{"pos":10,"out":"  request: {
-        hook: [Function: bound bound register] },\n","time":5},{"pos":11,"out":"  url:
-        ''/repos/{owner}/{repo}/pulls'',\n","time":5},{"pos":12,"out":"  owner: ''nytm'',\n","time":5},{"pos":13,"out":"  repo:
-        ''wf-project-vi'',\n","time":5},{"pos":14,"out":"  state: ''open'' }\n","time":5},{"pos":15,"out":"GET
-        /repos/nytm/wf-project-vi/pulls?state=open - 200 in 964ms\n","time":6}]
+      string: '[{"pos":0,"out":"+ echo \"running unit tests\"\n","time":7},{"pos":1,"out":"running
+        unit tests\n","time":7},{"pos":2,"out":"+ sleep 1\n","time":7},{"pos":3,"out":"+
+        echo \"unit tests succeeded\"\n","time":8},{"pos":4,"out":"unit tests succeeded\n","time":8}]
 
         '
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '1330'
+      - '259'
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:36 GMT
+      - Mon, 21 Jun 2021 23:15:25 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
@@ -493,606 +190,28 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/3
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/4
   response:
     body:
-      string: '[{"pos":0,"out":"+ apk update \u0026\u0026 apk upgrade \u0026\u0026
-        apk add --no-cache git\n","time":0},{"pos":1,"out":"fetch http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":2,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":3,"out":"v3.7.3-184-gffd32bfd09
-        [http://dl-cdn.alpinelinux.org/alpine/v3.7/main]\n","time":0},{"pos":4,"out":"v3.7.3-194-gcddd1b2302
-        [http://dl-cdn.alpinelinux.org/alpine/v3.7/community]\n","time":0},{"pos":5,"out":"OK:
-        9054 distinct packages available\n","time":0},{"pos":6,"out":"(1/2) Upgrading
-        musl (1.1.18-r3 -\u003e 1.1.18-r4)\n","time":0},{"pos":7,"out":"(2/2) Upgrading
-        musl-utils (1.1.18-r3 -\u003e 1.1.18-r4)\n","time":0},{"pos":8,"out":"Executing
-        busybox-1.27.2-r11.trigger\n","time":0},{"pos":9,"out":"OK: 5 MiB in 14 packages\n","time":0},{"pos":10,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/main/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":11,"out":"fetch
-        http://dl-cdn.alpinelinux.org/alpine/v3.7/community/x86_64/APKINDEX.tar.gz\n","time":0},{"pos":12,"out":"(1/5)
-        Installing libssh2 (1.9.0-r1)\n","time":0},{"pos":13,"out":"(2/5) Installing
-        libcurl (7.61.1-r3)\n","time":0},{"pos":14,"out":"(3/5) Installing expat (2.2.8-r0)\n","time":0},{"pos":15,"out":"(4/5)
-        Installing pcre2 (10.30-r0)\n","time":0},{"pos":16,"out":"(5/5) Installing
-        git (2.15.4-r0)\n","time":0},{"pos":17,"out":"Executing busybox-1.27.2-r11.trigger\n","time":0},{"pos":18,"out":"OK:
-        19 MiB in 19 packages\n","time":0},{"pos":19,"out":"+ echo ''If you see this
-        step fail, you have committed a change to the Drone YAML that is not reflected
-        in the jsonnet configuration. Please do not edit .drone.yml directly, but
-        instead update the respective jsonnet files and generate .drone.yml with the
-        Drone CLI tool.''\n","time":0},{"pos":20,"out":"If you see this step fail,
-        you have committed a change to the Drone YAML that is not reflected in the
-        jsonnet configuration. Please do not edit .drone.yml directly, but instead
-        update the respective jsonnet files and generate .drone.yml with the Drone
-        CLI tool.\n","time":0},{"pos":21,"out":"+ /bin/drone jsonnet --stream\n","time":0},{"pos":22,"out":"+
-        exit $(git diff | head -n1 | wc -l)\n","time":1}]
+      string: '[{"pos":0,"out":"+ echo \"running integration tests\"\n","time":7},{"pos":1,"out":"running
+        integration tests\n","time":7},{"pos":2,"out":"+ sleep 5\n","time":7},{"pos":3,"out":"+
+        echo \"integration tests succeeded\"\n","time":12},{"pos":4,"out":"integration
+        tests succeeded\n","time":12}]
 
         '
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:36 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/4
-  response:
-    body:
-      string: '[{"pos":0,"out":"docker.io/library/node@sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd:
-        Pulling from library/node\n","time":0},{"pos":1,"out":"Digest: sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd\n","time":14},{"pos":2,"out":"Status:
-        Downloaded newer image for node@sha256:a2397f3a30c8631d761b6e7d13af5a1107b2222b7d0ec2f515640674a44a09fd\n","time":14},{"pos":3,"out":"+
-        mkdir -p /etc/app/ssl\n","time":18},{"pos":4,"out":"+ echo $CERT | base64
-        --decode \u003e /etc/app/ssl/node.crt\n","time":18},{"pos":5,"out":"+ echo
-        $KEY | base64 --decode \u003e /etc/app/ssl/node.key\n","time":18},{"pos":6,"out":"+
-        make node_modules_ci\n","time":18},{"pos":7,"out":"rm -rf node_modules \u0026\u0026
-        yarn \\\n","time":78},{"pos":8,"out":"\t\u0026\u0026 /usr/bin/touch node_modules
-        \\\n","time":78},{"pos":9,"out":"\t|| (rm -rf node_modules \u0026\u0026 exit
-        1) # delete on error\n","time":78},{"pos":10,"out":"yarn install v1.22.4\n","time":78},{"pos":11,"out":"[1/5]
-        Validating package.json...\n","time":78},{"pos":12,"out":"[2/5] Resolving
-        packages...\n","time":78},{"pos":13,"out":"[3/5] Fetching packages...\n","time":78},{"pos":14,"out":"info
-        fsevents@2.3.2: The platform \"linux\" is incompatible with this module.\n","time":78},{"pos":15,"out":"info
-        \"fsevents@2.3.2\" is an optional dependency and failed compatibility check.
-        Excluding it from installation.\n","time":78},{"pos":16,"out":"info fsevents@1.2.13:
-        The platform \"linux\" is incompatible with this module.\n","time":78},{"pos":17,"out":"warning
-        Resolution field \"scheduler@0.19.1\" is incompatible with requested version
-        \"scheduler@^0.18.0\"\n","time":78},{"pos":18,"out":"warning Resolution field
-        \"scheduler@0.19.1\" is incompatible with requested version \"scheduler@^0.18.0\"\n","time":78},{"pos":19,"out":"warning
-        \" \u003e @nyt/programming@4.9.5\" has unmet peer dependency \"@mdx-js/mdx@^1.6.22\".\n","time":78},{"pos":20,"out":"warning
-        \" \u003e apollo-link-persisted-queries@0.2.2\" has incorrect peer dependency
-        \"graphql@^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0\".\n","time":78},{"pos":21,"out":"warning
-        \" \u003e react-apollo@3.1.5\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":78},{"pos":22,"out":"warning
-        \"react-apollo \u003e @apollo/react-common@3.1.4\" has unmet peer dependency
-        \"apollo-utilities@^1.3.2\".\n","time":78},{"pos":23,"out":"warning \"react-apollo
-        \u003e @apollo/react-common@3.1.4\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":78},{"pos":24,"out":"warning
-        \"react-apollo \u003e @apollo/react-components@3.1.5\" has unmet peer dependency
-        \"apollo-cache@^1.3.2\".\n","time":78},{"pos":25,"out":"warning \"react-apollo
-        \u003e @apollo/react-components@3.1.5\" has unmet peer dependency \"apollo-utilities@^1.3.2\".\n","time":78},{"pos":26,"out":"warning
-        \"react-apollo \u003e @apollo/react-components@3.1.5\" has incorrect peer
-        dependency \"graphql@^14.3.1\".\n","time":78},{"pos":27,"out":"warning \"react-apollo
-        \u003e @apollo/react-hoc@3.1.5\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":78},{"pos":28,"out":"warning
-        \"react-apollo \u003e @apollo/react-hooks@3.1.5\" has incorrect peer dependency
-        \"graphql@^14.3.1\".\n","time":78},{"pos":29,"out":"warning \" \u003e @apollo/react-testing@3.1.4\"
-        has unmet peer dependency \"apollo-utilities@^1.3.2\".\n","time":78},{"pos":30,"out":"warning
-        \" \u003e @apollo/react-testing@3.1.4\" has incorrect peer dependency \"graphql@^14.3.1\".\n","time":78},{"pos":31,"out":"warning
-        \"apollo \u003e apollo-language-server \u003e @apollographql/graphql-language-service-interface@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":78},{"pos":32,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-parser@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":78},{"pos":33,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-types@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0
-        || ^14.0.0\".\n","time":78},{"pos":34,"out":"warning \"apollo \u003e apollo-language-server
-        \u003e @apollographql/graphql-language-service-interface \u003e @apollographql/graphql-language-service-utils@2.0.2\"
-        has incorrect peer dependency \"graphql@^0.12.0 || ^0.13.0 || ^14.0.0\".\n","time":78},{"pos":35,"out":"warning
-        \"jest-preset-kyt-enzyme \u003e jest-environment-jsdom-global@2.0.4\" has
-        unmet peer dependency \"jest-environment-jsdom@22.x || 23.x || 24.x || 25.x
-        || 26.x\".\n","time":78},{"pos":36,"out":"info \"fsevents@1.2.13\" is an optional
-        dependency and failed compatibility check. Excluding it from installation.\n","time":78},{"pos":37,"out":"[4/5]
-        Linking dependencies...\n","time":78},{"pos":38,"out":"[5/5] Building fresh
-        packages...\n","time":78},{"pos":39,"out":"Done in 59.09s.\n","time":78}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:36 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/5
-  response:
-    body:
-      string: "[{\"pos\":0,\"out\":\"+ echo 'drone step - build_app'\\n\",\"time\":0},{\"pos\":1,\"out\":\"drone
-        step - build_app\\n\",\"time\":0},{\"pos\":2,\"out\":\"+ make build_ci\\n\",\"time\":0},{\"pos\":3,\"out\":\"NODE_ENV=production
-        yarn kyt build\\n\",\"time\":209},{\"pos\":4,\"out\":\"yarn run v1.22.4\\n\",\"time\":209},{\"pos\":5,\"out\":\"$
-        /drone/src/node_modules/.bin/kyt build\\n\",\"time\":209},{\"pos\":6,\"out\":\"\\n\",\"time\":209},{\"pos\":7,\"out\":\"\u2139\uFE0F
-        \ Using kyt config at /drone/src/kyt.config.js\\n\",\"time\":209},{\"pos\":8,\"out\":\"\\n\",\"time\":209},{\"pos\":9,\"out\":\"\U0001F525
-        \ Starting production build...\\n\",\"time\":209},{\"pos\":10,\"out\":\"\\n\",\"time\":209},{\"pos\":11,\"out\":\"\U0001F44D
-        \ Cleaned ./build\\n\",\"time\":209},{\"pos\":12,\"out\":\"\U0001F44D  Copied
-        /src/public to /build/public\\n\",\"time\":209},{\"pos\":13,\"out\":\"\U0001F44D
-        \ Client webpack configuration compiled\\n\",\"time\":209},{\"pos\":14,\"out\":\"[info]
-        [webpackbar] Compiling Client\\n\",\"time\":209},{\"pos\":15,\"out\":\"Total
-        precache size is about 23.9 MB for 196 resources.\\n\",\"time\":209},{\"pos\":16,\"out\":\"[success]
-        [webpackbar] Client: Compiled successfully in 1.56m\\n\",\"time\":209},{\"pos\":17,\"out\":\"\U0001F640
-        \ Client build warnings\\n\",\"time\":209},{\"pos\":18,\"out\":\"asset size
-        limit: The following asset(s) exceed the recommended size limit (244 KiB).\\n\",\"time\":209},{\"pos\":19,\"out\":\"This
-        can impact web performance.\\n\",\"time\":209},{\"pos\":20,\"out\":\"Assets:
-        \\n\",\"time\":209},{\"pos\":21,\"out\":\"  sb-genius-bd117019fca6f99d5e59cc5556acff62.jpg
-        (374 KiB)\\n\",\"time\":209},{\"pos\":22,\"out\":\"  sb-meet-sam-dccb696eab20674d8d4267bd8d7da237.jpg
-        (299 KiB)\\n\",\"time\":209},{\"pos\":23,\"out\":\"  Joel_Fagliano-95df53cbf780ce157633ea2ecffd4db4.jpg
-        (249 KiB)\\n\",\"time\":209},{\"pos\":24,\"out\":\"  Wyna_Liu-c38ef7919ce3401b126158406941f9a5.jpg
-        (256 KiB)\\n\",\"time\":209},{\"pos\":25,\"out\":\"  wordplay-girl-973d3396c177b955adba63e45afbeccb.jpg
-        (847 KiB)\\n\",\"time\":209},{\"pos\":26,\"out\":\"  wordplay-read-6ea7d4bedc17736b9f9402a704b101e2.jpg
-        (1.3 MiB)\\n\",\"time\":209},{\"pos\":27,\"out\":\"  xwd-how-to-make-0afe67bebc1e66ca746bb5ce3e66ef7e.jpg
-        (619 KiB)\\n\",\"time\":209},{\"pos\":28,\"out\":\"  xwd-how-to-solve-a0ef681ec5fbafb01661abffde554b26.gif
-        (659 KiB)\\n\",\"time\":209},{\"pos\":29,\"out\":\"  social-share-preview-image-4ef724294e9aacfe5e4d079c8e4228eb.png
-        (1.51 MiB)\\n\",\"time\":209},{\"pos\":30,\"out\":\"  vendor-361a3a5156942fc91866.js
-        (269 KiB)\\n\",\"time\":209},{\"pos\":31,\"out\":\"  capsule-d18d53f62e7fbcd89752.js
-        (566 KiB)\\n\",\"time\":209},{\"pos\":32,\"out\":\"  clientSideCapsule-14f51b063201c2757f63.js
-        (392 KiB)\\n\",\"time\":209},{\"pos\":33,\"out\":\"  collections-bc47aaa6296cff246535.js
-        (1.09 MiB)\\n\",\"time\":209},{\"pos\":34,\"out\":\"  explainer-4f66b708a914df2994b9.js
-        (795 KiB)\\n\",\"time\":209},{\"pos\":35,\"out\":\"  home-b04384c7a3790ca236a6.js
-        (666 KiB)\\n\",\"time\":209},{\"pos\":36,\"out\":\"  interactive-792f550759b4df200377.js
-        (768 KiB)\\n\",\"time\":209},{\"pos\":37,\"out\":\"  liveblog-8934f0fa37734cf8fa86.js
-        (851 KiB)\\n\",\"time\":209},{\"pos\":38,\"out\":\"  main-f92b4f97a1bd1743270b.js
-        (1.04 MiB)\\n\",\"time\":209},{\"pos\":39,\"out\":\"  paidpost-899cbeaeecfc4876c5e0.js
-        (429 KiB)\\n\",\"time\":209},{\"pos\":40,\"out\":\"  privacy-ca7ca96677831c564be3.js
-        (609 KiB)\\n\",\"time\":209},{\"pos\":41,\"out\":\"  slideshow-98c5bb4d353671642464.js
-        (260 KiB)\\n\",\"time\":209},{\"pos\":42,\"out\":\"  story-818f879150d1c63c893f.js
-        (996 KiB)\\n\",\"time\":209},{\"pos\":43,\"out\":\"  vendor-interactive-7086d83329fedc4746bc.js
-        (731 KiB)\\n\",\"time\":209},{\"pos\":44,\"out\":\"  video-a6fb9a86d3720ac2290f.js
-        (363 KiB)\\n\",\"time\":209},{\"pos\":45,\"out\":\"entrypoint size limit:
-        The following entrypoint(s) combined asset size exceeds the recommended limit
-        (244 KiB). This can impact web performance.\\n\",\"time\":209},{\"pos\":46,\"out\":\"Entrypoints:\\n\",\"time\":209},{\"pos\":47,\"out\":\"
-        \ main (1.31 MiB)\\n\",\"time\":209},{\"pos\":48,\"out\":\"      runtime~main-00f34bf483c3ea25c964.js\\n\",\"time\":209},{\"pos\":49,\"out\":\"
-        \     vendor-361a3a5156942fc91866.js\\n\",\"time\":209},{\"pos\":50,\"out\":\"
-        \     main-f92b4f97a1bd1743270b.js\\n\",\"time\":209},{\"pos\":51,\"out\":\"
-        \ interactive (1.47 MiB)\\n\",\"time\":209},{\"pos\":52,\"out\":\"      runtime~interactive-b43d1addea56ec248e5e.js\\n\",\"time\":209},{\"pos\":53,\"out\":\"
-        \     vendor-interactive-7086d83329fedc4746bc.js\\n\",\"time\":209},{\"pos\":54,\"out\":\"
-        \     interactive-792f550759b4df200377.js\\n\",\"time\":209},{\"pos\":55,\"out\":\"\\n\",\"time\":209},{\"pos\":56,\"out\":\"\u2139\uFE0F
-        \ Assets:\\n\",\"time\":209},{\"pos\":57,\"out\":\"    1.09 MB      (291.59
-        KB gzip)    build/public/collections-bc47aaa6296cff246535.js\\n\",\"time\":209},{\"pos\":58,\"out\":\"
-        \   1.04 MB      (316.29 KB gzip)    build/public/main-f92b4f97a1bd1743270b.js\\n\",\"time\":209},{\"pos\":59,\"out\":\"
-        \   995.91 KB    (267.23 KB gzip)    build/public/story-818f879150d1c63c893f.js\\n\",\"time\":209},{\"pos\":60,\"out\":\"
-        \   850.91 KB    (224.13 KB gzip)    build/public/liveblog-8934f0fa37734cf8fa86.js\\n\",\"time\":209},{\"pos\":61,\"out\":\"warning
-        Resolution field \\\"scheduler@0.19.1\\\" is incompatible with requested version
-        \\\"scheduler@^0.18.0\\\"\\n\",\"time\":209},{\"pos\":62,\"out\":\"warning
-        Resolution field \\\"scheduler@0.19.1\\\" is incompatible with requested version
-        \\\"scheduler@^0.18.0\\\"\\n\",\"time\":209},{\"pos\":63,\"out\":\"warning
-        \\\" \\u003e @nyt/programming@4.9.5\\\" has unmet peer dependency \\\"@mdx-js/mdx@^1.6.22\\\".\\n\",\"time\":209},{\"pos\":64,\"out\":\"
-        \   794.56 KB    (208.63 KB gzip)    build/public/explainer-4f66b708a914df2994b9.js\\n\",\"time\":209},{\"pos\":65,\"out\":\"warning
-        \\\" \\u003e apollo-link-persisted-queries@0.2.2\\\" has incorrect peer dependency
-        \\\"graphql@^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0\\\".\\n\",\"time\":209},{\"pos\":66,\"out\":\"
-        \   767.82 KB    (204.94 KB gzip)    build/public/interactive-792f550759b4df200377.js\\n\",\"time\":209},{\"pos\":67,\"out\":\"
-        \   731.45 KB    (228.09 KB gzip)    build/public/vendor-interactive-7086d83329fedc4746bc.js\\n\",\"time\":209},{\"pos\":68,\"out\":\"
-        \   665.52 KB    (152.8 KB gzip)     build/public/home-b04384c7a3790ca236a6.js\\n\",\"time\":209},{\"pos\":69,\"out\":\"
-        \   609.29 KB    (158.05 KB gzip)    build/public/privacy-ca7ca96677831c564be3.js\\n\",\"time\":209},{\"pos\":70,\"out\":\"
-        \   566.38 KB    (146.09 KB gzip)    build/public/capsule-d18d53f62e7fbcd89752.js\\n\",\"time\":209},{\"pos\":71,\"out\":\"
-        \   429.11 KB    (111.1 KB gzip)     build/public/paidpost-899cbeaeecfc4876c5e0.js\\n\",\"time\":209},{\"pos\":72,\"out\":\"
-        \   392 KB       (96.71 KB gzip)     build/public/clientSideCapsule-14f51b063201c2757f63.js\\n\",\"time\":209},{\"pos\":73,\"out\":\"
-        \   362.82 KB    (99.25 KB gzip)     build/public/video-a6fb9a86d3720ac2290f.js\\n\",\"time\":209},{\"pos\":74,\"out\":\"
-        \   268.97 KB    (80.19 KB gzip)     build/public/vendor-361a3a5156942fc91866.js\\n\",\"time\":209},{\"pos\":75,\"out\":\"
-        \   260.28 KB    (73.06 KB gzip)     build/public/slideshow-98c5bb4d353671642464.js\\n\",\"time\":209},{\"pos\":76,\"out\":\"
-        \   237.69 KB    (65.11 KB gzip)     build/public/audio-48af6f33c2418088931d.js\\n\",\"time\":209},{\"pos\":77,\"out\":\"
-        \   170.93 KB    (44.85 KB gzip)     build/public/bestsellers-a6884608a8314ee7388a.js\\n\",\"time\":209},{\"pos\":78,\"out\":\"
-        \   164.35 KB    (41.58 KB gzip)     build/public/vendors~phone-number-input-4968a48eb73474ba1850.js\\n\",\"time\":209},{\"pos\":79,\"out\":\"
-        \   132.9 KB     (32.16 KB gzip)     build/public/search-7ca87d02abfb33f315e8.js\\n\",\"time\":209},{\"pos\":80,\"out\":\"
-        \   130.6 KB     (36.49 KB gzip)     build/public/your-list-91b75211c3159a64f634.js\\n\",\"time\":209},{\"pos\":81,\"out\":\"
-        \   113 KB       (30.97 KB gzip)     build/public/recirculation-5efd2ec488dacf349a95.js\\n\",\"time\":209},{\"pos\":82,\"out\":\"
-        \   109.75 KB    (29.02 KB gzip)     build/public/vendors~commentsForm~weddings-9b9f348fce001d18ec42.js\\n\",\"time\":209},{\"pos\":83,\"out\":\"
-        \   101.94 KB    (25.85 KB gzip)     build/public/reviews-e57f505652f91d844eaf.js\\n\",\"time\":209},{\"pos\":84,\"out\":\"
-        \   99.03 KB     (23.22 KB gzip)     build/public/weddings-5193c046e410203017ee.js\\n\",\"time\":209},{\"pos\":85,\"out\":\"
-        \   96.51 KB     (36.88 KB gzip)     build/public/welcomeBlock-1a87bd4ba241ec4ecec1.js\\n\",\"time\":209},{\"pos\":86,\"out\":\"
-        \   94.72 KB     (25.19 KB gzip)     build/public/byline-3352274f1be015e5edc4.js\\n\",\"time\":209},{\"pos\":87,\"out\":\"
-        \   89.11 KB     (21.07 KB gzip)     build/public/vendors~videoblock-d4bbc3276f254a1daf83.js\\n\",\"time\":209},{\"pos\":88,\"out\":\"
-        \   88.5 KB      (25.11 KB gzip)     build/public/welcomesubscriber-4edfac7b50216bbda25f.js\\n\",\"time\":209},{\"pos\":89,\"out\":\"
-        \   82 KB        (24.67 KB gzip)     build/public/getstarted-74322257ae7b184e06a3.js\\n\",\"time\":209},{\"pos\":90,\"out\":\"
-        \   81.65 KB     (24.29 KB gzip)     build/public/answerpage-cc501d9f33267ee9a0c2.js\\n\",\"time\":209},{\"pos\":91,\"out\":\"
-        \   76.07 KB     (21.07 KB gzip)     build/public/newsletter-ea4bfac2db89b16bf7b4.js\\n\",\"time\":209},{\"pos\":92,\"out\":\"warning
-        \\\" \\u003e react-apollo@3.1.5\\\" has incorrect peer dependency \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":93,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-common@3.1.4\\\" has unmet peer dependency
-        \\\"apollo-utilities@^1.3.2\\\".\\n\",\"time\":209},{\"pos\":94,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-common@3.1.4\\\" has incorrect peer
-        dependency \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":95,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-components@3.1.5\\\" has unmet peer
-        dependency \\\"apollo-cache@^1.3.2\\\".\\n\",\"time\":209},{\"pos\":96,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-components@3.1.5\\\" has unmet peer
-        dependency \\\"apollo-utilities@^1.3.2\\\".\\n\",\"time\":209},{\"pos\":97,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-components@3.1.5\\\" has incorrect
-        peer dependency \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":98,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-hoc@3.1.5\\\" has incorrect peer dependency
-        \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":99,\"out\":\"warning
-        \\\"react-apollo \\u003e @apollo/react-hooks@3.1.5\\\" has incorrect peer
-        dependency \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":100,\"out\":\"warning
-        \\\" \\u003e @apollo/react-testing@3.1.4\\\" has unmet peer dependency \\\"apollo-utilities@^1.3.2\\\".\\n\",\"time\":209},{\"pos\":101,\"out\":\"warning
-        \\\" \\u003e @apollo/react-testing@3.1.4\\\" has incorrect peer dependency
-        \\\"graphql@^14.3.1\\\".\\n\",\"time\":209},{\"pos\":102,\"out\":\"warning
-        \\\"apollo \\u003e apollo-language-server \\u003e @apollographql/graphql-language-service-interface@2.0.2\\\"
-        has incorrect peer dependency \\\"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 ||
-        ^0.13.0 || ^14.0.0\\\".\\n\",\"time\":209},{\"pos\":103,\"out\":\"warning
-        \\\"apollo \\u003e apollo-language-server \\u003e @apollographql/graphql-language-service-interface
-        \\u003e @apollographql/graphql-language-service-parser@2.0.2\\\" has incorrect
-        peer dependency \\\"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0\\\".\\n\",\"time\":209},{\"pos\":104,\"out\":\"warning
-        \\\"apollo \\u003e apollo-language-server \\u003e @apollographql/graphql-language-service-interface
-        \\u003e @apollographql/graphql-language-service-types@2.0.2\\\" has incorrect
-        peer dependency \\\"graphql@^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0\\\".\\n\",\"time\":209},{\"pos\":105,\"out\":\"warning
-        \\\"apollo \\u003e apollo-language-server \\u003e @apollographql/graphql-language-service-interface
-        \\u003e @apollographql/graphql-language-service-utils@2.0.2\\\" has incorrect
-        peer dependency \\\"graphql@^0.12.0 || ^0.13.0 || ^14.0.0\\\".\\n\",\"time\":209},{\"pos\":106,\"out\":\"warning
-        \\\"jest-preset-kyt-enzyme \\u003e jest-environment-jsdom-global@2.0.4\\\"
-        has unmet peer dependency \\\"jest-environment-jsdom@22.x || 23.x || 24.x
-        || 25.x || 26.x\\\".\\n\",\"time\":209},{\"pos\":107,\"out\":\"    73.73 KB
-        \    (19.72 KB gzip)     build/public/timeswire-36ea9c279aca7683aa8e.js\\n\",\"time\":209},{\"pos\":108,\"out\":\"
-        \   73.61 KB     (20.52 KB gzip)     build/public/trending-923a2b15c69e96190c61.js\\n\",\"time\":209},{\"pos\":109,\"out\":\"
-        \   71.2 KB      (13.49 KB gzip)     build/public/vendors~audio~byline~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~slidesho~b1468c2d-f20b8abb6fb69f9d7185.js\\n\",\"time\":209},{\"pos\":110,\"out\":\"
-        \   62.34 KB     (14.76 KB gzip)     build/public/vendors~audioblock-9465220dbbf1244387f3.js\\n\",\"time\":209},{\"pos\":111,\"out\":\"
-        \   57.52 KB     (11.85 KB gzip)     build/public/desktopNav-7a780c48556a2c63e48f.js\\n\",\"time\":209},{\"pos\":112,\"out\":\"
-        \   50.53 KB     (15.08 KB gzip)     build/public/vendors~slideshow-500864c1145931fff9c1.js\\n\",\"time\":209},{\"pos\":113,\"out\":\"
-        \   50.17 KB     (12.4 KB gzip)      build/public/vendors~emailsignup~newsletter~newsletters~recirculation-608e84562dd9923b84b4.js\\n\",\"time\":209},{\"pos\":114,\"out\":\"
-        \   49.98 KB     (15 KB gzip)        build/public/refer-b49060f38282688e3f34.js\\n\",\"time\":209},{\"pos\":115,\"out\":\"
-        \   49.89 KB     (14.58 KB gzip)     build/public/comments-006df318ef353fafc155.js\\n\",\"time\":209},{\"pos\":116,\"out\":\"
-        \   49.41 KB     (15.48 KB gzip)     build/public/hubpage-a52b56517f9b6ee8aa16.js\\n\",\"time\":209},{\"pos\":117,\"out\":\"
-        \   43.77 KB     (12.87 KB gzip)     build/public/getstarted~newsletter-e191446c8f305313810a.js\\n\",\"time\":209},{\"pos\":118,\"out\":\"
-        \   41.53 KB     (12.79 KB gzip)     build/public/mortgagecalculator-b3672b75f09e623e52ab.js\\n\",\"time\":209},{\"pos\":119,\"out\":\"
-        \   41.08 KB     (8.01 KB gzip)      build/public/programmables-ad03e0428608c97e7f23.js\\n\",\"time\":209},{\"pos\":120,\"out\":\"
-        \   39.69 KB     (8.4 KB gzip)       build/public/markets-bfb0648edc3d5a63b843.js\\n\",\"time\":209},{\"pos\":121,\"out\":\"
-        \   39.68 KB     (11.57 KB gzip)     build/public/datasubjectrequest-99679c21c2d5cd2acd67.js\\n\",\"time\":209},{\"pos\":122,\"out\":\"
-        \   39.33 KB     (11.98 KB gzip)     build/public/vendors~footerBlock-3070af5f4b425f069368.js\\n\",\"time\":209},{\"pos\":123,\"out\":\"
-        \   39.1 KB      (12.86 KB gzip)     build/public/getstarted~recirculation~welcomesubscriber-f775c67dd0aa10ceb415.js\\n\",\"time\":209},{\"pos\":124,\"out\":\"
-        \   36.88 KB     (8.52 KB gzip)      build/public/vendors~search-68f829dd71236a1b1dd5.js\\n\",\"time\":209},{\"pos\":125,\"out\":\"
-        \   36.87 KB     (10.62 KB gzip)     build/public/byline~markets~reviews-e6329c3d43bf1d7c2307.js\\n\",\"time\":209},{\"pos\":126,\"out\":\"
-        \   36.39 KB     (10.55 KB gzip)     build/public/answerpage~bestsellers~hubpage~markets~privacy~reviews~search~slideshow~timeswire~trending~weddings~your-list-091b0c1c9cac16e89da3.js\\n\",\"time\":209},{\"pos\":127,\"out\":\"
-        \   35.78 KB     (9.46 KB gzip)      build/public/phone-number-input-252697ed24c60417b6f2.js\\n\",\"time\":209},{\"pos\":128,\"out\":\"
-        \   33.54 KB     (10.53 KB gzip)     build/public/ask-b8f27d747257b580109f.js\\n\",\"time\":209},{\"pos\":129,\"out\":\"
-        \   33.11 KB     (7.54 KB gzip)      build/public/internationalHamburgerNavData-1b304ed18ce79082bfa3.js\\n\",\"time\":209},{\"pos\":130,\"out\":\"
-        \   33.02 KB     (10.39 KB gzip)     build/public/coderedeem-5b5ec5b247dac09cfd24.js\\n\",\"time\":209},{\"pos\":131,\"out\":\"
-        \   32.19 KB     (7.53 KB gzip)      build/public/canadaHamburgerNavData-9e626ddde0e984a06ce9.js\\n\",\"time\":209},{\"pos\":132,\"out\":\"
-        \   32.17 KB     (9.09 KB gzip)      build/public/newsletters-aef0e30dec519f1069ad.js\\n\",\"time\":209},{\"pos\":133,\"out\":\"
-        \   31.63 KB     (7.44 KB gzip)      build/public/defaultHamburgerNavData-11908c5a069733903ef4.js\\n\",\"time\":209},{\"pos\":134,\"out\":\"
-        \   31.28 KB     (9.9 KB gzip)       build/public/vendors~reviewheader-a757c0d0380516cb94a4.js\\n\",\"time\":209},{\"pos\":135,\"out\":\"
-        \   30.9 KB      (7.63 KB gzip)      build/public/vendors~mortgagecalculator-4726c50078df29ad2078.js\\n\",\"time\":209},{\"pos\":136,\"out\":\"
-        \   30.1 KB      (5.95 KB gzip)      build/public/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~video-9919df76c1dc23f31e32.js\\n\",\"time\":209},{\"pos\":137,\"out\":\"
-        \   29.78 KB     (9.45 KB gzip)      build/public/getstarted~postLoginInterrupter~welcomesubscriber-816774a96d44d4c3b090.js\\n\",\"time\":209},{\"pos\":138,\"out\":\"
-        \   28.14 KB     (7.99 KB gzip)      build/public/regilite-5100528dafcb7d40d134.js\\n\",\"time\":209},{\"pos\":139,\"out\":\"
-        \   26.1 KB      (8.32 KB gzip)      build/public/answerpage~hubpage-7d41f4c455478297f345.js\\n\",\"time\":209},{\"pos\":140,\"out\":\"
-        \   25.16 KB     (6.99 KB gzip)      build/public/vendors~episodefooter-a6b34d836f241ce76c77.js\\n\",\"time\":209},{\"pos\":141,\"out\":\"
-        \   23.83 KB     (6.43 KB gzip)      build/public/sitemap-534694367f60e6a49be1.js\\n\",\"time\":209},{\"pos\":142,\"out\":\"
-        \   22.83 KB     (6.18 KB gzip)      build/public/vendors~slideshowinline-4bab35f6ecdacc129beb.js\\n\",\"time\":209},{\"pos\":143,\"out\":\"
-        \   20.12 KB     (6.71 KB gzip)      build/public/livePostHeader-1470bd4aa7eebbb14b43.js\\n\",\"time\":209},{\"pos\":144,\"out\":\"
-        \   19.96 KB     (7.13 KB gzip)      build/public/answerpage~bestsellers~byline~hubpage~markets~reviews~search~timeswire~trending~your-list-3a11916bdf99d4c489f4.js\\n\",\"time\":209},{\"pos\":145,\"out\":\"
-        \   19.78 KB     (4.63 KB gzip)      build/public/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~trending~video-596ae37870af61daa675.js\\n\",\"time\":209},{\"pos\":146,\"out\":\"
-        \   18.93 KB     (6.23 KB gzip)      build/public/liveRecirculation-3815a030cdff58c0354e.js\\n\",\"time\":209},{\"pos\":147,\"out\":\"
-        \   16.96 KB     (5.37 KB gzip)      build/public/footerBlock-b65bcac5a46102236e8a.js\\n\",\"time\":209},{\"pos\":148,\"out\":\"
-        \   16.91 KB     (4.23 KB gzip)      build/public/vendors~producernotes-23bd47e000f744f381ff.js\\n\",\"time\":209},{\"pos\":149,\"out\":\"
-        \   15.46 KB     (5 KB gzip)         build/public/siteIndexContent-c70d94512d7707a9bc27.js\\n\",\"time\":209},{\"pos\":150,\"out\":\"
-        \   14.98 KB     (5.44 KB gzip)      build/public/adslot-f32df753a7f26b792f2b.js\\n\",\"time\":209},{\"pos\":151,\"out\":\"
-        \   14.69 KB     (4.32 KB gzip)      build/public/vendors~your-list-bf0b418ccd49c30a49ce.js\\n\",\"time\":209},{\"pos\":152,\"out\":\"
-        \   13.83 KB     (4.04 KB gzip)      build/public/headerlivebriefingvi-71732137ed18eb99b531.js\\n\",\"time\":209},{\"pos\":153,\"out\":\"
-        \   12.97 KB     (3.85 KB gzip)      build/public/vendors~livePostHeader~liveRecirculation-a29b594d430f87e6a135.js\\n\",\"time\":209},{\"pos\":154,\"out\":\"
-        \   12.84 KB     (4.14 KB gzip)      build/public/postLoginInterrupter-f06a0630e52aa5f79d6c.js\\n\",\"time\":209},{\"pos\":155,\"out\":\"
-        \   12.72 KB     (3.12 KB gzip)      build/public/headerfullbleedhorizontal-d0351884f866b0befc92.js\\n\",\"time\":209},{\"pos\":156,\"out\":\"
-        \   11.83 KB     (2.86 KB gzip)      build/public/headerfullbleedvertical-dcaf48740e83fe9574bc.js\\n\",\"time\":209},{\"pos\":157,\"out\":\"
-        \   11.56 KB     (4.52 KB gzip)      build/public/commentsForm-ec0e3e2b816d1e19c285.js\\n\",\"time\":209},{\"pos\":158,\"out\":\"
-        \   10.3 KB      (4.07 KB gzip)      build/public/surveywithdrawconsent-a59b13ecb46e31356641.js\\n\",\"time\":209},{\"pos\":159,\"out\":\"
-        \   10.27 KB     (3.79 KB gzip)      build/public/vendors~weddings-4ca92b58026f082f9258.js\\n\",\"time\":209},{\"pos\":160,\"out\":\"
-        \   8.59 KB      (2.67 KB gzip)      build/public/related-coverage-chunk-2600326ffdd30fd22029.js\\n\",\"time\":209},{\"pos\":161,\"out\":\"
-        \   8.51 KB      (3.46 KB gzip)      build/public/dealbook-3a2bc13b4d34eb54f415.js\\n\",\"time\":209},{\"pos\":162,\"out\":\"
-        \   7.52 KB      (3.8 KB gzip)       build/public/runtime~main-00f34bf483c3ea25c964.js\\n\",\"time\":209},{\"pos\":163,\"out\":\"
-        \   6.32 KB      (2.25 KB gzip)      build/public/stickyfilljs-f857f79e5e24c852208f.js\\n\",\"time\":209},{\"pos\":164,\"out\":\"
-        \   6.2 KB       (1.32 KB gzip)      build/public/episodefooter-32048ff6ba695de558ab.js\\n\",\"time\":209},{\"pos\":165,\"out\":\"
-        \   5.96 KB      (2.64 KB gzip)      build/public/videoblock-4210a80deb7056cf0d99.js\\n\",\"time\":209},{\"pos\":166,\"out\":\"
-        \   5.8 KB       (2.41 KB gzip)      build/public/audioblock-4e226f30dbaffd1e5981.js\\n\",\"time\":209},{\"pos\":167,\"out\":\"
-        \   4.56 KB      (2.33 KB gzip)      build/public/runtime~interactive-b43d1addea56ec248e5e.js\\n\",\"time\":209},{\"pos\":168,\"out\":\"
-        \   4.56 KB      (1.79 KB gzip)      build/public/global-69acc7c8fb6a313ed7e8641e4a88bf30.css\\n\",\"time\":209},{\"pos\":169,\"out\":\"
-        \   4.52 KB      (2.06 KB gzip)      build/public/shareSelected-557726db0809a5adbed9.js\\n\",\"time\":209},{\"pos\":170,\"out\":\"
-        \   4.44 KB      (1.87 KB gzip)      build/public/additionalPlaylists-150a9e7b483e454d1253.js\\n\",\"time\":209},{\"pos\":171,\"out\":\"
-        \   4.43 KB      (1.37 KB gzip)      build/public/internationalSiteIndexData-b72c4d2e0677e00252c6.js\\n\",\"time\":209},{\"pos\":172,\"out\":\"
-        \   4.38 KB      (1.77 KB gzip)      build/public/datasubjectrequestverification-e2bec5bc5bbccf84ebf2.js\\n\",\"time\":209},{\"pos\":173,\"out\":\"
-        \   3.95 KB      (1.36 KB gzip)      build/public/canadaSiteIndexData-ea57421ff8cb5579d32a.js\\n\",\"time\":209},{\"pos\":174,\"out\":\"
-        \   3.82 KB      (1.35 KB gzip)      build/public/defaultSiteIndexData-62689f7a6e50c2041565.js\\n\",\"time\":209},{\"pos\":175,\"out\":\"
-        \   3.81 KB      (1.57 KB gzip)      build/public/activationBlock-1379ce08cb82e3c0a0a8.js\\n\",\"time\":209},{\"pos\":176,\"out\":\"
-        \   3.52 KB      (1.67 KB gzip)      build/public/upshot-6de11d8c7141b438cfaa.js\\n\",\"time\":209},{\"pos\":177,\"out\":\"
-        \   3.13 KB      (1.32 KB gzip)      build/public/explainerRecirculation-41fa3a5a38e8ea6ac40a.js\\n\",\"time\":209},{\"pos\":178,\"out\":\"
-        \   2.99 KB      (1.46 KB gzip)      build/public/world-cup-2019-1e2713417dda80c07bd8.js\\n\",\"time\":209},{\"pos\":179,\"out\":\"
-        \   2.36 KB      (1.09 KB gzip)      build/public/lens-26462cc6841a10a83bd5.js\\n\",\"time\":209},{\"pos\":180,\"out\":\"
-        \   2.1 KB       (995 B gzip)        build/public/explainerPostHeader-ec58da554873afd8fa1c.js\\n\",\"time\":209},{\"pos\":181,\"out\":\"
-        \   1.94 KB      (1.04 KB gzip)      build/public/producernotes-82cb89ee2732f5f45ab7.js\\n\",\"time\":209},{\"pos\":182,\"out\":\"
-        \   1.54 KB      (798 B gzip)        build/public/runtime~adslot-8a2cb914dc65ac618370.js\\n\",\"time\":209},{\"pos\":183,\"out\":\"
-        \   1.13 KB      (724 B gzip)        build/public/blank-b45c6bf8875395c0d175.js\\n\",\"time\":209},{\"pos\":184,\"out\":\"
-        \   1018 B       (567 B gzip)        build/public/emailsignup-71adbed9a8b71530bac3.js\\n\",\"time\":209},{\"pos\":185,\"out\":\"
-        \   635 B        (415 B gzip)        build/public/opinion-f7fa6f754fca70faafca.js\\n\",\"time\":209},{\"pos\":186,\"out\":\"
-        \   571 B        (338 B gzip)        build/public/foo-3cc6fc79099db3c0bbd5.js\\n\",\"time\":209},{\"pos\":187,\"out\":\"
-        \   207 B        (194 B gzip)        build/public/slideshowinline-4e843e110279bcf2b103.js\\n\",\"time\":209},{\"pos\":188,\"out\":\"
-        \   204 B        (191 B gzip)        build/public/reviewheader-d35db0081d3244887290.js\\n\",\"time\":209},{\"pos\":189,\"out\":\"\U0001F44D
-        \ Server webpack configuration compiled\\n\",\"time\":209},{\"pos\":190,\"out\":\"[info]
-        [webpackbar] Compiling Server\\n\",\"time\":209},{\"pos\":191,\"out\":\"[success]
-        [webpackbar] Server: Compiled successfully in 1.14m\\n\",\"time\":209},{\"pos\":192,\"out\":\"\U0001F44D
-        \ Server build successful\\n\",\"time\":209},{\"pos\":193,\"out\":\"\\n\",\"time\":209},{\"pos\":194,\"out\":\"\u2705
-        \ Done building\\n\",\"time\":209},{\"pos\":195,\"out\":\"\\n\",\"time\":209},{\"pos\":196,\"out\":\"Done
-        in 164.97s.\\n\",\"time\":209},{\"pos\":197,\"out\":\"mkdir -p public/vi-assets\\n\",\"time\":209},{\"pos\":198,\"out\":\"mv
-        build/public public/vi-assets/static-assets\\n\",\"time\":209},{\"pos\":199,\"out\":\"mv
-        public build/\\n\",\"time\":209},{\"pos\":200,\"out\":\"cp -v Dockerfile*
-        build/\\n\",\"time\":209},{\"pos\":201,\"out\":\"'Dockerfile' -\\u003e 'build/Dockerfile'\\n\",\"time\":209},{\"pos\":202,\"out\":\"'Dockerfile.puppet-theater'
-        -\\u003e 'build/Dockerfile.puppet-theater'\\n\",\"time\":209},{\"pos\":203,\"out\":\"cp
-        -af .npmrc package.json yarn.lock node_modules build/server\\n\",\"time\":209},{\"pos\":204,\"out\":\"mkdir
-        -p build/server/tools \\u0026\\u0026 cp -R tools/bundlesize tools/eslint build/server/tools/\\n\",\"time\":209},{\"pos\":205,\"out\":\"cd
-        build/server \\u0026\\u0026 yarn install --production\\n\",\"time\":209},{\"pos\":206,\"out\":\"yarn
-        install v1.22.4\\n\",\"time\":209},{\"pos\":207,\"out\":\"[1/5] Validating
-        package.json...\\n\",\"time\":209},{\"pos\":208,\"out\":\"[2/5] Resolving
-        packages...\\n\",\"time\":209},{\"pos\":209,\"out\":\"[3/5] Fetching packages...\\n\",\"time\":209},{\"pos\":210,\"out\":\"info
-        fsevents@2.3.2: The platform \\\"linux\\\" is incompatible with this module.\\n\",\"time\":209},{\"pos\":211,\"out\":\"info
-        \\\"fsevents@2.3.2\\\" is an optional dependency and failed compatibility
-        check. Excluding it from installation.\\n\",\"time\":209},{\"pos\":212,\"out\":\"info
-        fsevents@1.2.13: The platform \\\"linux\\\" is incompatible with this module.\\n\",\"time\":209},{\"pos\":213,\"out\":\"info
-        \\\"fsevents@1.2.13\\\" is an optional dependency and failed compatibility
-        check. Excluding it from installation.\\n\",\"time\":209},{\"pos\":214,\"out\":\"[4/5]
-        Linking dependencies...\\n\",\"time\":209},{\"pos\":215,\"out\":\"[5/5] Building
-        fresh packages...\\n\",\"time\":209},{\"pos\":216,\"out\":\"Done in 35.87s.\\n\",\"time\":209},{\"pos\":217,\"out\":\"echo
-        \\\"$(git rev-parse HEAD) @ $(date) ($(whoami)@$(hostname))\\\" \\u003ebuild/version.txt\\n\",\"time\":209}]\n"
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:36 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/2/6
-  response:
-    body:
-      string: '[{"pos":0,"out":"docker.io/getsentry/sentry-cli@sha256:cc181ddcbbb3a721a501fb1bb05f0054e17b7e30414b54fdbf3fc07188bdea73:
-        Pulling from getsentry/sentry-cli\n","time":0},{"pos":1,"out":"Digest: sha256:cc181ddcbbb3a721a501fb1bb05f0054e17b7e30414b54fdbf3fc07188bdea73\n","time":0},{"pos":2,"out":"Status:
-        Downloaded newer image for getsentry/sentry-cli@sha256:cc181ddcbbb3a721a501fb1bb05f0054e17b7e30414b54fdbf3fc07188bdea73\n","time":0},{"pos":3,"out":"+
-        tools/sentry/create-release\n","time":1},{"pos":4,"out":"Created release 4fcb2a3a106092213307f605aab07254d76512f9.\n","time":1},{"pos":5,"out":"+--------------------+--------------+\n","time":2},{"pos":6,"out":"|
-        Repository         | Revision     |\n","time":2},{"pos":7,"out":"+--------------------+--------------+\n","time":2},{"pos":8,"out":"|
-        nytm/wf-project-vi | 4fcb2a3a1060 |\n","time":2},{"pos":9,"out":"+--------------------+--------------+\n","time":2},{"pos":10,"out":"\u003e
-        Found 225 release files\n","time":3},{"pos":11,"out":"  WARN    2021-05-27
-        10:16:18.713154749 +00:00 The default --no-rewrite will disappear. Please
-        specify --rewrite or --no-rewrite explicitly during sourcemap upload.\n","time":3},{"pos":12,"out":"\u003e
-        Analyzing 225 sources\n","time":3},{"pos":13,"out":"\u003e Adding source map
-        references\n","time":4},{"pos":14,"out":"\u003e Bundled 225 files for upload\n","time":6},{"pos":15,"out":"\u003e
-        Uploaded release files to Sentry\n","time":8},{"pos":16,"out":"\u003e File
-        upload complete\n","time":8},{"pos":17,"out":"\n","time":8},{"pos":18,"out":"Source
-        Map Upload Report\n","time":8},{"pos":19,"out":"  Minified Scripts\n","time":8},{"pos":20,"out":"    ~/vi-assets/static-assets/activationBlock-1379ce08cb82e3c0a0a8.js
-        (sourcemap at activationBlock-1379ce08cb82e3c0a0a8.js.map)\n","time":8},{"pos":21,"out":"    ~/vi-assets/static-assets/additionalPlaylists-150a9e7b483e454d1253.js
-        (sourcemap at additionalPlaylists-150a9e7b483e454d1253.js.map)\n","time":8},{"pos":22,"out":"    ~/vi-assets/static-assets/adslot-f32df753a7f26b792f2b.js
-        (sourcemap at adslot-f32df753a7f26b792f2b.js.map)\n","time":8},{"pos":23,"out":"    ~/vi-assets/static-assets/answerpage-cc501d9f33267ee9a0c2.js
-        (sourcemap at answerpage-cc501d9f33267ee9a0c2.js.map)\n","time":8},{"pos":24,"out":"    ~/vi-assets/static-assets/answerpage~bestsellers~byline~hubpage~markets~reviews~search~timeswire~trending~your-list-3a11916bdf99d4c489f4.js
-        (sourcemap at answerpage~bestsellers~byline~hubpage~markets~reviews~search~timeswire~trending~your-list-3a11916bdf99d4c489f4.js.map)\n","time":8},{"pos":25,"out":"    ~/vi-assets/static-assets/answerpage~bestsellers~hubpage~markets~privacy~reviews~search~slideshow~timeswire~trending~weddings~your-list-091b0c1c9cac16e89da3.js
-        (sourcemap at answerpage~bestsellers~hubpage~markets~privacy~reviews~search~slideshow~timeswire~trending~weddings~your-list-091b0c1c9cac16e89da3.js.map)\n","time":8},{"pos":26,"out":"    ~/vi-assets/static-assets/answerpage~hubpage-7d41f4c455478297f345.js
-        (sourcemap at answerpage~hubpage-7d41f4c455478297f345.js.map)\n","time":8},{"pos":27,"out":"    ~/vi-assets/static-assets/ask-b8f27d747257b580109f.js
-        (sourcemap at ask-b8f27d747257b580109f.js.map)\n","time":8},{"pos":28,"out":"    ~/vi-assets/static-assets/audio-48af6f33c2418088931d.js
-        (sourcemap at audio-48af6f33c2418088931d.js.map)\n","time":8},{"pos":29,"out":"    ~/vi-assets/static-assets/audioblock-4e226f30dbaffd1e5981.js
-        (sourcemap at audioblock-4e226f30dbaffd1e5981.js.map)\n","time":8},{"pos":30,"out":"    ~/vi-assets/static-assets/bestsellers-a6884608a8314ee7388a.js
-        (sourcemap at bestsellers-a6884608a8314ee7388a.js.map)\n","time":8},{"pos":31,"out":"    ~/vi-assets/static-assets/blank-b45c6bf8875395c0d175.js
-        (sourcemap at blank-b45c6bf8875395c0d175.js.map)\n","time":8},{"pos":32,"out":"    ~/vi-assets/static-assets/byline-3352274f1be015e5edc4.js
-        (sourcemap at byline-3352274f1be015e5edc4.js.map)\n","time":8},{"pos":33,"out":"    ~/vi-assets/static-assets/byline~markets~reviews-e6329c3d43bf1d7c2307.js
-        (sourcemap at byline~markets~reviews-e6329c3d43bf1d7c2307.js.map)\n","time":8},{"pos":34,"out":"    ~/vi-assets/static-assets/canadaHamburgerNavData-9e626ddde0e984a06ce9.js
-        (sourcemap at canadaHamburgerNavData-9e626ddde0e984a06ce9.js.map)\n","time":8},{"pos":35,"out":"    ~/vi-assets/static-assets/canadaSiteIndexData-ea57421ff8cb5579d32a.js
-        (sourcemap at canadaSiteIndexData-ea57421ff8cb5579d32a.js.map)\n","time":8},{"pos":36,"out":"    ~/vi-assets/static-assets/capsule-d18d53f62e7fbcd89752.js
-        (sourcemap at capsule-d18d53f62e7fbcd89752.js.map)\n","time":8},{"pos":37,"out":"    ~/vi-assets/static-assets/clientSideCapsule-14f51b063201c2757f63.js
-        (sourcemap at clientSideCapsule-14f51b063201c2757f63.js.map)\n","time":8},{"pos":38,"out":"    ~/vi-assets/static-assets/coderedeem-5b5ec5b247dac09cfd24.js
-        (sourcemap at coderedeem-5b5ec5b247dac09cfd24.js.map)\n","time":8},{"pos":39,"out":"    ~/vi-assets/static-assets/collections-bc47aaa6296cff246535.js
-        (sourcemap at collections-bc47aaa6296cff246535.js.map)\n","time":8},{"pos":40,"out":"    ~/vi-assets/static-assets/comments-006df318ef353fafc155.js
-        (sourcemap at comments-006df318ef353fafc155.js.map)\n","time":8},{"pos":41,"out":"    ~/vi-assets/static-assets/commentsForm-ec0e3e2b816d1e19c285.js
-        (sourcemap at commentsForm-ec0e3e2b816d1e19c285.js.map)\n","time":8},{"pos":42,"out":"    ~/vi-assets/static-assets/datasubjectrequest-99679c21c2d5cd2acd67.js
-        (sourcemap at datasubjectrequest-99679c21c2d5cd2acd67.js.map)\n","time":8},{"pos":43,"out":"    ~/vi-assets/static-assets/datasubjectrequestverification-e2bec5bc5bbccf84ebf2.js
-        (sourcemap at datasubjectrequestverification-e2bec5bc5bbccf84ebf2.js.map)\n","time":8},{"pos":44,"out":"    ~/vi-assets/static-assets/dealbook-3a2bc13b4d34eb54f415.js
-        (sourcemap at dealbook-3a2bc13b4d34eb54f415.js.map)\n","time":8},{"pos":45,"out":"    ~/vi-assets/static-assets/defaultHamburgerNavData-11908c5a069733903ef4.js
-        (sourcemap at defaultHamburgerNavData-11908c5a069733903ef4.js.map)\n","time":8},{"pos":46,"out":"    ~/vi-assets/static-assets/defaultSiteIndexData-62689f7a6e50c2041565.js
-        (sourcemap at defaultSiteIndexData-62689f7a6e50c2041565.js.map)\n","time":8},{"pos":47,"out":"    ~/vi-assets/static-assets/desktopNav-7a780c48556a2c63e48f.js
-        (sourcemap at desktopNav-7a780c48556a2c63e48f.js.map)\n","time":8},{"pos":48,"out":"    ~/vi-assets/static-assets/emailsignup-71adbed9a8b71530bac3.js
-        (sourcemap at emailsignup-71adbed9a8b71530bac3.js.map)\n","time":8},{"pos":49,"out":"    ~/vi-assets/static-assets/episodefooter-32048ff6ba695de558ab.js
-        (sourcemap at episodefooter-32048ff6ba695de558ab.js.map)\n","time":8},{"pos":50,"out":"    ~/vi-assets/static-assets/explainer-4f66b708a914df2994b9.js
-        (sourcemap at explainer-4f66b708a914df2994b9.js.map)\n","time":8},{"pos":51,"out":"    ~/vi-assets/static-assets/explainerPostHeader-ec58da554873afd8fa1c.js
-        (sourcemap at explainerPostHeader-ec58da554873afd8fa1c.js.map)\n","time":8},{"pos":52,"out":"    ~/vi-assets/static-assets/explainerRecirculation-41fa3a5a38e8ea6ac40a.js
-        (sourcemap at explainerRecirculation-41fa3a5a38e8ea6ac40a.js.map)\n","time":8},{"pos":53,"out":"    ~/vi-assets/static-assets/foo-3cc6fc79099db3c0bbd5.js
-        (sourcemap at foo-3cc6fc79099db3c0bbd5.js.map)\n","time":8},{"pos":54,"out":"    ~/vi-assets/static-assets/footerBlock-b65bcac5a46102236e8a.js
-        (sourcemap at footerBlock-b65bcac5a46102236e8a.js.map)\n","time":8},{"pos":55,"out":"    ~/vi-assets/static-assets/getstarted-74322257ae7b184e06a3.js
-        (sourcemap at getstarted-74322257ae7b184e06a3.js.map)\n","time":8},{"pos":56,"out":"    ~/vi-assets/static-assets/getstarted~newsletter-e191446c8f305313810a.js
-        (sourcemap at getstarted~newsletter-e191446c8f305313810a.js.map)\n","time":8},{"pos":57,"out":"    ~/vi-assets/static-assets/getstarted~postLoginInterrupter~welcomesubscriber-816774a96d44d4c3b090.js
-        (sourcemap at getstarted~postLoginInterrupter~welcomesubscriber-816774a96d44d4c3b090.js.map)\n","time":8},{"pos":58,"out":"    ~/vi-assets/static-assets/getstarted~recirculation~welcomesubscriber-f775c67dd0aa10ceb415.js
-        (sourcemap at getstarted~recirculation~welcomesubscriber-f775c67dd0aa10ceb415.js.map)\n","time":8},{"pos":59,"out":"    ~/vi-assets/static-assets/headerfullbleedhorizontal-d0351884f866b0befc92.js
-        (sourcemap at headerfullbleedhorizontal-d0351884f866b0befc92.js.map)\n","time":8},{"pos":60,"out":"    ~/vi-assets/static-assets/headerfullbleedvertical-dcaf48740e83fe9574bc.js
-        (sourcemap at headerfullbleedvertical-dcaf48740e83fe9574bc.js.map)\n","time":8},{"pos":61,"out":"    ~/vi-assets/static-assets/headerlivebriefingvi-71732137ed18eb99b531.js
-        (sourcemap at headerlivebriefingvi-71732137ed18eb99b531.js.map)\n","time":8},{"pos":62,"out":"    ~/vi-assets/static-assets/home-b04384c7a3790ca236a6.js
-        (sourcemap at home-b04384c7a3790ca236a6.js.map)\n","time":8},{"pos":63,"out":"    ~/vi-assets/static-assets/hubpage-a52b56517f9b6ee8aa16.js
-        (sourcemap at hubpage-a52b56517f9b6ee8aa16.js.map)\n","time":8},{"pos":64,"out":"    ~/vi-assets/static-assets/interactive-792f550759b4df200377.js
-        (sourcemap at interactive-792f550759b4df200377.js.map)\n","time":8},{"pos":65,"out":"    ~/vi-assets/static-assets/internationalHamburgerNavData-1b304ed18ce79082bfa3.js
-        (sourcemap at internationalHamburgerNavData-1b304ed18ce79082bfa3.js.map)\n","time":8},{"pos":66,"out":"    ~/vi-assets/static-assets/internationalSiteIndexData-b72c4d2e0677e00252c6.js
-        (sourcemap at internationalSiteIndexData-b72c4d2e0677e00252c6.js.map)\n","time":8},{"pos":67,"out":"    ~/vi-assets/static-assets/lens-26462cc6841a10a83bd5.js
-        (sourcemap at lens-26462cc6841a10a83bd5.js.map)\n","time":8},{"pos":68,"out":"    ~/vi-assets/static-assets/livePostHeader-1470bd4aa7eebbb14b43.js
-        (sourcemap at livePostHeader-1470bd4aa7eebbb14b43.js.map)\n","time":8},{"pos":69,"out":"    ~/vi-assets/static-assets/liveRecirculation-3815a030cdff58c0354e.js
-        (sourcemap at liveRecirculation-3815a030cdff58c0354e.js.map)\n","time":8},{"pos":70,"out":"    ~/vi-assets/static-assets/liveblog-8934f0fa37734cf8fa86.js
-        (sourcemap at liveblog-8934f0fa37734cf8fa86.js.map)\n","time":8},{"pos":71,"out":"    ~/vi-assets/static-assets/main-f92b4f97a1bd1743270b.js
-        (sourcemap at main-f92b4f97a1bd1743270b.js.map)\n","time":8},{"pos":72,"out":"    ~/vi-assets/static-assets/markets-bfb0648edc3d5a63b843.js
-        (sourcemap at markets-bfb0648edc3d5a63b843.js.map)\n","time":8},{"pos":73,"out":"    ~/vi-assets/static-assets/mortgagecalculator-b3672b75f09e623e52ab.js
-        (sourcemap at mortgagecalculator-b3672b75f09e623e52ab.js.map)\n","time":8},{"pos":74,"out":"    ~/vi-assets/static-assets/newsletter-ea4bfac2db89b16bf7b4.js
-        (sourcemap at newsletter-ea4bfac2db89b16bf7b4.js.map)\n","time":8},{"pos":75,"out":"    ~/vi-assets/static-assets/newsletters-aef0e30dec519f1069ad.js
-        (sourcemap at newsletters-aef0e30dec519f1069ad.js.map)\n","time":8},{"pos":76,"out":"    ~/vi-assets/static-assets/opinion-f7fa6f754fca70faafca.js
-        (sourcemap at opinion-f7fa6f754fca70faafca.js.map)\n","time":8},{"pos":77,"out":"    ~/vi-assets/static-assets/paidpost-899cbeaeecfc4876c5e0.js
-        (sourcemap at paidpost-899cbeaeecfc4876c5e0.js.map)\n","time":8},{"pos":78,"out":"    ~/vi-assets/static-assets/phone-number-input-252697ed24c60417b6f2.js
-        (sourcemap at phone-number-input-252697ed24c60417b6f2.js.map)\n","time":8},{"pos":79,"out":"    ~/vi-assets/static-assets/postLoginInterrupter-f06a0630e52aa5f79d6c.js
-        (sourcemap at postLoginInterrupter-f06a0630e52aa5f79d6c.js.map)\n","time":8},{"pos":80,"out":"    ~/vi-assets/static-assets/privacy-ca7ca96677831c564be3.js
-        (sourcemap at privacy-ca7ca96677831c564be3.js.map)\n","time":8},{"pos":81,"out":"    ~/vi-assets/static-assets/producernotes-82cb89ee2732f5f45ab7.js
-        (sourcemap at producernotes-82cb89ee2732f5f45ab7.js.map)\n","time":8},{"pos":82,"out":"    ~/vi-assets/static-assets/programmables-ad03e0428608c97e7f23.js
-        (sourcemap at programmables-ad03e0428608c97e7f23.js.map)\n","time":8},{"pos":83,"out":"    ~/vi-assets/static-assets/recirculation-5efd2ec488dacf349a95.js
-        (sourcemap at recirculation-5efd2ec488dacf349a95.js.map)\n","time":8},{"pos":84,"out":"    ~/vi-assets/static-assets/refer-b49060f38282688e3f34.js
-        (sourcemap at refer-b49060f38282688e3f34.js.map)\n","time":8},{"pos":85,"out":"    ~/vi-assets/static-assets/regilite-5100528dafcb7d40d134.js
-        (sourcemap at regilite-5100528dafcb7d40d134.js.map)\n","time":8},{"pos":86,"out":"    ~/vi-assets/static-assets/related-coverage-chunk-2600326ffdd30fd22029.js
-        (sourcemap at related-coverage-chunk-2600326ffdd30fd22029.js.map)\n","time":8},{"pos":87,"out":"    ~/vi-assets/static-assets/reviewheader-d35db0081d3244887290.js
-        (sourcemap at reviewheader-d35db0081d3244887290.js.map)\n","time":8},{"pos":88,"out":"    ~/vi-assets/static-assets/reviews-e57f505652f91d844eaf.js
-        (sourcemap at reviews-e57f505652f91d844eaf.js.map)\n","time":8},{"pos":89,"out":"    ~/vi-assets/static-assets/runtime~adslot-8a2cb914dc65ac618370.js
-        (sourcemap at runtime~adslot-8a2cb914dc65ac618370.js.map)\n","time":8},{"pos":90,"out":"    ~/vi-assets/static-assets/runtime~interactive-b43d1addea56ec248e5e.js
-        (sourcemap at runtime~interactive-b43d1addea56ec248e5e.js.map)\n","time":8},{"pos":91,"out":"    ~/vi-assets/static-assets/runtime~main-00f34bf483c3ea25c964.js
-        (sourcemap at runtime~main-00f34bf483c3ea25c964.js.map)\n","time":8},{"pos":92,"out":"    ~/vi-assets/static-assets/search-7ca87d02abfb33f315e8.js
-        (sourcemap at search-7ca87d02abfb33f315e8.js.map)\n","time":8},{"pos":93,"out":"    ~/vi-assets/static-assets/service-worker-test-1622110341028.js
-        (no sourcemap ref)\n","time":8},{"pos":94,"out":"      - warning: could not
-        determine a source map reference (Could not auto-detect referenced sourcemap
-        for ~/vi-assets/static-assets/service-worker-test-1622110341028.js.)\n","time":8},{"pos":95,"out":"    ~/vi-assets/static-assets/shareSelected-557726db0809a5adbed9.js
-        (sourcemap at shareSelected-557726db0809a5adbed9.js.map)\n","time":8},{"pos":96,"out":"    ~/vi-assets/static-assets/siteIndexContent-c70d94512d7707a9bc27.js
-        (sourcemap at siteIndexContent-c70d94512d7707a9bc27.js.map)\n","time":8},{"pos":97,"out":"    ~/vi-assets/static-assets/sitemap-534694367f60e6a49be1.js
-        (sourcemap at sitemap-534694367f60e6a49be1.js.map)\n","time":8},{"pos":98,"out":"    ~/vi-assets/static-assets/slideshow-98c5bb4d353671642464.js
-        (sourcemap at slideshow-98c5bb4d353671642464.js.map)\n","time":8},{"pos":99,"out":"    ~/vi-assets/static-assets/slideshowinline-4e843e110279bcf2b103.js
-        (sourcemap at slideshowinline-4e843e110279bcf2b103.js.map)\n","time":8},{"pos":100,"out":"    ~/vi-assets/static-assets/stickyfilljs-f857f79e5e24c852208f.js
-        (sourcemap at stickyfilljs-f857f79e5e24c852208f.js.map)\n","time":8},{"pos":101,"out":"    ~/vi-assets/static-assets/story-818f879150d1c63c893f.js
-        (sourcemap at story-818f879150d1c63c893f.js.map)\n","time":8},{"pos":102,"out":"    ~/vi-assets/static-assets/surveywithdrawconsent-a59b13ecb46e31356641.js
-        (sourcemap at surveywithdrawconsent-a59b13ecb46e31356641.js.map)\n","time":8},{"pos":103,"out":"    ~/vi-assets/static-assets/timeswire-36ea9c279aca7683aa8e.js
-        (sourcemap at timeswire-36ea9c279aca7683aa8e.js.map)\n","time":8},{"pos":104,"out":"    ~/vi-assets/static-assets/trending-923a2b15c69e96190c61.js
-        (sourcemap at trending-923a2b15c69e96190c61.js.map)\n","time":8},{"pos":105,"out":"    ~/vi-assets/static-assets/upshot-6de11d8c7141b438cfaa.js
-        (sourcemap at upshot-6de11d8c7141b438cfaa.js.map)\n","time":8},{"pos":106,"out":"    ~/vi-assets/static-assets/vendor-361a3a5156942fc91866.js
-        (sourcemap at vendor-361a3a5156942fc91866.js.map)\n","time":8},{"pos":107,"out":"    ~/vi-assets/static-assets/vendor-interactive-7086d83329fedc4746bc.js
-        (sourcemap at vendor-interactive-7086d83329fedc4746bc.js.map)\n","time":8},{"pos":108,"out":"    ~/vi-assets/static-assets/vendors~audioblock-9465220dbbf1244387f3.js
-        (sourcemap at vendors~audioblock-9465220dbbf1244387f3.js.map)\n","time":8},{"pos":109,"out":"    ~/vi-assets/static-assets/vendors~audio~byline~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~slidesho~b1468c2d-f20b8abb6fb69f9d7185.js
-        (sourcemap at vendors~audio~byline~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~slidesho~b1468c2d-f20b8abb6fb69f9d7185.js.map)\n","time":8},{"pos":110,"out":"    ~/vi-assets/static-assets/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~trending~video-596ae37870af61daa675.js
-        (sourcemap at vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~trending~video-596ae37870af61daa675.js.map)\n","time":8},{"pos":111,"out":"    ~/vi-assets/static-assets/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~video-9919df76c1dc23f31e32.js
-        (sourcemap at vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~video-9919df76c1dc23f31e32.js.map)\n","time":8},{"pos":112,"out":"    ~/vi-assets/static-assets/vendors~commentsForm~weddings-9b9f348fce001d18ec42.js
-        (sourcemap at vendors~commentsForm~weddings-9b9f348fce001d18ec42.js.map)\n","time":8},{"pos":113,"out":"    ~/vi-assets/static-assets/vendors~emailsignup~newsletter~newsletters~recirculation-608e84562dd9923b84b4.js
-        (sourcemap at vendors~emailsignup~newsletter~newsletters~recirculation-608e84562dd9923b84b4.js.map)\n","time":8},{"pos":114,"out":"    ~/vi-assets/static-assets/vendors~episodefooter-a6b34d836f241ce76c77.js
-        (sourcemap at vendors~episodefooter-a6b34d836f241ce76c77.js.map)\n","time":8},{"pos":115,"out":"    ~/vi-assets/static-assets/vendors~footerBlock-3070af5f4b425f069368.js
-        (sourcemap at vendors~footerBlock-3070af5f4b425f069368.js.map)\n","time":8},{"pos":116,"out":"    ~/vi-assets/static-assets/vendors~livePostHeader~liveRecirculation-a29b594d430f87e6a135.js
-        (sourcemap at vendors~livePostHeader~liveRecirculation-a29b594d430f87e6a135.js.map)\n","time":8},{"pos":117,"out":"    ~/vi-assets/static-assets/vendors~mortgagecalculator-4726c50078df29ad2078.js
-        (sourcemap at vendors~mortgagecalculator-4726c50078df29ad2078.js.map)\n","time":8},{"pos":118,"out":"    ~/vi-assets/static-assets/vendors~phone-number-input-4968a48eb73474ba1850.js
-        (sourcemap at vendors~phone-number-input-4968a48eb73474ba1850.js.map)\n","time":8},{"pos":119,"out":"    ~/vi-assets/static-assets/vendors~producernotes-23bd47e000f744f381ff.js
-        (sourcemap at vendors~producernotes-23bd47e000f744f381ff.js.map)\n","time":8},{"pos":120,"out":"    ~/vi-assets/static-assets/vendors~reviewheader-a757c0d0380516cb94a4.js
-        (sourcemap at vendors~reviewheader-a757c0d0380516cb94a4.js.map)\n","time":8},{"pos":121,"out":"    ~/vi-assets/static-assets/vendors~search-68f829dd71236a1b1dd5.js
-        (sourcemap at vendors~search-68f829dd71236a1b1dd5.js.map)\n","time":8},{"pos":122,"out":"    ~/vi-assets/static-assets/vendors~slideshow-500864c1145931fff9c1.js
-        (sourcemap at vendors~slideshow-500864c1145931fff9c1.js.map)\n","time":8},{"pos":123,"out":"    ~/vi-assets/static-assets/vendors~slideshowinline-4bab35f6ecdacc129beb.js
-        (sourcemap at vendors~slideshowinline-4bab35f6ecdacc129beb.js.map)\n","time":8},{"pos":124,"out":"    ~/vi-assets/static-assets/vendors~videoblock-d4bbc3276f254a1daf83.js
-        (sourcemap at vendors~videoblock-d4bbc3276f254a1daf83.js.map)\n","time":8},{"pos":125,"out":"    ~/vi-assets/static-assets/vendors~weddings-4ca92b58026f082f9258.js
-        (sourcemap at vendors~weddings-4ca92b58026f082f9258.js.map)\n","time":8},{"pos":126,"out":"    ~/vi-assets/static-assets/vendors~your-list-bf0b418ccd49c30a49ce.js
-        (sourcemap at vendors~your-list-bf0b418ccd49c30a49ce.js.map)\n","time":8},{"pos":127,"out":"    ~/vi-assets/static-assets/video-a6fb9a86d3720ac2290f.js
-        (sourcemap at video-a6fb9a86d3720ac2290f.js.map)\n","time":8},{"pos":128,"out":"    ~/vi-assets/static-assets/videoblock-4210a80deb7056cf0d99.js
-        (sourcemap at videoblock-4210a80deb7056cf0d99.js.map)\n","time":8},{"pos":129,"out":"    ~/vi-assets/static-assets/weddings-5193c046e410203017ee.js
-        (sourcemap at weddings-5193c046e410203017ee.js.map)\n","time":8},{"pos":130,"out":"    ~/vi-assets/static-assets/welcomeBlock-1a87bd4ba241ec4ecec1.js
-        (sourcemap at welcomeBlock-1a87bd4ba241ec4ecec1.js.map)\n","time":8},{"pos":131,"out":"    ~/vi-assets/static-assets/welcomesubscriber-4edfac7b50216bbda25f.js
-        (sourcemap at welcomesubscriber-4edfac7b50216bbda25f.js.map)\n","time":8},{"pos":132,"out":"    ~/vi-assets/static-assets/world-cup-2019-1e2713417dda80c07bd8.js
-        (sourcemap at world-cup-2019-1e2713417dda80c07bd8.js.map)\n","time":8},{"pos":133,"out":"    ~/vi-assets/static-assets/your-list-91b75211c3159a64f634.js
-        (sourcemap at your-list-91b75211c3159a64f634.js.map)\n","time":8},{"pos":134,"out":"  Source
-        Maps\n","time":8},{"pos":135,"out":"    ~/vi-assets/static-assets/activationBlock-1379ce08cb82e3c0a0a8.js.map\n","time":8},{"pos":136,"out":"    ~/vi-assets/static-assets/additionalPlaylists-150a9e7b483e454d1253.js.map\n","time":8},{"pos":137,"out":"    ~/vi-assets/static-assets/adslot-f32df753a7f26b792f2b.js.map\n","time":8},{"pos":138,"out":"    ~/vi-assets/static-assets/answerpage-cc501d9f33267ee9a0c2.js.map\n","time":8},{"pos":139,"out":"    ~/vi-assets/static-assets/answerpage~bestsellers~byline~hubpage~markets~reviews~search~timeswire~trending~your-list-3a11916bdf99d4c489f4.js.map\n","time":8},{"pos":140,"out":"    ~/vi-assets/static-assets/answerpage~bestsellers~hubpage~markets~privacy~reviews~search~slideshow~timeswire~trending~weddings~your-list-091b0c1c9cac16e89da3.js.map\n","time":8},{"pos":141,"out":"    ~/vi-assets/static-assets/answerpage~hubpage-7d41f4c455478297f345.js.map\n","time":8},{"pos":142,"out":"    ~/vi-assets/static-assets/ask-b8f27d747257b580109f.js.map\n","time":8},{"pos":143,"out":"    ~/vi-assets/static-assets/audio-48af6f33c2418088931d.js.map\n","time":8},{"pos":144,"out":"    ~/vi-assets/static-assets/audioblock-4e226f30dbaffd1e5981.js.map\n","time":8},{"pos":145,"out":"    ~/vi-assets/static-assets/bestsellers-a6884608a8314ee7388a.js.map\n","time":8},{"pos":146,"out":"    ~/vi-assets/static-assets/blank-b45c6bf8875395c0d175.js.map\n","time":8},{"pos":147,"out":"    ~/vi-assets/static-assets/byline-3352274f1be015e5edc4.js.map\n","time":8},{"pos":148,"out":"    ~/vi-assets/static-assets/byline~markets~reviews-e6329c3d43bf1d7c2307.js.map\n","time":8},{"pos":149,"out":"    ~/vi-assets/static-assets/canadaHamburgerNavData-9e626ddde0e984a06ce9.js.map\n","time":8},{"pos":150,"out":"    ~/vi-assets/static-assets/canadaSiteIndexData-ea57421ff8cb5579d32a.js.map\n","time":8},{"pos":151,"out":"    ~/vi-assets/static-assets/capsule-d18d53f62e7fbcd89752.js.map\n","time":8},{"pos":152,"out":"    ~/vi-assets/static-assets/clientSideCapsule-14f51b063201c2757f63.js.map\n","time":8},{"pos":153,"out":"    ~/vi-assets/static-assets/coderedeem-5b5ec5b247dac09cfd24.js.map\n","time":8},{"pos":154,"out":"    ~/vi-assets/static-assets/collections-bc47aaa6296cff246535.js.map\n","time":8},{"pos":155,"out":"    ~/vi-assets/static-assets/comments-006df318ef353fafc155.js.map\n","time":8},{"pos":156,"out":"    ~/vi-assets/static-assets/commentsForm-ec0e3e2b816d1e19c285.js.map\n","time":8},{"pos":157,"out":"    ~/vi-assets/static-assets/datasubjectrequest-99679c21c2d5cd2acd67.js.map\n","time":8},{"pos":158,"out":"    ~/vi-assets/static-assets/datasubjectrequestverification-e2bec5bc5bbccf84ebf2.js.map\n","time":8},{"pos":159,"out":"    ~/vi-assets/static-assets/dealbook-3a2bc13b4d34eb54f415.js.map\n","time":8},{"pos":160,"out":"    ~/vi-assets/static-assets/defaultHamburgerNavData-11908c5a069733903ef4.js.map\n","time":8},{"pos":161,"out":"    ~/vi-assets/static-assets/defaultSiteIndexData-62689f7a6e50c2041565.js.map\n","time":8},{"pos":162,"out":"    ~/vi-assets/static-assets/desktopNav-7a780c48556a2c63e48f.js.map\n","time":8},{"pos":163,"out":"    ~/vi-assets/static-assets/emailsignup-71adbed9a8b71530bac3.js.map\n","time":8},{"pos":164,"out":"    ~/vi-assets/static-assets/episodefooter-32048ff6ba695de558ab.js.map\n","time":8},{"pos":165,"out":"    ~/vi-assets/static-assets/explainer-4f66b708a914df2994b9.js.map\n","time":8},{"pos":166,"out":"    ~/vi-assets/static-assets/explainerPostHeader-ec58da554873afd8fa1c.js.map\n","time":8},{"pos":167,"out":"    ~/vi-assets/static-assets/explainerRecirculation-41fa3a5a38e8ea6ac40a.js.map\n","time":8},{"pos":168,"out":"    ~/vi-assets/static-assets/foo-3cc6fc79099db3c0bbd5.js.map\n","time":8},{"pos":169,"out":"    ~/vi-assets/static-assets/footerBlock-b65bcac5a46102236e8a.js.map\n","time":8},{"pos":170,"out":"    ~/vi-assets/static-assets/getstarted-74322257ae7b184e06a3.js.map\n","time":8},{"pos":171,"out":"    ~/vi-assets/static-assets/getstarted~newsletter-e191446c8f305313810a.js.map\n","time":8},{"pos":172,"out":"    ~/vi-assets/static-assets/getstarted~postLoginInterrupter~welcomesubscriber-816774a96d44d4c3b090.js.map\n","time":8},{"pos":173,"out":"    ~/vi-assets/static-assets/getstarted~recirculation~welcomesubscriber-f775c67dd0aa10ceb415.js.map\n","time":8},{"pos":174,"out":"    ~/vi-assets/static-assets/headerfullbleedhorizontal-d0351884f866b0befc92.js.map\n","time":8},{"pos":175,"out":"    ~/vi-assets/static-assets/headerfullbleedvertical-dcaf48740e83fe9574bc.js.map\n","time":8},{"pos":176,"out":"    ~/vi-assets/static-assets/headerlivebriefingvi-71732137ed18eb99b531.js.map\n","time":8},{"pos":177,"out":"    ~/vi-assets/static-assets/home-b04384c7a3790ca236a6.js.map\n","time":8},{"pos":178,"out":"    ~/vi-assets/static-assets/hubpage-a52b56517f9b6ee8aa16.js.map\n","time":8},{"pos":179,"out":"    ~/vi-assets/static-assets/interactive-792f550759b4df200377.js.map\n","time":8},{"pos":180,"out":"    ~/vi-assets/static-assets/internationalHamburgerNavData-1b304ed18ce79082bfa3.js.map\n","time":8},{"pos":181,"out":"    ~/vi-assets/static-assets/internationalSiteIndexData-b72c4d2e0677e00252c6.js.map\n","time":8},{"pos":182,"out":"    ~/vi-assets/static-assets/lens-26462cc6841a10a83bd5.js.map\n","time":8},{"pos":183,"out":"    ~/vi-assets/static-assets/livePostHeader-1470bd4aa7eebbb14b43.js.map\n","time":8},{"pos":184,"out":"    ~/vi-assets/static-assets/liveRecirculation-3815a030cdff58c0354e.js.map\n","time":8},{"pos":185,"out":"    ~/vi-assets/static-assets/liveblog-8934f0fa37734cf8fa86.js.map\n","time":8},{"pos":186,"out":"    ~/vi-assets/static-assets/main-f92b4f97a1bd1743270b.js.map\n","time":8},{"pos":187,"out":"    ~/vi-assets/static-assets/markets-bfb0648edc3d5a63b843.js.map\n","time":8},{"pos":188,"out":"    ~/vi-assets/static-assets/mortgagecalculator-b3672b75f09e623e52ab.js.map\n","time":8},{"pos":189,"out":"    ~/vi-assets/static-assets/newsletter-ea4bfac2db89b16bf7b4.js.map\n","time":8},{"pos":190,"out":"    ~/vi-assets/static-assets/newsletters-aef0e30dec519f1069ad.js.map\n","time":8},{"pos":191,"out":"    ~/vi-assets/static-assets/opinion-f7fa6f754fca70faafca.js.map\n","time":8},{"pos":192,"out":"    ~/vi-assets/static-assets/paidpost-899cbeaeecfc4876c5e0.js.map\n","time":8},{"pos":193,"out":"    ~/vi-assets/static-assets/phone-number-input-252697ed24c60417b6f2.js.map\n","time":8},{"pos":194,"out":"    ~/vi-assets/static-assets/postLoginInterrupter-f06a0630e52aa5f79d6c.js.map\n","time":8},{"pos":195,"out":"    ~/vi-assets/static-assets/privacy-ca7ca96677831c564be3.js.map\n","time":8},{"pos":196,"out":"    ~/vi-assets/static-assets/producernotes-82cb89ee2732f5f45ab7.js.map\n","time":8},{"pos":197,"out":"    ~/vi-assets/static-assets/programmables-ad03e0428608c97e7f23.js.map\n","time":8},{"pos":198,"out":"    ~/vi-assets/static-assets/recirculation-5efd2ec488dacf349a95.js.map\n","time":8},{"pos":199,"out":"    ~/vi-assets/static-assets/refer-b49060f38282688e3f34.js.map\n","time":8},{"pos":200,"out":"    ~/vi-assets/static-assets/regilite-5100528dafcb7d40d134.js.map\n","time":8},{"pos":201,"out":"    ~/vi-assets/static-assets/related-coverage-chunk-2600326ffdd30fd22029.js.map\n","time":8},{"pos":202,"out":"    ~/vi-assets/static-assets/reviewheader-d35db0081d3244887290.js.map\n","time":8},{"pos":203,"out":"    ~/vi-assets/static-assets/reviews-e57f505652f91d844eaf.js.map\n","time":8},{"pos":204,"out":"    ~/vi-assets/static-assets/runtime~adslot-8a2cb914dc65ac618370.js.map\n","time":8},{"pos":205,"out":"    ~/vi-assets/static-assets/runtime~interactive-b43d1addea56ec248e5e.js.map\n","time":8},{"pos":206,"out":"    ~/vi-assets/static-assets/runtime~main-00f34bf483c3ea25c964.js.map\n","time":8},{"pos":207,"out":"    ~/vi-assets/static-assets/search-7ca87d02abfb33f315e8.js.map\n","time":8},{"pos":208,"out":"    ~/vi-assets/static-assets/shareSelected-557726db0809a5adbed9.js.map\n","time":8},{"pos":209,"out":"    ~/vi-assets/static-assets/siteIndexContent-c70d94512d7707a9bc27.js.map\n","time":8},{"pos":210,"out":"    ~/vi-assets/static-assets/sitemap-534694367f60e6a49be1.js.map\n","time":8},{"pos":211,"out":"    ~/vi-assets/static-assets/slideshow-98c5bb4d353671642464.js.map\n","time":8},{"pos":212,"out":"    ~/vi-assets/static-assets/slideshowinline-4e843e110279bcf2b103.js.map\n","time":8},{"pos":213,"out":"    ~/vi-assets/static-assets/stickyfilljs-f857f79e5e24c852208f.js.map\n","time":8},{"pos":214,"out":"    ~/vi-assets/static-assets/story-818f879150d1c63c893f.js.map\n","time":8},{"pos":215,"out":"    ~/vi-assets/static-assets/surveywithdrawconsent-a59b13ecb46e31356641.js.map\n","time":8},{"pos":216,"out":"    ~/vi-assets/static-assets/timeswire-36ea9c279aca7683aa8e.js.map\n","time":8},{"pos":217,"out":"    ~/vi-assets/static-assets/trending-923a2b15c69e96190c61.js.map\n","time":8},{"pos":218,"out":"    ~/vi-assets/static-assets/upshot-6de11d8c7141b438cfaa.js.map\n","time":8},{"pos":219,"out":"    ~/vi-assets/static-assets/vendor-361a3a5156942fc91866.js.map\n","time":8},{"pos":220,"out":"    ~/vi-assets/static-assets/vendor-interactive-7086d83329fedc4746bc.js.map\n","time":8},{"pos":221,"out":"    ~/vi-assets/static-assets/vendors~audioblock-9465220dbbf1244387f3.js.map\n","time":8},{"pos":222,"out":"    ~/vi-assets/static-assets/vendors~audio~byline~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~slidesho~b1468c2d-f20b8abb6fb69f9d7185.js.map\n","time":8},{"pos":223,"out":"    ~/vi-assets/static-assets/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~trending~video-596ae37870af61daa675.js.map\n","time":8},{"pos":224,"out":"    ~/vi-assets/static-assets/vendors~audio~capsule~clientSideCapsule~collections~explainer~home~liveblog~paidpost~story~video-9919df76c1dc23f31e32.js.map\n","time":8},{"pos":225,"out":"    ~/vi-assets/static-assets/vendors~commentsForm~weddings-9b9f348fce001d18ec42.js.map\n","time":8},{"pos":226,"out":"    ~/vi-assets/static-assets/vendors~emailsignup~newsletter~newsletters~recirculation-608e84562dd9923b84b4.js.map\n","time":8},{"pos":227,"out":"    ~/vi-assets/static-assets/vendors~episodefooter-a6b34d836f241ce76c77.js.map\n","time":8},{"pos":228,"out":"    ~/vi-assets/static-assets/vendors~footerBlock-3070af5f4b425f069368.js.map\n","time":8},{"pos":229,"out":"    ~/vi-assets/static-assets/vendors~livePostHeader~liveRecirculation-a29b594d430f87e6a135.js.map\n","time":8},{"pos":230,"out":"    ~/vi-assets/static-assets/vendors~mortgagecalculator-4726c50078df29ad2078.js.map\n","time":8},{"pos":231,"out":"    ~/vi-assets/static-assets/vendors~phone-number-input-4968a48eb73474ba1850.js.map\n","time":8},{"pos":232,"out":"    ~/vi-assets/static-assets/vendors~producernotes-23bd47e000f744f381ff.js.map\n","time":8},{"pos":233,"out":"    ~/vi-assets/static-assets/vendors~reviewheader-a757c0d0380516cb94a4.js.map\n","time":8},{"pos":234,"out":"    ~/vi-assets/static-assets/vendors~search-68f829dd71236a1b1dd5.js.map\n","time":8},{"pos":235,"out":"    ~/vi-assets/static-assets/vendors~slideshow-500864c1145931fff9c1.js.map\n","time":8},{"pos":236,"out":"    ~/vi-assets/static-assets/vendors~slideshowinline-4bab35f6ecdacc129beb.js.map\n","time":8},{"pos":237,"out":"    ~/vi-assets/static-assets/vendors~videoblock-d4bbc3276f254a1daf83.js.map\n","time":8},{"pos":238,"out":"    ~/vi-assets/static-assets/vendors~weddings-4ca92b58026f082f9258.js.map\n","time":8},{"pos":239,"out":"    ~/vi-assets/static-assets/vendors~your-list-bf0b418ccd49c30a49ce.js.map\n","time":8},{"pos":240,"out":"    ~/vi-assets/static-assets/video-a6fb9a86d3720ac2290f.js.map\n","time":8},{"pos":241,"out":"    ~/vi-assets/static-assets/videoblock-4210a80deb7056cf0d99.js.map\n","time":8},{"pos":242,"out":"    ~/vi-assets/static-assets/weddings-5193c046e410203017ee.js.map\n","time":8},{"pos":243,"out":"    ~/vi-assets/static-assets/welcomeBlock-1a87bd4ba241ec4ecec1.js.map\n","time":8},{"pos":244,"out":"    ~/vi-assets/static-assets/welcomesubscriber-4edfac7b50216bbda25f.js.map\n","time":8},{"pos":245,"out":"    ~/vi-assets/static-assets/world-cup-2019-1e2713417dda80c07bd8.js.map\n","time":8},{"pos":246,"out":"    ~/vi-assets/static-assets/your-list-91b75211c3159a64f634.js.map\n","time":8}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      Date:
-      - Thu, 27 May 2021 14:19:37 GMT
-      Expires:
-      - Thu, 01 Jan 1970 00:00:00 UTC
-      Pragma:
-      - no-cache
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Origin
-      X-Accel-Expires:
-      - '0'
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
-      User-Agent:
-      - DroneCI Butler v0.1.0
-    method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/8/1
-  response:
-    body:
-      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":0},{"pos":1,"out":"+
-        git fetch origin +refs/heads/deprecate-e2e-and-introduce-acceptance-tests:\n","time":0},{"pos":2,"out":"From
-        https://github.com/nytm/wf-project-vi\n","time":22},{"pos":3,"out":" * branch                deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e FETCH_HEAD\n","time":22},{"pos":4,"out":" * [new branch]          deprecate-e2e-and-introduce-acceptance-tests
-        -\u003e origin/deprecate-e2e-and-introduce-acceptance-tests\n","time":22},{"pos":5,"out":"+
-        git checkout 4fcb2a3a106092213307f605aab07254d76512f9 -b deprecate-e2e-and-introduce-acceptance-tests\n","time":22},{"pos":6,"out":"Switched
-        to a new branch ''deprecate-e2e-and-introduce-acceptance-tests''\n","time":24}]
-
-        '
-    headers:
-      Cache-Control:
-      - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '778'
+      - '289'
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:37 GMT
+      - Mon, 21 Jun 2021 23:15:26 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
@@ -1108,32 +227,143 @@ interactions:
     body: null
     headers:
       Authorization:
-      - Bearer VIiQwPXd3YdxtAzkjl1S7rUUxaQh9PMy
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
       User-Agent:
       - DroneCI Butler v0.1.0
     method: GET
-    uri: https://drone.dv.nyt.net/api/repos/nytm/wf-project-vi/builds/138179/logs/8/2
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/5
   response:
     body:
-      string: "[{\"pos\":0,\"out\":\"us.gcr.io/nyt-wfvi-dev/hub@sha256:38fdbf939e494ae6dc64591d66bbd31b26a4e38622addd3fc77cdac76d34fd96:
-        Pulling from nyt-wfvi-dev/hub\\n\",\"time\":0},{\"pos\":1,\"out\":\"Digest:
-        sha256:38fdbf939e494ae6dc64591d66bbd31b26a4e38622addd3fc77cdac76d34fd96\\n\",\"time\":33},{\"pos\":2,\"out\":\"Status:
-        Downloaded newer image for us.gcr.io/nyt-wfvi-dev/hub@sha256:38fdbf939e494ae6dc64591d66bbd31b26a4e38622addd3fc77cdac76d34fd96\\n\",\"time\":33},{\"pos\":3,\"out\":\"+
-        node tools/datadog/drone-metrics/index.js\\n\",\"time\":52},{\"pos\":4,\"out\":\"\U0001F436
-        \ \U0001F937\u200D  Metrics file (/drone/src/drone-metrics.jsonl) not found.\\n\",\"time\":52},{\"pos\":5,\"out\":\"\u274C
-        \U0001F6F8 \u274C  OUTCH!! Drone build fetch failed: 404-Not Found\\n\",\"time\":52},{\"pos\":6,\"out\":\"
-        \          {\\\"message\\\":\\\"Not Found\\\"}\\n\",\"time\":52},{\"pos\":7,\"out\":\"\\n\",\"time\":52}]\n"
+      string: '[{"pos":0,"out":"+ echo \"running component tests\"\n","time":7},{"pos":1,"out":"running
+        component tests\n","time":7},{"pos":2,"out":"+ sleep 15\n","time":7},{"pos":3,"out":"+
+        echo \"component tests succeeded\"\n","time":22},{"pos":4,"out":"component
+        tests succeeded\n","time":22}]
+
+        '
     headers:
       Cache-Control:
       - no-cache, no-store, must-revalidate, private, max-age=0
-      Connection:
-      - keep-alive
       Content-Length:
-      - '803'
+      - '282'
       Content-Type:
       - application/json
       Date:
-      - Thu, 27 May 2021 14:19:37 GMT
+      - Mon, 21 Jun 2021 23:15:26 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/1/6
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo \"running e2e tests\"\n","time":5},{"pos":1,"out":"running
+        e2e tests\n","time":5},{"pos":2,"out":"+ sleep 30\n","time":5},{"pos":3,"out":"+
+        echo \"e2e tests succeeded\"\n","time":35},{"pos":4,"out":"e2e tests succeeded\n","time":35}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 21 Jun 2021 23:15:26 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/2/1
+  response:
+    body:
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":3},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":3},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-ci-monitor\n","time":3},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":3},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":3},{"pos":5,"out":"+
+        git checkout 96024d60a80148302ce0e192059d0872bbeb98a4 -b main\n","time":3},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":3}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '552'
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 21 Jun 2021 23:15:27 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-ci-monitor/builds/2/logs/2/2
+  response:
+    body:
+      string: '[{"pos":0,"out":"latest: Pulling from plugins/webhook\n","time":1},{"pos":1,"out":"Digest:
+        sha256:a862b76d5c51eade0372a1d4d82c4ac7c7d186eef0dbf61ca01bcd51f17d275d\n","time":1},{"pos":2,"out":"Status:
+        Image is up to date for plugins/webhook:latest\n","time":1},{"pos":3,"out":"Error:
+        Failed to execute the HTTP request. Post https://drone-ci-butler.ngrok.io/hooks/drone:
+        local error: tls: bad record MAC\n","time":306},{"pos":4,"out":"2021/06/21
+        23:13:07 Post https://drone-ci-butler.ngrok.io/hooks/drone: local error: tls:
+        bad record MAC\n","time":306}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '554'
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 21 Jun 2021 23:15:27 GMT
       Expires:
       - Thu, 01 Jan 1970 00:00:00 UTC
       Pragma:
