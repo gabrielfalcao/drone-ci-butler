@@ -53,5 +53,5 @@ setup(
     package_dir={PACKAGE_NAME: MODULE_NAME},
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
-    # install_requires=local_file("requirements.txt").splitlines(),
+    install_requires=local_file("requirements.txt").splitlines(),
 )
