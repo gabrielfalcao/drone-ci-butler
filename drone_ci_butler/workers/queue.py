@@ -23,7 +23,7 @@ class QueueClient(object):
         rep_connect_address: str,
         rep_high_watermark: int = 1,
     ):
-        self.logger = get_logger("queue-client")
+        self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
         self.rep_connect_address = rep_connect_address
         self.socket = context.socket(zmq.REQ)
         self.socket.set_hwm(rep_high_watermark)
@@ -66,7 +66,7 @@ class QueueServer(object):
         log_level: int = logging.WARNING,
         postmortem_sleep_seconds: int = 10,
     ):
-        self.logger = get_logger("queue-server")
+        self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
         self.log_level = log_level
         self.rep_bind_address = rep_bind_address
         self.push_bind_address = push_bind_address
@@ -127,6 +127,7 @@ class QueueServer(object):
         socks = dict(self.poller.poll())
         if self.push in socks and socks[self.push] == zmq.POLLOUT:
             self.push.send_json(data)
+            gevent.sleep()
             return True
 
     def handle_request(self):

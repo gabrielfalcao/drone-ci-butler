@@ -19,7 +19,7 @@ from uiclasses import ModelList, ModelSet
 from uiclasses.typing import Property
 from datetime import datetime
 from drone_ci_butler.config import Config
-from drone_ci_butler.drone_api.models import BuildContext, Build, Step, Stage
+from drone_ci_butler.drone_api.models import AnalysisContext, Build, Step, Stage
 from .exceptions import ConditionRequired
 from .exceptions import CancelationRequested
 from .exceptions import ContextElementMissing
@@ -183,6 +183,22 @@ class Condition(Model):
                 condition=self,
             )
 
+    @classmethod
+    def from_config(cls: Type[T], config: dict) -> T:
+        params = {}
+        for k, matchers in config.items():
+            keys = k.split(".")
+            ctx_elem = keys[0]
+            tgt_attr = keys[1:]
+            params["context_element"] = ctx_elem
+            params["target_attribute"] = tgt_attr
+            params.update(matchers)
+            # params["target_attribute"] = ValueList(tgt_attr)
+            # for matcher, value in matchers.items():
+            #     params[matcher] = ValueList(value)
+
+        return cls(**params)
+
     def to_description(self):
         match = self.describe_matches()
         return f"Condition: Expect {self.context_element}.{self.target_attribute.name} {match}"
@@ -209,7 +225,7 @@ class Condition(Model):
         return ", ".join(message)
 
     def process_context(
-        self: Type[T], context: BuildContext
+        self: Type[T], context: AnalysisContext
     ) -> Tuple[Any, List[str], str, str, Any]:
         element = context.get(self.context_element)
 
@@ -235,7 +251,7 @@ class Condition(Model):
 
         return element, path, attribute, location, value
 
-    def apply(self: Type[T], context: BuildContext) -> List[T]:
+    def apply(self: Type[T], context: AnalysisContext) -> List[T]:
         result = []
         element, path, attribute, location, value = self.process_context(context)
 
@@ -334,7 +350,7 @@ class Condition(Model):
 class MatchedCondition(Model):
     __id_attributes__ = ["condition", "location", "value", "match_type"]
     condition: Condition
-    context: BuildContext
+    context: AnalysisContext
     value: Any
     element: Union[Build, Stage, Step]
     attribute: str
@@ -382,7 +398,7 @@ class ConditionSet(Model):
 
     def apply(
         self,
-        context: BuildContext,
+        context: AnalysisContext,
     ) -> Tuple[MatchedCondition.List, List[InvalidCondition]]:
         matched_conditions = MatchedCondition.List([])
         invalid_conditions = []
@@ -452,7 +468,7 @@ class Rule(Model):
         return self
 
     def apply(
-        self, context: BuildContext
+        self, context: AnalysisContext
     ) -> Tuple[MatchedCondition.List, List[InvalidCondition]]:
         matched_conditions, invalid_conditions = self.conditions.apply(context)
         failed_required_conditions = [
@@ -463,7 +479,7 @@ class Rule(Model):
             return [], []
         return matched_conditions, invalid_conditions
 
-    def match(self, context: BuildContext):
+    def match(self, context: AnalysisContext):
         matched_conditions, invalid_conditions = self.apply(context)
         return MatchedRule(
             matched_conditions=matched_conditions,
@@ -477,7 +493,7 @@ class MatchedRule(Model):
     __id_attributes__ = ["rule", "context"]
     matched_conditions: MatchedCondition.List
     invalid_conditions: List[InvalidCondition]
-    context: BuildContext
+    context: AnalysisContext
     rule: Rule
 
     def __repr__(self):
@@ -516,7 +532,7 @@ class RuleSet(Model):
     def __str__(self):
         return f"<RuleSet {self.name}>"
 
-    def apply(self, context: BuildContext) -> MatchedRule.List:
+    def apply(self, context: AnalysisContext) -> MatchedRule.List:
         required_conditions = self.required_conditions or []
         if required_conditions:
             required_matches, invalid_conditions = required_conditions.apply(context)

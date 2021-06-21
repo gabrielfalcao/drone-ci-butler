@@ -301,8 +301,19 @@ class Build(Model):
                     return step
 
 
-class BuildContext(Model):
+class AnalysisContext(Model):
     __id_attributes__ = ["build", "state", "step"]
     build: Build
     stage: Stage
     step: Step
+
+    def __str__(self):
+        parts = []
+        if self.build and self.build.link:
+            parts.append(f"build='{self.build.link}'")
+        if self.stage and self.stage.number:
+            parts.append(f"stage='{self.stage.number}'")
+        if self.step and self.step.number:
+            parts.append(f"step='{self.step.number}'")
+        attrs = ", ".join(parts)
+        return f"<AnalysisContext {attrs}>"

@@ -5,11 +5,11 @@ from drone_ci_butler.drone_api.models import (
     Build,
     Step,
     Stage,
-    BuildContext,
+    AnalysisContext,
     Output,
     OutputLine,
 )
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.models import (
     Rule,
     RuleAction,
@@ -51,4 +51,4 @@ def fake_context_with_output_lines(
         ),
     )
 
-    return BuildContext(build=fake_build, stage=fake_stage, step=fake_step)
+    return AnalysisContext(build=fake_build, stage=fake_stage, step=fake_step)

@@ -4,11 +4,11 @@ from drone_ci_butler.drone_api.models import (
     Build,
     Step,
     Stage,
-    BuildContext,
+    AnalysisContext,
     Output,
     OutputLine,
 )
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.models import (
     Rule,
     RuleAction,

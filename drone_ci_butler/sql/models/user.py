@@ -10,7 +10,7 @@ from sqlalchemy import desc
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.util import load_json
 from drone_ci_butler.slack import SlackClient
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from chemist import Model, db, metadata
 from drone_ci_butler.config import config
 
@@ -188,10 +188,19 @@ class User(Model):
         return now() < valid_until
 
     def notify_error(
-        self, message: str, context: BuildContext, matches: List[Any] = None
+        self, message: str, context: AnalysisContext, matches: List[Any] = None
     ):
         logger.error(f"{message} {matches} {context}")
 
-    def notify_ruleset_matches(self, context: BuildContext, matches: List[Any] = None):
+    def notify_ruleset_matches(self, context: AnalysisContext, matches: List[Any] = None):
         count = len(matches or [])
         logger.warning(f"found {count} matches {matches} in {context}")
+
+    def to_log_dict(self):
+        data = {}
+        for key, value in self.to_dict().items():
+            if "token" in key or "json" in key:
+                continue
+            data[key] = value
+
+        return data

@@ -5,11 +5,11 @@ from drone_ci_butler.drone_api.models import (
     Build,
     Step,
     Stage,
-    BuildContext,
+    AnalysisContext,
     Output,
     OutputLine,
 )
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.models import (
     Rule,
     RuleAction,
@@ -192,6 +192,6 @@ Matched Rule **my-ruleset.required_conditions**:
   **Invalid Conditions**:
     Condition could not be fulfilled: Condition: Expect step.exit_code to have exact value `0`
     Condition(context_element='step', target_attribute=<ValueList: ['output.lines']>, matches_regex=None, matches_value=None, value_exact=(), contains_string=<ValueList: ['foo bar']>, is_not=(), value=None, regex_options=<RegexFlag.UNICODE|DOTALL|MULTILINE|IGNORECASE: 58>, required=True) could not find attribute output.lines in step: 'output.lines'
-    Cancelation requested on BuildContext(build=<Build number=None link='https://drone.dv.nyt.net/nytm/wf-project-vi/138785' message=None started=None finished=None>, stage=<Stage number=None name='build' started=None stopped=None>, step=<Step number=None name='node_modules' status='failure' started=None stopped=None exit_code=1>)
+    Cancelation requested on <AnalysisContext build='https://drone.dv.nyt.net/nytm/wf-project-vi/138785'>
 """.strip()
     )

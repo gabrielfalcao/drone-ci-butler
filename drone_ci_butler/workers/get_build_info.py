@@ -5,7 +5,7 @@ from drone_ci_butler.slack import SlackClient
 from drone_ci_butler.drone_api.models import Build
 from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.sql.models.user import User
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.default_rules import wf_project_vi
 from .puller import PullerWorker
 from drone_ci_butler.es import connect_to_elasticsearch
@@ -113,7 +113,7 @@ class GetBuildInfoWorker(PullerWorker):
 
         logmeta.update(
             {
-                "user": user and user.to_dict() or {},
+                "user": user and user.to_log_dict() or {},
                 "pr_number": pr_number,
             }
         )
@@ -121,7 +121,7 @@ class GetBuildInfoWorker(PullerWorker):
         if not pr_number:
             self.logger.debug(
                 f"ignoring build that is not from a Github PR: {build.link} by {repr(build.author_login)}",
-                extra=logmeta,
+                extra=dict(logmeta),
             )
             return
 
@@ -129,7 +129,7 @@ class GetBuildInfoWorker(PullerWorker):
             if not user:
                 self.logger.warning(
                     f"ignoring build from a user that has not opted in: {build.author_login}",
-                    extra=logmeta,
+                    extra=dict(logmeta),
                 )
                 return
 
@@ -147,7 +147,7 @@ class GetBuildInfoWorker(PullerWorker):
             build=build,
         )
 
-        self.process_rulesets(build, stored, user, owner, repo, extra=dict(logmeta))
+        self.process_rulesets(build, stored, user, owner, repo, logmeta=logmeta)
 
     def process_rulesets(
         self,
@@ -156,8 +156,20 @@ class GetBuildInfoWorker(PullerWorker):
         user: User,
         owner: str,
         repo: str,
-        **logmeta,
+        logmeta: dict = None,
     ):
+
+        logmeta = logmeta or {}
+        logmeta.update(
+            dict(
+                build=build.to_dict(),
+                owner=owner,
+                repo=repo,
+            )
+        )
+
+        if user:
+            logmeta["user"] = user.to_log_dict()
 
         try:
             es = connect_to_elasticsearch()
@@ -172,7 +184,7 @@ class GetBuildInfoWorker(PullerWorker):
             logmeta.update({"stage": stage and stage.to_dict() or {}})
             for step in stage.failed_steps():
                 logmeta.update({"step": step and step.to_dict() or {}})
-                context = BuildContext(
+                context = AnalysisContext(
                     build=build,
                     stage=stage,
                     step=step,

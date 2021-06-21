@@ -24,7 +24,7 @@ from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.slack import SlackClient
 
 
-logger = get_logger("system-events")
+logger = get_logger("system.events")
 
 
 @github_event.connect

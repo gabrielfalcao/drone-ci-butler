@@ -5,11 +5,11 @@ can be posted to slack or github if the user opts in the feature
 
 from typing import List, Union, Any, Optional
 from drone_ci_butler.exceptions import UserFriendlyException
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 
 
 class InvalidCondition(UserFriendlyException):
-    def __init__(self, message, condition: Any, context: Optional[BuildContext] = None):
+    def __init__(self, message, condition: Any, context: Optional[AnalysisContext] = None):
         self.message = message
         self.condition = condition
         self.context = context
@@ -19,7 +19,7 @@ class InvalidCondition(UserFriendlyException):
 class ConditionRequired(InvalidCondition):
     """specifically raised when a condition with required=True does not match"""
 
-    def __init__(self, condition: Any, context: BuildContext):
+    def __init__(self, condition: Any, context: AnalysisContext):
         description = condition.to_description()
         message = f"Condition could not be fulfilled: {description}"
         super().__init__(message, condition, context)
@@ -28,7 +28,7 @@ class ConditionRequired(InvalidCondition):
 class CancelationRequested(InvalidCondition):
     """specifically raised when a rule or ruleset have the RuleAction.REQUEST_CANCELATION"""
 
-    def __init__(self, context: BuildContext):
+    def __init__(self, context: AnalysisContext):
         message = f"Cancelation requested on {context}"
         super().__init__(message, None, context)
 
@@ -44,7 +44,7 @@ class NotStringOrListOfStrings(UserFriendlyException):
 
 
 class ContextElementMissing(UserFriendlyException):
-    def __init__(self, condition: Any, context: BuildContext):
+    def __init__(self, condition: Any, context: AnalysisContext):
         self.condition = condition
         self.context = context
         name = self.condition.context_element

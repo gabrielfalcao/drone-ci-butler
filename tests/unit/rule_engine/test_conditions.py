@@ -4,11 +4,11 @@ from drone_ci_butler.drone_api.models import (
     Build,
     Step,
     Stage,
-    BuildContext,
+    AnalysisContext,
     Output,
     OutputLine,
 )
-from drone_ci_butler.drone_api.models import BuildContext
+from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.models import (
     Rule,
     RuleAction,
@@ -27,7 +27,7 @@ from drone_ci_butler.rule_engine.default_rules import step_exit_code_nonzero
 def test_matching_build_property():
     "Condition matching build.link contains_string"
     # Given fake context that matches that condition
-    context_build_link = BuildContext(
+    context_build_link = AnalysisContext(
         build=Build(
             link="https://drone.dv.nyt.net/nytm/wf-project-vi/138785",
         )
@@ -51,12 +51,12 @@ def test_matching_build_property():
 def test_matching_step_property_matches_value_list():
     "Condition matching step.status matches_value"
     # Given fake context that matches that condition
-    context_step_failure = BuildContext(
+    context_step_failure = AnalysisContext(
         step=Step(
             status="failure",
         )
     )
-    context_step_running = BuildContext(
+    context_step_running = AnalysisContext(
         step=Step(
             status="running",
         )
@@ -85,7 +85,7 @@ def test_matching_step_property_matches_value_list():
 def test_matching_step_property_is_not_value():
     "Condition matching step.status is_not 0"
     # Given fake context that matches that condition
-    context_step_nonzero = BuildContext(step=Step(exit_code=42))
+    context_step_nonzero = AnalysisContext(step=Step(exit_code=42))
 
     assert step_exit_code_nonzero.describe_matches() == "to not be `0`"
     # When I apply a condition that matches the step
@@ -110,7 +110,7 @@ def test_matching_step_property_value_exact_value():
         required=True,
     )
 
-    context_step_nonzero = BuildContext(step=Step(exit_code=0))
+    context_step_nonzero = AnalysisContext(step=Step(exit_code=0))
 
     assert success_step.describe_matches() == "to have exact value `0`"
     # When I apply a condition that matches the step
