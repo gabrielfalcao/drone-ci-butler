@@ -160,6 +160,8 @@ class DroneAPIClient(object):
     def iter_builds_by_page(
         self, owner: str, repo: str, limit=10000, page=0, count=0, max_pages=None
     ) -> Build.List:
+        owner = owner or self.owner
+        repo = repo or self.repo
         result = self.request(
             "GET",
             f"/api/repos/{owner}/{repo}/builds",

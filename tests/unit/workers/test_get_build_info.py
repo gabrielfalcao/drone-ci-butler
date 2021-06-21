@@ -22,7 +22,7 @@ def test_process_job_fetches_data(fetch_data):
 
     # Then it should call fetch_data with the configured params
     fetch_data.assert_called_once_with(
-        "nytm", "wf-project-vi", 1234, ignore_filters=True
+        "drone-ci-monitor", "drone-ci-monitor", 1234, ignore_filters=True
     )
 
     # And it should have logged INFO
@@ -38,10 +38,10 @@ def test_process_job_fetches_data(fetch_data):
 
 def test_try_parse_github_pull_request_url_ok():
 
-    link = "https://github.com/nytm/wf-project-vi/pull/12870"
+    link = "https://github.com/drone-ci-monitor/drone-ci-monitor/pull/12870"
 
     result = try_parse_github_pull_request_url(link)
 
     result.should.equal(
-        {"pr_number": "12870", "owner": "nytm", "repo": "wf-project-vi"}
+        {"pr_number": "12870", "owner": "drone-ci-monitor", "repo": "drone-ci-monitor"}
     )

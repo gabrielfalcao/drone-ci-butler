@@ -137,3 +137,5 @@ logging:
     sqlalchemy: WARNING
     urllib3.connectionpool: ERROR
     system.events: WARNING
+    parso.python: ERROR
+    asyncio: ERROR

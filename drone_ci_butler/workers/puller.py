@@ -31,13 +31,10 @@ class PullerWorker(object):
         self.poller = zmq.Poller()
         self.queue = context.socket(zmq.PULL)
         self.queue.set_hwm(high_watermark)
-        self.github_owner = config.drone_github_owner
-        self.github_repo = config.drone_github_repo
+        self.github_owner = config.drone_api_owner
+        self.github_repo = config.drone_api_repo
         self.poller.register(self.queue, zmq.POLLIN)
-        self.api = DroneAPIClient(
-            url=self.config.drone_url,
-            access_token=self.config.drone_access_token,
-        )
+        self.api = DroneAPIClient.from_config(config)
 
     @property
     def name(self) -> str:
