@@ -68,8 +68,8 @@ authorize_url_generator = AuthorizeUrlGenerator(
         # View information about a user’s identity
         "identity.email",
         # View a user’s email address,
-        "users.profile:read",
-        # Read user (profile) info
+        # "users.profile:read",
+        # # Read user (profile) info
     ],
 )
 
