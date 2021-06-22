@@ -310,7 +310,7 @@ def index_builds_elasticsearch():
 @click.option("--elasticsearch", is_flag=True)
 @click.option("--http-cache", is_flag=True)
 def purge_es_and_cache(elasticsearch, http_cache):
-    es_indexes = ["drone*", "*-webhooks"]
+    es_indexes = ["drone*", "*-webhooks", "drone_ci_butler_logs"]
 
     if not elasticsearch and not http_cache:
         print_error(f"you must provide either --elasticsearch or --http-cache")
