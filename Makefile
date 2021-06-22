@@ -70,11 +70,13 @@ dependencies:
 tests: unit functional | $(MAIN_CLI_PATH)  # runs all tests
 
 # -> unit tests
-unit: | $(VENV)/bin/pytest # runs only unit tests
-	@$(VENV)/bin/pytest tests/$@
+unit functional: | $(VENV)/bin/pytest # runs only unit tests
+	@DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/functional/drone-ci-butler.yml \
+		$(VENV)/bin/pytest tests/$@
 
-functional: | $(VENV)/bin/nosetests
-	@$(VENV)/bin/nosetests tests/$@
+# functional: | $(VENV)/bin/nosetests
+#	DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/functional/drone-ci-butler.yml \
+#	 	@$(VENV)/bin/nosetests tests/$@
 
 # -> unit tests
 tdd: | $(VENV)/bin/nosetests  # runs only unit tests
@@ -88,7 +90,7 @@ purge workers builds: | $(MAIN_CLI_PATH)
 
 # run webapp
 web: | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT)
+	@DRONE_CI_BUTLER_CONFIG_PATH=~/.drone-ci-butler.yml $(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT)
 
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version

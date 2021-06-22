@@ -2,7 +2,7 @@ rulesets:
   drone-ci-monitor:
     default-conditions:
       - build.link:
-          contains_string: "drone-ci-monitor/drone-ci-monitor"
+          contains_string: "drone-ci-monitor/drone-api-tests"
       - step.status: failed
       - step.exit_code:
           is_not:  0
