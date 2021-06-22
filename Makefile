@@ -22,7 +22,8 @@ export PUBLIC_URL	:= https://drone-ci-butler.ngrok.io/
 export NODE_ENV		:= production
 ######################################################################
 # tool env vars
-export DRONE_CI_BUTLER_CONFIG_PATH := $(GIT_ROOT)/tests/functional/drone-ci-butler.yml
+export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
+# export DRONE_CI_BUTLER_CONFIG_PATH := $(GIT_ROOT)/tests/functional/drone-ci-butler.yml
 
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent
@@ -87,7 +88,7 @@ purge workers builds: | $(MAIN_CLI_PATH)
 
 # run webapp
 web: | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT) --debug
+	@$(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT)
 
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version
