@@ -1,10 +1,14 @@
 import json
 import io
 import requests
+import logging
 from chemist import Model, db
 from datetime import datetime
 from .base import metadata
 from .exceptions import BuildNotFound
+
+
+logger = logging.getLogger(__name__)
 
 
 class SlackMessage(Model):

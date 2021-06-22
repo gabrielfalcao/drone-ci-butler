@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, Iterator
 from itertools import chain
 from uiclasses import Model
 from uiclasses.typing import Property
@@ -193,15 +193,6 @@ class Stage(Model):
         self.build = build
         return self
 
-    def failed_steps(self) -> Step.List:
-        steps = Step.List(self.steps or [])
-        failed_steps = steps.filter(lambda step: step.exit_code != 0)
-        return failed_steps
-
-    def succeeded_steps(self) -> Step.List:
-        steps = Step.List(self.steps or [])
-        return steps.filter(lambda step: step.exit_code == 0)
-
     def __ui_attributes__(self):
         return {
             "number": self.id,
@@ -282,17 +273,14 @@ class Build(Model):
         self.headers = dict(headers)
         return self
 
-    def failed_stages(self) -> Stage.List:
-        stages = self.stages or Stage.List([])
-        return stages.filter(lambda stage: stage.on_success)
+    def iter_steps(self) -> Iterator[Step]:
+        for stage in self.stages or []:
+            for step in stage.steps or []:
+                yield step
 
-    def failed_steps(self) -> Step.List:
-        stages = self.failed_stages()
-        steps = []
-        for stage in stages:
-            steps.extend(stage.failed_steps())
-
-        return Step.List(steps)
+    @property
+    def steps(self) -> Step.List:
+        return Step.List(self.iter_steps())
 
     def get_step_by_number(self, step_number: int) -> Optional[Step]:
         for stage in self.stages:

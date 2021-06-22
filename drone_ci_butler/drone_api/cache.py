@@ -1,6 +1,8 @@
 import json
 import requests
 import hashlib
+from sqlalchemy import func, select
+
 from drone_ci_butler.sql import HttpInteraction
 from drone_ci_butler import events
 
@@ -68,3 +70,16 @@ class HttpCache(object):
         )
 
         return interaction
+
+    @classmethod
+    def purge(cls):
+        for row in HttpInteraction.all():
+            row.delete()
+
+    @classmethod
+    def count(self) -> int:
+        table = HttpInteraction.table
+        query = select(func.count(table.c.id))
+        conn = HttpInteraction.get_connection()
+        result = conn.execute(query)
+        return result.fetchone()[0]

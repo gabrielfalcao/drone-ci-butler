@@ -1,6 +1,7 @@
 import hashlib
 import jwt
 import bcrypt
+import logging
 
 from datetime import datetime, timedelta
 from dateutil.parser import parse as parse_datetime
@@ -14,7 +15,7 @@ from drone_ci_butler.drone_api.models import AnalysisContext
 from chemist import Model, db, metadata
 from drone_ci_butler.config import config
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class AccessToken(Model):
@@ -192,7 +193,9 @@ class User(Model):
     ):
         logger.error(f"{message} {matches} {context}")
 
-    def notify_ruleset_matches(self, context: AnalysisContext, matches: List[Any] = None):
+    def notify_ruleset_matches(
+        self, context: AnalysisContext, matches: List[Any] = None
+    ):
         count = len(matches or [])
         logger.warning(f"found {count} matches {matches} in {context}")
 

@@ -180,9 +180,9 @@ class GetBuildInfoWorker(PullerWorker):
             )
             es = None
 
-        for stage in build.failed_stages():
+        for stage in build.stages():
             logmeta.update({"stage": stage and stage.to_dict() or {}})
-            for step in stage.failed_steps():
+            for step in stage.steps:
                 logmeta.update({"step": step and step.to_dict() or {}})
                 context = AnalysisContext(
                     build=build,

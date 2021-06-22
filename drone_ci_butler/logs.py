@@ -1,12 +1,16 @@
 import sys
 import os
 import logging
+import warnings
 import colorlog
+
+from cmreslogging.handlers import CMRESHandler
+from elasticsearch.exceptions import ElasticsearchWarning
 from pythonjsonlogger import jsonlogger
 from drone_ci_butler.config import config
 from drone_ci_butler.networking import get_elasticsearch_params
-from cmreslogging.handlers import CMRESHandler
 
+CHATTY_LOGGER_NAMES = ["parso", "asyncio", "filelock"]
 
 # fmt = "%(asctime)s %(log_color)s%(levelname)s%(reset)s %(name)s %(message)s"
 fmt = "%(log_color)s%(levelname)s%(blue)s %(name)s %(reset)s%(message)s"
@@ -23,6 +27,7 @@ logger = logging.getLogger()
 
 eshandler = None
 if config.elasticsearch_host:
+    warnings.simplefilter("ignore", category=ElasticsearchWarning)
     eshandler = CMRESHandler(
         hosts=[get_elasticsearch_params()],
         auth_type=CMRESHandler.AuthType.NO_AUTH,
@@ -33,6 +38,11 @@ if config.elasticsearch_host:
 
 def get_default_level():
     return getattr(logging, config.logging_level_default, logging.DEBUG)
+
+
+def silence_chatty_loggers(next_level=logging.WARNING):
+    for name in CHATTY_LOGGER_NAMES:
+        get_logger(name).setLevel(next_level)
 
 
 def reset_level(target_level=config.logging_level_default):
@@ -47,6 +57,7 @@ def reset_level(target_level=config.logging_level_default):
         logger.handlers = [handler]
 
     logger.setLevel(level)
+    silence_chatty_loggers()
     apply_mapping()
 
 

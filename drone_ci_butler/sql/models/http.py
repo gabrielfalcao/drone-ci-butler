@@ -1,10 +1,14 @@
 import json
 import io
+import logging
 import requests
+from urllib.parse import urlencode
 from chemist import Model, db
 from datetime import datetime
 from drone_ci_butler.util import load_json
 from .base import metadata
+
+logger = logging.getLogger(__name__)
 
 
 class HttpInteraction(Model):
@@ -23,6 +27,15 @@ class HttpInteraction(Model):
         db.Column("created_at", db.DateTime, default=datetime.utcnow),
         db.Column("updated_at", db.DateTime, default=datetime.utcnow),
     )
+
+    def delete(self, *args, **kwargs):
+        method = self.request_method
+        url = self.request_url
+        params = ""
+        if self.request_params:
+            params = urlencode(load_json(self.request_params))
+        logger.warning(f"Deleting cache for {method} {url}{params}")
+        return super().delete(*args, **kwargs)
 
     def response(self) -> requests.Response:
         response = requests.Response()

@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 from zmq.devices import ProxySteerable
 
 from drone_ci_butler.version import version
-from drone_ci_butler.drone_api import DroneAPIClient
+from drone_ci_butler.drone_api import DroneAPIClient, HttpCache
 from drone_ci_butler import sql
 from drone_ci_butler.slack import SlackClient
 from drone_ci_butler.logs import get_logger
@@ -52,12 +52,18 @@ class Context(Model):
 logger = get_logger(__name__)
 
 
-def command_line_tool():
+def entrypoint():
     try:
         main()
     except ConfigMissing as e:
         print_error(f"{e}")
         raise SystemExit(1)
+
+
+def print_error(message):
+    sys.stderr.write(str(message))
+    sys.stderr.write("\n")
+    sys.stderr.flush()
 
 
 @click.group()
@@ -307,16 +313,42 @@ def migrate_db(ctx, target, alembic_ini):
 
 
 @main.command("purge")
-def purge_elasticsearch():
-    es = connect_to_elasticsearch()
-    owner = config.drone_github_owner
-    repo = config.drone_github_repo
-    get_logger("elasticsearch").setLevel(logging.INFO)
-    for index in ("drone*", "*-webhooks"):
-        try:
-            es.indices.delete(index=index, ignore=[400, 404])
-        except Exception as e:
-            logger.warning(f'failed to purge index "{index}": {e}')
+@click.option("--elasticsearch", is_flag=True)
+@click.option("--http-cache", is_flag=True)
+def purge_elasticsearch(elasticsearch, http_cache):
+    sql.setup_db()
+    es_indexes = ["drone*", "*-webhooks"]
+    result = []
+    if elasticsearch:
+        print(f"deleting elasticsearch indexes: {es_indexes}")
+        es = connect_to_elasticsearch()
+        get_logger("elasticsearch").setLevel(logging.INFO)
+        for index in es_indexes:
+            try:
+                es.indices.delete(index=index, ignore=[400, 404])
+            except Exception as e:
+                logger.warning(f'failed to purge index "{index}": {e}')
+
+        result.append("elasticsearch")
+        get_logger("elasticsearch").setLevel(logging.WARNING)
+
+    else:
+        logger.warning(
+            f"provide --elasticsearch if you want to delete the indexes: {es_indexes}"
+        )
+
+    http_cache_count = HttpCache.count()
+    if http_cache and http_cache_count > 0:
+        print("deleting http cache")
+        HttpCache.purge()
+        result.append("http-cache")
+
+    else:
+        logger.warning(f"provide --http-cache if you want to delete ")
+
+    if not result:
+        print_error(f"you must provide either --elasticsearch or --http-cache")
+        raise SystemExit(1)
 
 
 @main.command("index")

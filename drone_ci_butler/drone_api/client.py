@@ -196,6 +196,8 @@ class DroneAPIClient(object):
             )
 
     def get_build_info(self, owner: str, repo: str, build_number: str) -> Build:
+        owner = owner or self.owner
+        repo = repo or self.repo
         result = self.request("GET", f"/api/repos/{owner}/{repo}/builds/{build_number}")
         build = Build(result.json()).with_headers(result.headers)
         events.get_build_info.send(
@@ -211,6 +213,8 @@ class DroneAPIClient(object):
         stage_number: int,
         step_number: int,
     ) -> Optional[Output]:
+        owner = owner or self.owner
+        repo = repo or self.repo
         try:
             result = self.request(
                 "GET",
@@ -245,6 +249,8 @@ class DroneAPIClient(object):
         return output
 
     def get_latest_build(self, owner: str, repo: str, branch: str):
+        owner = owner or self.owner
+        repo = repo or self.repo
         result = self.request(
             "GET", f"/api/repos/{owner}/{repo}/builds/latest", params={"branch": branch}
         )

@@ -1,6 +1,7 @@
 import json
 import io
 import requests
+import logging
 from typing import List, Optional, Any
 from chemist import Model, db
 from datetime import datetime
@@ -10,12 +11,11 @@ from .base import metadata
 from .exceptions import BuildNotFound
 from drone_ci_butler.es import connect_to_elasticsearch
 from drone_ci_butler.config import config
-from drone_ci_butler.logs import get_logger
 from drone_ci_butler.util import load_json
 
 es = connect_to_elasticsearch()
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class DroneBuild(Model):
