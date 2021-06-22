@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: drone-ci-butler
+
+# Example configuration for the webserver
+# at https://github.com/monopole/hello
+commonLabels:
+  app-name: drone-ci-butler
+  app-runtime: python3.7
+  project-page: https://github.com/gabrielfalcao/drone-ci-butler
+  git-revision: '{{printf "%.7s" .COMMIT}}'
+
+resources:
+- deployment.yaml
+- service.yaml
+- configMap.yaml
