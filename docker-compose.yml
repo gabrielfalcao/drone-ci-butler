@@ -3,27 +3,31 @@ version: '3'
 services:
   elasticsearch:
     container_name: elasticsearch-butler
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    image: elasticsearch:6.8.16
     env_file:
       - ./tools/docker.env
+    volumes:
+      - ./elasticsearch-data:/usr/share/elasticsearch/data
     # ports:
     #   - 0.0.0.0:9201:9200
     #   - 0.0.0.0:9301:9300
     environment:
-      discovery.type: single-node
-
-  kibana:
-    container_name: kibana-butler
-    image: docker.elastic.co/kibana/kibana:7.13.2
-    env_file:
-      - ./tools/docker.env
-    ports:
-      - 0.0.0.0:5602:5601
-    environment:
-      discovery.type: single-node
-      ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
-    depends_on:
-      - elasticsearch
+      - node.name=es01
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  # kibana:
+  #   container_name: kibana-butler
+  #   image: kibana:6.8.16
+  #   env_file:
+  #     - ./tools/docker.env
+  #   ports:
+  #     - 0.0.0.0:5602:5601
+  #   environment:
+  #     discovery.type: single-node
+  #     ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
+  #   depends_on:
+  #     - elasticsearch
   redis:
     container_name: redis-butler
     image: redis:6.2.4-alpine
@@ -44,7 +48,8 @@ services:
 
   butler_workers:
     container_name: butler-workers
-    image: gabrielfalcao/drone-ci-butler
+    build: .
+    image: gabrielfalcao/drone-ci-butler:latest
     depends_on:
       - postgres
       - elasticsearch
@@ -56,21 +61,29 @@ services:
       - 0.0.0.0:5556:5556
       - 0.0.0.0:6666:6666
       - 0.0.0.0:7777:7777
+    networks:
+      - machine
 
     volumes:
+      - ./:/app
       - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
+
+
     restart: always
     env_file:
       - ./tools/docker.env
     environment:
       DRONE_CI_BUTLER_CONFIG_PATH: /drone-ci-butler.yml
 
-    command: drone-ci-butler workers
+    command: drone-ci-butler workers --migrate
 
 
   butler_builds:
     container_name: butler-builds
-    image: gabrielfalcao/drone-ci-butler
+    build: .
+    image: gabrielfalcao/drone-ci-butler:latest
+    networks:
+      - machine
     depends_on:
       - postgres
       - elasticsearch
@@ -78,7 +91,9 @@ services:
       - butler_workers
 
     volumes:
+      - ./:/app
       - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
+
     restart: always
     environment:
       DRONE_CI_BUTLER_CONFIG_PATH: /drone-ci-butler.yml
@@ -90,21 +105,31 @@ services:
 
   butler_web:
     container_name: butler-web
+    networks:
+      - machine
     depends_on:
       - postgres
       - elasticsearch
-      - kibana
+      # - kibana
       - redis
       - butler_workers
-      - butler_builds
 
-    image: gabrielfalcao/drone-ci-butler
+    build: .
+    image: gabrielfalcao/drone-ci-butler:latest
     ports:
       - 0.0.0.0:5000:5000
     volumes:
+      - ./:/app
       - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
+
     restart: always
     env_file:
       - ./tools/docker.env
 
-    command: drone-ci-butler web
+    command: drone-ci-butler web --migrate
+
+
+
+networks:
+  machine:
+    driver: bridge

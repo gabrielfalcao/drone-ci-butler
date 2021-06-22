@@ -31,13 +31,15 @@ from drone_ci_butler.logs import get_logger
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 from drone_ci_butler.web import webapp
 from drone_ci_butler.config import config
+
 from drone_ci_butler.sql.models.slack import SlackMessage
 from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient, ClientSocketType
 from drone_ci_butler.exceptions import ConfigMissing
 from drone_ci_butler.es import connect_to_elasticsearch
-from drone_ci_butler.networking import check_database_dns, check_db_connection
+
+# from drone_ci_butler.networking import check_database_dns, check_db_connection
 
 
 alembic_ini_path = Path(__file__).parent.joinpath("alembic.ini").absolute()
@@ -139,9 +141,13 @@ def slack_test():
 @click.option("-H", "--host", default=config.web_host)
 @click.option("-P", "--port", default=config.web_port, type=int)
 @click.option("-D", "--debug", is_flag=True)
+@click.option("--migrate", is_flag=True)
 @click.pass_context
-def web(ctx, host, port, debug):
-    sql.setup_db()
+def web(ctx, host, port, debug, migrate):
+    sql.setup_db(config)
+    if migrate:
+        sql.migrate_db(config)
+
     webapp.run(debug=debug, port=port, host=host)
 
 
@@ -149,9 +155,12 @@ def web(ctx, host, port, debug):
 @click.option("-r", "--queue-rep-address", default=config.worker_queue_rep_address)
 @click.option("-p", "--queue-pull-address", default=config.worker_queue_pull_address)
 @click.option("-m", "--max-workers", default=config.max_workers_per_process, type=int)
+@click.option("--migrate", is_flag=True)
 @click.pass_context
-def workers(ctx, queue_rep_address, queue_pull_address, max_workers):
-    sql.setup_db()
+def workers(ctx, queue_rep_address, queue_pull_address, max_workers, migrate):
+    sql.setup_db(config)
+    if migrate:
+        sql.migrate_db(config)
     if max_workers < 2:
         logger.error(f"{' '.join(sys.argv)}")
         logger.error(f"the setting -m/--max-workers cannot be lower than 2")
@@ -186,7 +195,7 @@ def workers(ctx, queue_rep_address, queue_pull_address, max_workers):
 @click.option("-c", "--pull-connect-address", default=config.worker_push_address)
 @click.pass_context
 def worker_get_build_info(ctx, pull_connect_address):
-    sql.setup_db()
+    sql.setup_db(config)
     worker = GetBuildInfoWorker(pull_connect_address)
     worker.run()
 
@@ -200,7 +209,7 @@ def worker_get_build_info(ctx, pull_connect_address):
 def worker_queue(
     ctx, pull_bind_address, push_bind_address, pub_bind_address, control_bind_address
 ):
-    sql.setup_db()
+    sql.setup_db(config)
     device = ProxySteerable(
         frontend=zmq.PULL, backend=zmq.PUSH, capture=zmq.PUB, control=zmq.PULL
     )
@@ -218,7 +227,7 @@ def worker_queue(
 @click.option("-c", "--connect-address", default=config.worker_queue_pull_address)
 @click.pass_context
 def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
-    sql.setup_db()
+    sql.setup_db(config)
     client = DroneAPIClient(
         ctx.obj["drone_url"],
         ctx.obj["access_token"],
@@ -239,6 +248,9 @@ def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
             )
 
             for i, build in enumerate(builds, start=1):
+                if "/pull" not in build.link:
+                    continue
+
                 logger.debug(
                     f"enqueing {build.link} (#{build.number} by {build.author_login})"
                 )
@@ -272,25 +284,12 @@ def print_env_declaration(ctx, docker):
 def migrate_db(ctx, target, alembic_ini):
     "runs the migrations"
 
-    error = check_database_dns()
-    if error:
-        logger.error(f"could not resolve {config.database_hostname!r}: {error}")
-        raise SystemExit(1)
-
-    alembic_ini_path = Path(alembic_ini).expanduser().absolute()
-    alembic_cfg = AlembicConfig(str(alembic_ini_path))
-    alembic_cfg.set_section_option("alembic", "sqlalchemy.url", config.sqlalchemy_uri)
-    alembic_cfg.set_section_option(
-        "alembic",
-        "script_location",
-        str(alembic_ini_path.parent.joinpath("migrations")),
-    )
-    alembic_command.upgrade(alembic_cfg, target)
+    sql.migrate_db(config, target=target)
 
 
 @main.command("index")
 def index_builds_elasticsearch():
-    sql.setup_db()
+    sql.setup_db(config)
     es = connect_to_elasticsearch()
     owner = config.drone_github_owner
     repo = config.drone_github_repo
@@ -329,7 +328,7 @@ def purge_es_and_cache(elasticsearch, http_cache):
         )
 
     if http_cache:
-        sql.setup_db()
+        sql.setup_db(config)
         http_cache_count = HttpCache.count()
         if http_cache_count > 0:
             print("deleting http cache")

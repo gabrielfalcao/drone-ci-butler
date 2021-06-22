@@ -8,7 +8,10 @@ from cmreslogging.handlers import CMRESHandler
 from elasticsearch.exceptions import ElasticsearchWarning
 from pythonjsonlogger import jsonlogger
 from drone_ci_butler.config import config
-from drone_ci_butler.networking import get_elasticsearch_params
+from drone_ci_butler.networking import (
+    get_elasticsearch_params,
+    connect_to_elasticsearch,
+)
 
 CHATTY_LOGGER_NAMES = ["parso", "asyncio", "filelock"]
 
@@ -28,12 +31,17 @@ logger = logging.getLogger()
 eshandler = None
 if config.elasticsearch_host:
     warnings.simplefilter("ignore", category=ElasticsearchWarning)
-    eshandler = CMRESHandler(
-        hosts=[get_elasticsearch_params()],
-        auth_type=CMRESHandler.AuthType.NO_AUTH,
-        es_index_name=config.elastic_search_logs_index,
-    )
-    eshandler.setFormatter(jsonlogger.JsonFormatter())
+    try:
+        conn = connect_to_elasticsearch()
+        conn.close()
+        eshandler = CMRESHandler(
+            hosts=[get_elasticsearch_params()],
+            auth_type=CMRESHandler.AuthType.NO_AUTH,
+            es_index_name=config.elastic_search_logs_index,
+        )
+        eshandler.setFormatter(jsonlogger.JsonFormatter())
+    except Exception:
+        pass
 
 
 def get_default_level():

@@ -1,3 +1,5 @@
-include LICENSE README.rst *.txt *.rst docs/source/*
+include LICENSE README.rst *.mako *.txt *.rst docs/source/*
+recursive-include drone_ci_butler/migrations *
+recursive-include drone_ci_butler/migrations/versions *
 recursive-include docs/source *.*
 recursive-include docs/source/_static *.*

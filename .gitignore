@@ -67,5 +67,6 @@ drone_ci_butler/web/public/static/
 *#*
 *.#*
 postgres-data
+elasticsearch-data
 redis-data
 .drone-butler-slack

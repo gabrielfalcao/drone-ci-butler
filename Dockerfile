@@ -9,9 +9,12 @@ ENV UPLOAD_FOLDER /butler/file-uploads
 ENV PIP_CACHE_DIR /pip/cache
 ENV DRONE_CI_BUTLER_CONFIG_PATH /butler/drone-ci-butler.yml
 
+# RUN sysctl net.ipv4.conf.all.forwarding=1
+# RUN iptables -P FORWARD ACCEPT
+RUN mkdir -p /logs
 
 COPY . /app/
-RUN /venv/bin/pip install /app
+RUN /venv/bin/pip install -e /app > /logs/pip.log
 
 
 ENV DRONE_CI_BUTLER_WEB_HOSTNAME 0.0.0.0
@@ -21,11 +24,8 @@ ENV DRONE_GITHUB_CLIENT_SECRET 0
 ENV DRONE_SLACK_CLIENT_ID 0
 ENV DRONE_SLACK_CLIENT_SECRET 0
 ENV DRONE_GITHUB_OWNER drone-ci-monitor
-ENV DRONE_GITHUB_REPO drone-ci-monitor
+ENV DRONE_GITHUB_REPO drone-api-test
 ENV DRONE_SERVER_URL "https://drone-ci-server.ngrok.io"
-ENV REDIS_DB 0
-ENV REDIS_HOST localhost
-ENV REDIS_PORT 6379
 ENV SECRET_KEY insecure
 ENV SESSION_FILE_DIR /tmp/flask-session
 

@@ -18,7 +18,7 @@ vcr = VCR(
 
 
 def prepare_context():
-    metadata = sql.setup_db()
+    metadata = sql.setup_db(config)
     client = DroneAPIClient.from_config(config)
     return dict(
         client=client,

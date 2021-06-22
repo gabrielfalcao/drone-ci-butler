@@ -35,6 +35,9 @@ all: | $(MAIN_CLI_PATH)
 
 env-docker: | $(DOCKER_ENV)
 
+compose:
+	docker-compose up --abort-on-container-exit --force-recreate --build
+
 db-create:
 	@./tools/recreate-db drone_ci_butler
 
@@ -87,15 +90,18 @@ tdd: | $(VENV)/bin/nosetests  # runs only unit tests
 
 
 # run main command-line tool
-workers builds: | $(MAIN_CLI_PATH)
+builds: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 purge: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) purge --http-cache --elasticsearch
 
+workers: | $(MAIN_CLI_PATH)
+	@$(MAIN_CLI_PATH) workers --migrate
+
 # run webapp
 web: | $(MAIN_CLI_PATH)
-	@DRONE_CI_BUTLER_CONFIG_PATH=~/.drone-ci-butler.yml $(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT)
+	@DRONE_CI_BUTLER_CONFIG_PATH=~/.drone-ci-butler.yml $(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT) --migrate
 
 # Pushes release of this package to pypi
 push-release:  # pushes distribution tarballs of the current version
@@ -141,7 +147,7 @@ docker-base:
 	docker build -t gabrielfalcao/drone-ci-butler-base -f Dockerfile.base .
 
 docker-k8s:
-	docker build -t gabrielfalcao/drone-ci-butler -f Dockerfile .
+	docker build -t gabrielfalcao/drone-ci-butler:1 -f Dockerfile .
 
 # creates virtual env if necessary and installs pip and setuptools
 $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
@@ -184,6 +190,7 @@ $(DOCKER_ENV): clean
 	black \
 	build-release \
 	clean \
+	compose \
 	dependencies \
 	develop \
 	push-release \

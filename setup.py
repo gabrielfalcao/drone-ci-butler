@@ -48,7 +48,16 @@ setup(
     packages=find_packages(exclude=["*tests*"]),
     include_package_data=True,
     package_data={
-        MODULE_NAME: ["README.rst", "*.png", "*.json", "*.rst", "docs/*", "docs/*/*"]
+        MODULE_NAME: [
+            "README.rst",
+            "*.png",
+            "*.json",
+            "*.rst",
+            "docs/*",
+            "docs/*/*",
+            "migrations/versions/*",
+            "migrations/*",
+        ]
     },
     package_dir={PACKAGE_NAME: MODULE_NAME},
     author=AUTHOR,

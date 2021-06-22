@@ -37,7 +37,7 @@ def resolve_zmq_address(address) -> str:
         hostname = parsed.netloc
 
     if port:
-        host = socket.gethostbyname(hostname)
+        host = resolve_hostname(hostname, hostname)
     else:
         host = hostname
 
@@ -84,27 +84,31 @@ def connect_to_redis(pool=None) -> redis.Redis:
 
 def check_db_connection(engine):
     url = engine.url
-    logger.info(f"Trying to connect to DB: {str(url)!r}")
+    logger.debug(f"Trying to connect to DB: {str(url)!r}")
     result = engine.connect()
-    logger.info(f"SUCCESS: {url}")
+    logger.debug(f"SUCCESS: {url}")
     result.close()
 
 
 def check_database_dns():
+    check_tcp_can_connect(config.database_hostname, config.database_port)
+
+
+def check_tcp_can_connect(hostname: str, port: int):
     try:
-        logger.info(f"Check ability to resolve name: {config.database_hostname}")
-        host = socket.gethostbyname(config.database_hostname)
-        logger.info(f"SUCCESS: {config.database_hostname!r} => {host!r}")
+        logger.debug(f"Check ability to resolve name: {hostname}")
+        host = socket.gethostbyname(hostname)
+        logger.debug(f"SUCCESS: {hostname!r} => {host!r}")
     except Exception as e:
         return e
 
-    if not config.database_port:
+    if not port:
         return
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
-        logger.info(f"Checking TCP connection to {host!r}")
-        sock.connect((host, config.database_port))
+        logger.info(f"Checking TCP connection to {host}:{port}")
+        sock.connect((host, port))
         logger.info(f"SUCCESS: TCP connection to database works!!")
     except Exception as e:
         return e
