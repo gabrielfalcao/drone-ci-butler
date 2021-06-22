@@ -14,7 +14,8 @@ export VENV		?= $(VENV_ROOT)
 WEB_PORT		:= 4000
 WEB_HOST		:= 0.0.0.0
 STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.json favicon.ico index.html robots.txt static)
-
+DOCKER_ENV		:= $(GIT_ROOT)/tools/docker.env
+BUILD_PATHS		:= build docs/build frontend/build
 ######################################################################
 # webpack env vars
 export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
@@ -23,7 +24,6 @@ export NODE_ENV		:= production
 ######################################################################
 # tool env vars
 export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
-# export DRONE_CI_BUTLER_CONFIG_PATH := $(GIT_ROOT)/tests/functional/drone-ci-butler.yml
 
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent
@@ -32,6 +32,8 @@ export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
 
 # default target when running `make` without arguments
 all: | $(MAIN_CLI_PATH)
+
+env-docker: | $(DOCKER_ENV)
 
 db-create:
 	@./tools/recreate-db drone_ci_butler
@@ -71,11 +73,11 @@ tests: unit functional | $(MAIN_CLI_PATH)  # runs all tests
 
 # -> unit tests
 unit functional: | $(VENV)/bin/pytest # runs only unit tests
-	@DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/functional/drone-ci-butler.yml \
+	@DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/drone-ci-butler.yml \
 		$(VENV)/bin/pytest tests/$@
 
 # functional: | $(VENV)/bin/nosetests
-#	DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/functional/drone-ci-butler.yml \
+#	DRONE_CI_BUTLER_CONFIG_PATH=$(GIT_ROOT)/tests/drone-ci-butler.yml \
 #	 	@$(VENV)/bin/nosetests tests/$@
 
 # -> unit tests
@@ -85,8 +87,11 @@ tdd: | $(VENV)/bin/nosetests  # runs only unit tests
 
 
 # run main command-line tool
-purge workers builds: | $(MAIN_CLI_PATH)
+workers builds: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
+
+purge: | $(MAIN_CLI_PATH)
+	@$(MAIN_CLI_PATH) purge --http-cache --elasticsearch
 
 # run webapp
 web: | $(MAIN_CLI_PATH)
@@ -109,7 +114,8 @@ release: tests build-release push-release
 
 # Convenience target to delete the virtualenv
 clean:
-	@rm -rf .venv
+	@rm -f $(DOCKER_ENV)
+	@rm -rf $(BUILD_PATHS)
 
 # Convenience target to format code with black with PEP8's default
 # 80 character limit per line
@@ -165,6 +171,9 @@ $(REQUIREMENTS_PATH):
 	@echo ""
 	@exit 1
 
+$(DOCKER_ENV): clean
+	@$(MAIN_CLI_PATH) env > $@
+	@echo CREATED $@
 ###############################################################
 # Declare all target names that exist for convenience and don't
 # represent real paths, which is what Make expects by default:
@@ -192,5 +201,6 @@ $(REQUIREMENTS_PATH):
 	tdd \
 	purge \
 	web \
+	env-docker \
 	docker-base \
 	docker-k8s
