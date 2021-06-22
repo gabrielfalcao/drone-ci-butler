@@ -37,6 +37,7 @@ from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient, ClientSocketType
 from drone_ci_butler.exceptions import ConfigMissing
 from drone_ci_butler.es import connect_to_elasticsearch
+from drone_ci_butler.networking import check_database_dns, check_db_connection
 
 
 alembic_ini_path = Path(__file__).parent.joinpath("alembic.ini").absolute()
@@ -262,36 +263,6 @@ def print_env_declaration(ctx, docker):
         print(config.to_docker_env_declaration())
     else:
         print(config.to_shell_env_declaration())
-
-
-def check_db_connection(engine):
-    url = engine.url
-    logger.info(f"Trying to connect to DB: {str(url)!r}")
-    result = engine.connect()
-    logger.info(f"SUCCESS: {url}")
-    result.close()
-
-
-def check_database_dns():
-    try:
-        logger.info(f"Check ability to resolve name: {config.database_hostname}")
-        host = socket.gethostbyname(config.database_hostname)
-        logger.info(f"SUCCESS: {config.database_hostname!r} => {host!r}")
-    except Exception as e:
-        return e
-
-    if not config.database_port:
-        return
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        logger.info(f"Checking TCP connection to {host!r}")
-        sock.connect((host, config.database_port))
-        logger.info(f"SUCCESS: TCP connection to database works!!")
-    except Exception as e:
-        return e
-    finally:
-        sock.close()
 
 
 @main.command("migrate-db")

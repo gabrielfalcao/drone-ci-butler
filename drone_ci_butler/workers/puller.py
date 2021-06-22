@@ -4,6 +4,7 @@ from collections import defaultdict
 from drone_ci_butler.config import Config, config
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.drone_api import DroneAPIClient
+from drone_ci_butler.networking import resolve_zmq_address
 
 from .base import context
 
@@ -26,7 +27,7 @@ class PullerWorker(object):
 
         self.config = config
         self.postmortem_sleep_seconds = postmortem_sleep_seconds
-        self.pull_connect_address = pull_connect_address
+        self.pull_connect_address = resolve_zmq_address(pull_connect_address)
         self.should_run = True
         self.poller = zmq.Poller()
         self.queue = context.socket(zmq.PULL)

@@ -1,6 +1,7 @@
 import redis
 import socket
 import logging
+from urllib.parse import urlparse
 from elasticsearch import Elasticsearch
 from drone_ci_butler.config import config
 
@@ -20,10 +21,31 @@ def resolve_hostname(hostname, default="localhost") -> str:
     try:
         return socket.gethostbyname(hostname)
     except Exception:
-        logger.warning(
-            f"could not resolve hostname {hostname}. Defaulting to {default}"
-        )
+        logger.error(f"could not resolve hostname {hostname}. Defaulting to {default}")
         return default
+
+
+def resolve_zmq_address(address) -> str:
+    default = address
+
+    parsed = urlparse(address)
+    items = parsed.netloc.split(":")
+    port = None
+    if len(items) == 2:
+        hostname, port = items
+    else:
+        hostname = parsed.netloc
+
+    if port:
+        host = socket.gethostbyname(hostname)
+    else:
+        host = hostname
+
+    netloc = host
+    if port:
+        netloc += f":{port}"
+
+    return f"{parsed.scheme}://{netloc}"
 
 
 def connect_to_elasticsearch() -> Elasticsearch:
@@ -58,3 +80,33 @@ def connect_to_redis(pool=None) -> redis.Redis:
 
     params = get_redis_params()
     return redis.Redis(**params)
+
+
+def check_db_connection(engine):
+    url = engine.url
+    logger.info(f"Trying to connect to DB: {str(url)!r}")
+    result = engine.connect()
+    logger.info(f"SUCCESS: {url}")
+    result.close()
+
+
+def check_database_dns():
+    try:
+        logger.info(f"Check ability to resolve name: {config.database_hostname}")
+        host = socket.gethostbyname(config.database_hostname)
+        logger.info(f"SUCCESS: {config.database_hostname!r} => {host!r}")
+    except Exception as e:
+        return e
+
+    if not config.database_port:
+        return
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        logger.info(f"Checking TCP connection to {host!r}")
+        sock.connect((host, config.database_port))
+        logger.info(f"SUCCESS: TCP connection to database works!!")
+    except Exception as e:
+        return e
+    finally:
+        sock.close()

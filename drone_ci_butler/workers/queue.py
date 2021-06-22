@@ -11,6 +11,7 @@ from collections import defaultdict
 
 from drone_ci_butler.logs import get_logger
 from drone_ci_butler.drone_api import DroneAPIClient
+from drone_ci_butler.networking import resolve_zmq_address
 
 from .base import context
 
@@ -41,7 +42,7 @@ class QueueClient(object):
         high_watermark: int = 1,
     ):
         self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
-        self.connect_address = connect_address
+        self.connect_address = resolve_zmq_address(connect_address)
         self.socket_type = socket_type
         self.zmq_socket_type = socket_type.value()
         self.socket = context.socket(self.zmq_socket_type)
@@ -96,9 +97,9 @@ class QueueServer(object):
     ):
         self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
         self.log_level = log_level
-        self.rep_bind_address = rep_bind_address
-        self.pull_bind_address = pull_bind_address
-        self.push_bind_address = push_bind_address
+        self.rep_bind_address = resolve_zmq_address(rep_bind_address)
+        self.pull_bind_address = resolve_zmq_address(pull_bind_address)
+        self.push_bind_address = resolve_zmq_address(push_bind_address)
         self.should_run = True
         self.sleep_timeout = sleep_timeout
         self.poller = zmq.Poller()
