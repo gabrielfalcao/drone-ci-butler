@@ -9,7 +9,7 @@ from uiclasses import UserFriendlyObject
 from drone_ci_butler.drone_api.models import Build, Output
 from .base import metadata
 from .exceptions import BuildNotFound
-from drone_ci_butler.es import connect_to_elasticsearch
+from drone_ci_butler.networking import connect_to_elasticsearch
 from drone_ci_butler.config import config
 from drone_ci_butler.util import load_json
 

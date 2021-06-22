@@ -90,33 +90,30 @@ tdd: | $(VENV)/bin/nosetests  # runs only unit tests
 
 
 # run main command-line tool
-builds: | $(MAIN_CLI_PATH)
+workers builds: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) $@
 
 purge: | $(MAIN_CLI_PATH)
 	@$(MAIN_CLI_PATH) purge --http-cache --elasticsearch
-
-workers: | $(MAIN_CLI_PATH)
-	@$(MAIN_CLI_PATH) workers --migrate
 
 # run webapp
 web: | $(MAIN_CLI_PATH)
 	@DRONE_CI_BUTLER_CONFIG_PATH=~/.drone-ci-butler.yml $(MAIN_CLI_PATH) web -H $(WEB_HOST) -P $(WEB_PORT) --migrate
 
 # Pushes release of this package to pypi
-push-release:  # pushes distribution tarballs of the current version
+release-push:  # pushes distribution tarballs of the current version
 	$(VENV)/bin/twine upload dist/*.tar.gz
 
 # Prepares release of this package prior to pushing to pypi
-build-release:
+release-build:
 	rm -rf ./dist  # remove local packages
 	$(VENV)/bin/twine check dist/*.tar.gz
 	$(VENV)/bin/python setup.py build sdist
 
 # Convenience target that runs all tests then builds and pushes a release to pypi
-release: tests build-release push-release
-	$(MAKE) build-release
-	$(MAKE) push-release
+release: tests release-build release-push
+	$(MAKE) release-build
+	$(MAKE) release-push
 
 # Convenience target to delete the virtualenv
 clean:
@@ -188,12 +185,12 @@ $(DOCKER_ENV): clean
 .PHONY: \
 	all \
 	black \
-	build-release \
+	release-build \
 	clean \
 	compose \
 	dependencies \
 	develop \
-	push-release \
+	release-push \
 	release \
 	setup \
 	run \

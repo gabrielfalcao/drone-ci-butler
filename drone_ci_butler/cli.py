@@ -37,7 +37,7 @@ from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
 from drone_ci_butler.workers import QueueServer, QueueClient, ClientSocketType
 from drone_ci_butler.exceptions import ConfigMissing
-from drone_ci_butler.es import connect_to_elasticsearch
+from drone_ci_butler.networking import connect_to_elasticsearch
 
 # from drone_ci_butler.networking import check_database_dns, check_db_connection
 
@@ -225,8 +225,11 @@ def worker_queue(
 @click.option("-P", "--max-pages", default=config.drone_api_max_pages, type=int)
 @click.option("-m", "--max-builds", default=config.drone_api_max_builds, type=int)
 @click.option("-c", "--connect-address", default=config.worker_queue_pull_address)
+@click.option("-I", "--ignore-filters", is_flag=True, default=True)
 @click.pass_context
-def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
+def get_builds(
+    ctx, initial_page, connect_address, max_builds, max_pages, ignore_filters
+):
     sql.setup_db(config)
     client = DroneAPIClient(
         ctx.obj["drone_url"],
@@ -242,19 +245,22 @@ def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
         owner=ctx.obj["github_owner"], repo=ctx.obj["github_repo"], page=initial_page
     ):
         try:
-            count = len(builds)
-            logger.info(
-                f"enqueing the {count} builds found (page {page}/{total_pages})"
-            )
+            # count = len(builds)
+            # logger.info(
+            #     f"enqueing the {count} builds found on page {page} of {total_pages}"
+            # )
 
             for i, build in enumerate(builds, start=1):
                 if "/pull" not in build.link:
+                    # logger.debug(f"skipping {build.link}")
                     continue
 
-                logger.debug(
+                logger.info(
                     f"enqueing {build.link} (#{build.number} by {build.author_login})"
                 )
-                worker.send({"build_id": build.number, "ignore_filters": True})
+                worker.send(
+                    {"build_id": build.number, "ignore_filters": ignore_filters}
+                )
         except Exception as e:
             logger.error(f"failed to process builds")
             worker.close()

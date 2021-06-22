@@ -78,5 +78,5 @@ class PullerWorker(object):
 
     def process_queue(self):
         info = self.pull_queue()
-        self.logger.debug(f"processing job")
+        self.logger.debug(f"processing job", extra=dict(job=info))
         self.process_job(info)

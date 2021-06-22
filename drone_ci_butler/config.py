@@ -177,10 +177,42 @@ class Config(DataBag, metaclass=MetaConfig):
         default_value=".slack/installation",
     )
 
-    sqlalchemy_uri = ConfigProperty(
-        "sqlalchemy",
-        "uri",
-        env="DRONE_CI_BUTLER_SQLALCHEMY_URI",
+    database_hostname = ConfigProperty(
+        "postgres",
+        "host",
+        default_value="postgres",
+        env="POSTGRES_HOST",
+    )
+    database_name = ConfigProperty(
+        "postgres",
+        "db",
+        default_value="drone_ci_butler",
+        env="POSTGRES_DB",
+    )
+    database_user = ConfigProperty(
+        "postgres",
+        "user",
+        default_value="drone_ci_butler",
+        env="POSTGRES_USER",
+    )
+    database_password = ConfigProperty(
+        "postgres",
+        "password",
+        default_value="drone_ci_butler",
+        env="POSTGRES_PASSWORD",
+    )
+    database_port = ConfigProperty(
+        "postgres",
+        "port",
+        env="POSTGRES_PORT",
+        default_value=5432,
+        deserialize=int,
+    )
+    database_auth_method = ConfigProperty(
+        "postgres",
+        "host_auth_method",
+        default_value="trust",
+        env="POSTGRES_HOST_AUTH_METHOD",
     )
     drone_url = ConfigProperty(
         "drone",
@@ -355,6 +387,10 @@ class Config(DataBag, metaclass=MetaConfig):
     )
 
     @property
+    def sqlalchemy_uri(self) -> str:
+        return f"postgresql://{self.database_user}:{self.database_password}@{self.database_hostname}:{self.database_port}/{self.database_name}"
+
+    @property
     @lru_cache()
     def SESSION_REDIS(self):
         if self.REDIS_HOST and self.REDIS_PORT:
@@ -386,14 +422,6 @@ class Config(DataBag, metaclass=MetaConfig):
         p = Path(self.slack_state_path).expanduser().absolute()
         p.mkdir(exist_ok=True, parents=True)
         return p
-
-    @property
-    def database_hostname(self) -> str:
-        return make_url(self.sqlalchemy_uri).host
-
-    @property
-    def database_port(self) -> int:
-        return make_url(self.sqlalchemy_uri).port or 5432
 
     @property
     def logging_mapping(self) -> Dict[str, str]:

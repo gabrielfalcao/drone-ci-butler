@@ -8,7 +8,7 @@ from drone_ci_butler.sql.models.user import User
 from drone_ci_butler.drone_api.models import AnalysisContext
 from drone_ci_butler.rule_engine.default_rules import wf_project_vi
 from .puller import PullerWorker
-from drone_ci_butler.es import connect_to_elasticsearch
+from drone_ci_butler.networking import connect_to_elasticsearch
 
 # 1. Poll zmq for job with build_id
 # 2. Iterate over failed stages
@@ -239,6 +239,6 @@ class GetBuildInfoWorker(PullerWorker):
                     continue
                 elif user:
                     self.logger.warning(
-                        "no ruleset matches for build {build.number} {build.link} by {build.author_login}",
+                        f"no ruleset matches for build {build.number} {build.link} by {build.author_login}",
                         extra=dict(logmeta),
                     )
