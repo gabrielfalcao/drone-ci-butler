@@ -21,12 +21,22 @@ def show_session():
     return jsonify(dict(session.items()))
 
 
-@webapp.route("/hooks/drone", methods=["GET", "POST"])
-def drone_webhook():
-    data = request.get_json(force=True, silent=True, cache=True)
-    logger.info(f"drone webhook invoked")
+@webapp.route("/hooks/<service_name>", methods=["GET", "POST"])
+@webapp.route("/hooks/<service_name>/<path:path>", methods=["GET", "POST"])
+def service_webhook(service_name, path=None):
+    body = request.get_json(force=True, silent=True, cache=True)
+
+    data = {
+        "body": dict(body),
+        "service_name": service_name,
+        "headers": dict(request.headers),
+    }
+    if path:
+        data["path"] = path
+
+    logger.info(f"{service_name} webhook invoked", extra=data)
     if data:
-        es.index("drone-webhook", id=str(uuid4()), body=data)
+        es.index(f"{service_name}-webhook", id=str(uuid4()), body=data)
 
     return jsonify({"ok": True})
 

@@ -312,7 +312,7 @@ def purge_elasticsearch():
     owner = config.drone_github_owner
     repo = config.drone_github_repo
     get_logger("elasticsearch").setLevel(logging.INFO)
-    for index in ("drone*",):
+    for index in ("drone*", "*-webhooks"):
         try:
             es.indices.delete(index=index, ignore=[400, 404])
         except Exception as e:
