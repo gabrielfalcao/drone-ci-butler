@@ -70,16 +70,6 @@ auth:
 sqlalchemy:
   uri: "postgresql://drone_ci_butler@localhost/drone_ci_butler"
 
-redis:
-  host: localhost
-  port: 6379
-  db: 0
-
-session:
-  # type: "redis"
-  type: "filesystem"
-  file_dir: /tmp/flask-session
-
 github:
   app:
     webhook_secret: "github-dummy-webhook-secret"
@@ -112,22 +102,41 @@ drone:
     max_pages: 1
     initial_page: 0
 
+session:
+  type: "redis"
+  # type: "filesystem"
+  # file_dir: /tmp/flask-session
+
+
 web:
   host: 0.0.0.0
   port: 4000
 
 workers:
-  queue_rep_address: tcp://127.0.0.1:5555
-  queue_pull_address: tcp://127.0.0.1:5556
-  push_address: tcp://127.0.0.1:6666
-  pull_address: tcp://127.0.0.1:7777
-  monitor_address: tcp://127.0.0.1:5001
-  control_address: tcp://127.0.0.1:5002
+  queue_rep_address: tcp://butler_workers:5555
+  queue_pull_address: tcp://butler_workers:5556
+  push_address: tcp://butler_workers:6666
+  pull_address: tcp://butler_workers:7777
+  monitor_address: tcp://butler_workers:5001
+  control_address: tcp://butler_workers:5002
   # max_per_process: 17
 
 elasticsearch:
-  host: localhost
+  host: elasticsearch
   port: 9200
+
+
+postgres:
+  host: postgres
+  port: 5432
+  user: drone_ci_butler
+  password: drone_ci_butler
+  db: drone_ci_butler
+
+redis:
+  host: redis
+  port: 6379
+  db: 0
 
 
 logging:
