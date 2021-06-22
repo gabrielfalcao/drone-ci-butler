@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from requests import Response, Session
 from drone_ci_butler import events
 from drone_ci_butler.logs import get_logger
-from drone_ci_butler.config import Config
+from drone_ci_butler.config import Config, config
 from drone_ci_butler.version import version
 from drone_ci_butler.drone_api.models import Build, OutputLine, Output
 from drone_ci_butler.drone_api.cache import HttpCache
@@ -39,12 +39,12 @@ DroneAPIClient = TypeVar("DroneAPIClient")
 class DroneAPIClient(object):
     def __init__(
         self,
-        url: str,
-        access_token: str,
-        max_pages: int = 100,
-        max_builds: int = 100,
-        owner: str = None,
-        repo: str = None,
+        url: str = config.drone_url,
+        access_token: str = config.drone_access_token,
+        max_pages: int = config.drone_api_max_pages,
+        max_builds: int = config.drone_api_max_builds,
+        owner: str = config.drone_github_owner,
+        repo: str = config.drone_github_repo,
     ):
         self.api_url = url
         self.access_token = access_token
@@ -158,7 +158,13 @@ class DroneAPIClient(object):
         return all_builds
 
     def iter_builds_by_page(
-        self, owner: str, repo: str, limit=10000, page=0, count=0, max_pages=None
+        self,
+        owner: str,
+        repo: str,
+        limit=10000,
+        page=0,
+        count=0,
+        max_pages=None,
     ) -> Build.List:
         owner = owner or self.owner
         repo = repo or self.repo

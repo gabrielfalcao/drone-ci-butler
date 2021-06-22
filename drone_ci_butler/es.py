@@ -8,7 +8,9 @@ logger = get_logger(__name__)
 
 
 def get_elasticsearch_hostname():
-    return resolve_hostname(config.elasticsearch_host)
+    result = resolve_hostname(config.elasticsearch_host)
+    logger.debug(f"resolved elasticsearch host {config.elasticsearch_host}: {result}")
+    return result
 
 
 def resolve_hostname(hostname, default="localhost") -> str:
@@ -23,4 +25,5 @@ def resolve_hostname(hostname, default="localhost") -> str:
 
 def connect_to_elasticsearch() -> Elasticsearch:
     hosts = [get_elasticsearch_hostname()]
+    logger.info(f"using elasticsearch hosts {hosts}")
     return Elasticsearch(hosts, maxsize=config.elasticsearch_pool_size)

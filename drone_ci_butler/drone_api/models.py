@@ -282,8 +282,10 @@ class Build(Model):
     def steps(self) -> Step.List:
         return Step.List(self.iter_steps())
 
-    def get_step_by_number(self, step_number: int) -> Optional[Step]:
+    def get_step_by_number(self, stage_number: int, step_number: int) -> Optional[Step]:
         for stage in self.stages:
+            if stage.number != stage_number:
+                continue
             for step in stage.steps:
                 if step.number == step_number:
                     return step

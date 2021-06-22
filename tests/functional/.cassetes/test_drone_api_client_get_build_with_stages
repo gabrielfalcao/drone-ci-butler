@@ -1,0 +1,521 @@
+interactions:
+- request:
+    body: '{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.sql","msg":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","args":[],"levelname":"INFO","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/sql/__init__.py","filename":"__init__.py","module":"__init__","exc_info":"","exc_text":"","stack_info":"","lineno":13,"funcName":"setup_db","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","timestamp":"2021-06-22T19:28:56.770Z"}
+
+      {"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.sql","msg":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","args":[],"levelname":"INFO","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/sql/__init__.py","filename":"__init__.py","module":"__init__","exc_info":"","exc_text":"","stack_info":"","lineno":13,"funcName":"setup_db","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","timestamp":"2021-06-22T19:28:57.352Z"}
+
+      '
+    headers:
+      Content-Length:
+      - '1402'
+      content-type:
+      - application/json
+      user-agent:
+      - elasticsearch-py/7.13.0 (Python 3.7.3)
+      x-elastic-client-meta:
+      - es=7.13.0,py=3.7.3,t=7.13.0,rq=2.25.1,h=bp
+    method: POST
+    uri: http://127.0.0.1:9200/_bulk
+  response:
+    body:
+      string: '{"took":22,"errors":false,"items":[{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"jF4yNXoBsRdhqtz1d-e3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2497,"_primary_term":1,"status":201}},{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"jV4yNXoBsRdhqtz1d-e3","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2498,"_primary_term":1,"status":201}}]}'
+    headers:
+      Warning:
+      - 299 Elasticsearch-7.10.2-SNAPSHOT-unknown "[types removal] Specifying types
+        in bulk requests is deprecated."
+      content-length:
+      - '498'
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1
+  response:
+    body:
+      string: "{\"id\":9,\"repo_id\":2408,\"trigger\":\"@hook\",\"number\":1,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/drone-ci-monitor/drone-api-tests/compare/9412d2ac765f...4246cb686b8a\",\"timestamp\":0,\"message\":\"readme\",\"before\":\"9412d2ac765fdb17c109ca410d4cee8b17d6e184\",\"after\":\"4246cb686b8a46fcfdd12845ed1dfc742cfe1ca1\",\"ref\":\"refs/heads/main\",\"source_repo\":\"\",\"source\":\"main\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"Gabriel
+        Falc\xE3o (he/him/his)\",\"author_email\":\"gabriel.falcao@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/85517645?v=4\",\"sender\":\"drone-ci-monitor\",\"started\":1624379184,\"finished\":1624379284,\"created\":1624379182,\"updated\":1624379184,\"version\":3,\"stages\":[{\"id\":20,\"repo_id\":2408,\"build_id\":9,\"number\":1,\"name\":\"success\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"c1b22df4dd9c\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624379184,\"stopped\":1624379284,\"created\":1624379182,\"updated\":1624379284,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":96,\"step_id\":20,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379188,\"stopped\":1624379193,\"version\":4},{\"id\":97,\"step_id\":20,\"number\":2,\"name\":\"build\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379193,\"stopped\":1624379205,\"version\":4},{\"id\":98,\"step_id\":20,\"number\":3,\"name\":\"unit
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379206,\"stopped\":1624379211,\"version\":4},{\"id\":99,\"step_id\":20,\"number\":4,\"name\":\"integration
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379212,\"stopped\":1624379219,\"version\":4},{\"id\":100,\"step_id\":20,\"number\":5,\"name\":\"component
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379220,\"stopped\":1624379233,\"version\":4},{\"id\":101,\"step_id\":20,\"number\":6,\"name\":\"functional
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379233,\"stopped\":1624379251,\"version\":4},{\"id\":102,\"step_id\":20,\"number\":7,\"name\":\"e2e
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379251,\"stopped\":1624379284,\"version\":4}]},{\"id\":21,\"repo_id\":2408,\"build_id\":9,\"number\":2,\"name\":\"error\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"failure\",\"errignore\":false,\"exit_code\":0,\"machine\":\"c1b22df4dd9c\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624379184,\"stopped\":1624379207,\"created\":1624379182,\"updated\":1624379207,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":90,\"step_id\":21,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379198,\"stopped\":1624379202,\"version\":4},{\"id\":91,\"step_id\":21,\"number\":2,\"name\":\"slack
+        server error\",\"status\":\"failure\",\"exit_code\":1,\"started\":1624379202,\"stopped\":1624379205,\"version\":4},{\"id\":92,\"step_id\":21,\"number\":3,\"name\":\"verify
+        docs\",\"status\":\"skipped\",\"exit_code\":0,\"started\":1624379206,\"stopped\":1624379206,\"version\":3},{\"id\":93,\"step_id\":21,\"number\":4,\"name\":\"connection
+        refused\",\"status\":\"skipped\",\"exit_code\":0,\"started\":1624379206,\"stopped\":1624379206,\"version\":3},{\"id\":94,\"step_id\":21,\"number\":5,\"name\":\"merge
+        conflict\",\"status\":\"skipped\",\"exit_code\":0,\"started\":1624379206,\"stopped\":1624379206,\"version\":3},{\"id\":95,\"step_id\":21,\"number\":6,\"name\":\"yarn
+        dependencies\",\"status\":\"skipped\",\"exit_code\":0,\"started\":1624379207,\"stopped\":1624379207,\"version\":3}]},{\"id\":22,\"repo_id\":2408,\"build_id\":9,\"number\":3,\"name\":\"webhooks\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"0a20ac1f36fb\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624379184,\"stopped\":1624379205,\"created\":1624379182,\"updated\":1624379205,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":103,\"step_id\":22,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624379192,\"stopped\":1624379197,\"version\":4},{\"id\":104,\"step_id\":22,\"number\":2,\"name\":\"webhook\",\"status\":\"success\",\"errignore\":true,\"exit_code\":0,\"started\":1624379197,\"stopped\":1624379205,\"version\":4}]}]}\n"
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:57 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/1
+  response:
+    body:
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":2},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":2},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-api-tests\n","time":3},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":3},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":3},{"pos":5,"out":"+
+        git checkout 4246cb686b8a46fcfdd12845ed1dfc742cfe1ca1 -b main\n","time":3},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":3}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '551'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:58 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/2
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"build\"\n","time":3},{"pos":1,"out":"build\n","time":3},{"pos":2,"out":"+
+        sleep 0\n","time":3},{"pos":3,"out":"+ pip install pytest pytest-cov\n","time":3},{"pos":4,"out":"Collecting
+        pytest\n","time":5},{"pos":5,"out":"  Downloading pytest-6.2.4-py3-none-any.whl
+        (280 kB)\n","time":5},{"pos":6,"out":"Collecting pytest-cov\n","time":5},{"pos":7,"out":"  Downloading
+        pytest_cov-2.12.1-py2.py3-none-any.whl (20 kB)\n","time":5},{"pos":8,"out":"Collecting
+        packaging\n","time":6},{"pos":9,"out":"  Downloading packaging-20.9-py2.py3-none-any.whl
+        (40 kB)\n","time":6},{"pos":10,"out":"Collecting importlib-metadata\u003e=0.12\n","time":6},{"pos":11,"out":"  Downloading
+        importlib_metadata-4.5.0-py3-none-any.whl (17 kB)\n","time":6},{"pos":12,"out":"Collecting
+        pluggy\u003c1.0.0a1,\u003e=0.12\n","time":6},{"pos":13,"out":"  Downloading
+        pluggy-0.13.1-py2.py3-none-any.whl (18 kB)\n","time":6},{"pos":14,"out":"Collecting
+        attrs\u003e=19.2.0\n","time":6},{"pos":15,"out":"  Downloading attrs-21.2.0-py2.py3-none-any.whl
+        (53 kB)\n","time":6},{"pos":16,"out":"Collecting toml\n","time":6},{"pos":17,"out":"  Downloading
+        toml-0.10.2-py2.py3-none-any.whl (16 kB)\n","time":6},{"pos":18,"out":"Collecting
+        py\u003e=1.8.2\n","time":6},{"pos":19,"out":"  Downloading py-1.10.0-py2.py3-none-any.whl
+        (97 kB)\n","time":6},{"pos":20,"out":"Collecting iniconfig\n","time":7},{"pos":21,"out":"  Downloading
+        iniconfig-1.1.1-py2.py3-none-any.whl (5.0 kB)\n","time":7},{"pos":22,"out":"Collecting
+        zipp\u003e=0.5\n","time":7},{"pos":23,"out":"  Downloading zipp-3.4.1-py3-none-any.whl
+        (5.2 kB)\n","time":7},{"pos":24,"out":"Collecting typing-extensions\u003e=3.6.4\n","time":7},{"pos":25,"out":"  Downloading
+        typing_extensions-3.10.0.0-py3-none-any.whl (26 kB)\n","time":7},{"pos":26,"out":"Collecting
+        coverage\u003e=5.2.1\n","time":8},{"pos":27,"out":"  Downloading coverage-5.5.tar.gz
+        (691 kB)\n","time":8},{"pos":28,"out":"Collecting pyparsing\u003e=2.0.2\n","time":9},{"pos":29,"out":"  Downloading
+        pyparsing-2.4.7-py2.py3-none-any.whl (67 kB)\n","time":9},{"pos":30,"out":"Building
+        wheels for collected packages: coverage\n","time":9},{"pos":31,"out":"  Building
+        wheel for coverage (setup.py): started\n","time":9},{"pos":32,"out":"  Building
+        wheel for coverage (setup.py): finished with status ''done''\n","time":10},{"pos":33,"out":"  Created
+        wheel for coverage: filename=coverage-5.5-py3-none-any.whl size=200003 sha256=1cc80b292479792715b881b61ad171adef52a0d081f7bff43e8df004a001e0b3\n","time":10},{"pos":34,"out":"  Stored
+        in directory: /root/.cache/pip/wheels/3f/fd/71/12c90f917cc480a8141d6f31334b485a7ac671608ec6fc5993\n","time":10},{"pos":35,"out":"Successfully
+        built coverage\n","time":10},{"pos":36,"out":"Installing collected packages:
+        zipp, typing-extensions, pyparsing, importlib-metadata, toml, py, pluggy,
+        packaging, iniconfig, attrs, pytest, coverage, pytest-cov\n","time":10},{"pos":37,"out":"Successfully
+        installed attrs-21.2.0 coverage-5.5 importlib-metadata-4.5.0 iniconfig-1.1.1
+        packaging-20.9 pluggy-0.13.1 py-1.10.0 pyparsing-2.4.7 pytest-6.2.4 pytest-cov-2.12.1
+        toml-0.10.2 typing-extensions-3.10.0.0 zipp-3.4.1\n","time":10},{"pos":38,"out":"WARNING:
+        Running pip as root will break packages and permissions. You should install
+        packages reliably by using venv: https://pip.pypa.io/warnings/venv\n","time":10}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:58 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/3
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"unit tests\"\n","time":2},{"pos":1,"out":"unit
+        tests\n","time":2},{"pos":2,"out":"+ sleep 2\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '135'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:58 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/4
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"integration tests\"\n","time":2},{"pos":1,"out":"integration
+        tests\n","time":2},{"pos":2,"out":"+ sleep 5\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '149'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:59 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/5
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"component tests\"\n","time":2},{"pos":1,"out":"component
+        tests\n","time":2},{"pos":2,"out":"+ sleep 10\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '146'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:59 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/6
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"functional tests\"\n","time":2},{"pos":1,"out":"functional
+        tests\n","time":2},{"pos":2,"out":"+ sleep 15\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '148'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:59 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/1/7
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"e2e tests\"\n","time":2},{"pos":1,"out":"e2e
+        tests\n","time":2},{"pos":2,"out":"+ sleep 30\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '134'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:29:00 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/2/1
+  response:
+    body:
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":2},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":2},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-api-tests\n","time":3},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":3},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":3},{"pos":5,"out":"+
+        git checkout 4246cb686b8a46fcfdd12845ed1dfc742cfe1ca1 -b main\n","time":3},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":3}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '551'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:29:00 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/2/2
+  response:
+    body:
+      string: '[{"pos":0,"out":"+ echo -e \"slack server error\"\n","time":2},{"pos":1,"out":"slack
+        server error\n","time":2},{"pos":2,"out":"+ echo -e ''''\n","time":2},{"pos":3,"out":"\n","time":2},{"pos":4,"out":"+
+        exit 1\n","time":2}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '222'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:29:00 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/3/1
+  response:
+    body:
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":3},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":3},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-api-tests\n","time":4},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":4},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":4},{"pos":5,"out":"+
+        git checkout 4246cb686b8a46fcfdd12845ed1dfc742cfe1ca1 -b main\n","time":4},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":4}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '551'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:29:01 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/1/logs/3/2
+  response:
+    body:
+      string: '[{"pos":0,"out":"latest: Pulling from plugins/webhook\n","time":1},{"pos":1,"out":"Digest:
+        sha256:a862b76d5c51eade0372a1d4d82c4ac7c7d186eef0dbf61ca01bcd51f17d275d\n","time":1},{"pos":2,"out":"Status:
+        Image is up to date for plugins/webhook:latest\n","time":1},{"pos":3,"out":"Webhook
+        1\n","time":6},{"pos":4,"out":"  URL: https://drone-ci-butler.ngrok.io/hooks/drone\n","time":6},{"pos":5,"out":"  METHOD:
+        POST\n","time":6},{"pos":6,"out":"  HEADERS: map[Authorization:[Basic bXl1c2VybmFtZTpteXBhc3N3b3Jk]
+        Content-Type:[application/json]]\n","time":6},{"pos":7,"out":"  REQUEST BODY:
+        {\"repo\":{\"owner\":\"drone-ci-monitor\",\"name\":\"drone-api-tests\"},\"build\":{\"tag\":\"\",\"event\":\"push\",\"number\":1,\"commit\":\"4246cb686b8a46fcfdd12845ed1dfc742cfe1ca1\",\"ref\":\"refs/heads/main\",\"branch\":\"main\",\"author\":\"gabrielfalcao\",\"message\":\"readme\",\"status\":\"success\",\"link\":\"https://drone-ci-server.ngrok.io/drone-ci-monitor/drone-api-tests/1\",\"deployTo\":\"\",\"started\":1624379198,\"created\":1624379182}}\n","time":6},{"pos":8,"out":"\n","time":6},{"pos":9,"out":"  RESPONSE
+        STATUS: 200 OK\n","time":6},{"pos":10,"out":"  RESPONSE BODY: {\"ok\":true}\n","time":6},{"pos":11,"out":"\n","time":6}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '1229'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:29:01 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

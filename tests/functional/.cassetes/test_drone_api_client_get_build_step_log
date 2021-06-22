@@ -1,0 +1,41 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/3/logs/2/1
+  response:
+    body:
+      string: '[{"pos":0,"out":"Initialized empty Git repository in /drone/src/.git/\n","time":2},{"pos":1,"out":"+
+        git fetch origin +refs/heads/main:\n","time":2},{"pos":2,"out":"From https://github.com/drone-ci-monitor/drone-api-tests\n","time":4},{"pos":3,"out":"
+        * branch            main       -\u003e FETCH_HEAD\n","time":4},{"pos":4,"out":"
+        * [new branch]      main       -\u003e origin/main\n","time":4},{"pos":5,"out":"+
+        git checkout fbe514519c336e7a66a01788e16bc2fb57d8bd35 -b main\n","time":4},{"pos":6,"out":"Switched
+        to a new branch ''main''\n","time":4}]
+
+        '
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Length:
+      - '551'
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:57 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

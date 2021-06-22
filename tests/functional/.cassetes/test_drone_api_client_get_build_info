@@ -1,0 +1,97 @@
+interactions:
+- request:
+    body: '{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.sql","msg":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","args":[],"levelname":"INFO","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/sql/__init__.py","filename":"__init__.py","module":"__init__","exc_info":"","exc_text":"","stack_info":"","lineno":13,"funcName":"setup_db","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","timestamp":"2021-06-22T19:28:55.144Z"}
+
+      {"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.drone_api.client","msg":"Retrieved
+      8 builds for drone-ci-monitor/drone-ci-monitor page 0","args":[],"levelname":"DEBUG","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/drone_api/client.py","filename":"client.py","module":"client","exc_info":"","exc_text":"","stack_info":"","lineno":142,"funcName":"get_builds","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"Retrieved
+      8 builds for drone-ci-monitor/drone-ci-monitor page 0","timestamp":"2021-06-22T19:28:55.525Z"}
+
+      {"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.drone_api.client","msg":"Retrieved
+      16 builds for drone-ci-monitor/drone-ci-monitor page 1","args":[],"levelname":"DEBUG","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/drone_api/client.py","filename":"client.py","module":"client","exc_info":"","exc_text":"","stack_info":"","lineno":142,"funcName":"get_builds","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"Retrieved
+      16 builds for drone-ci-monitor/drone-ci-monitor page 1","timestamp":"2021-06-22T19:28:55.548Z"}
+
+      {"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log"}}
+
+      {"host":"A10500.local","host_ip":"127.0.0.1","name":"drone_ci_butler.sql","msg":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","args":[],"levelname":"INFO","pathname":"/Users/gabrielfalcao/projects/work/drone-ci-butler/drone_ci_butler/sql/__init__.py","filename":"__init__.py","module":"__init__","exc_info":"","exc_text":"","stack_info":"","lineno":13,"funcName":"setup_db","thread":4466470336,"threadName":"MainThread","processName":"MainProcess","process":3970,"message":"using
+      sqlalchemy uri: postgresql://drone_ci_butler@localhost/drone_ci_butler","timestamp":"2021-06-22T19:28:55.605Z"}
+
+      '
+    headers:
+      Content-Length:
+      - '2788'
+      content-type:
+      - application/json
+      user-agent:
+      - elasticsearch-py/7.13.0 (Python 3.7.3)
+      x-elastic-client-meta:
+      - es=7.13.0,py=3.7.3,t=7.13.0,rq=2.25.1,h=bp
+    method: POST
+    uri: http://127.0.0.1:9200/_bulk
+  response:
+    body:
+      string: '{"took":41,"errors":false,"items":[{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"iF4yNXoBsRdhqtz1cede","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2493,"_primary_term":1,"status":201}},{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"iV4yNXoBsRdhqtz1cede","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2494,"_primary_term":1,"status":201}},{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"il4yNXoBsRdhqtz1cede","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2495,"_primary_term":1,"status":201}},{"index":{"_index":"drone_ci_butler_logs-2021.06.22","_type":"python_log","_id":"i14yNXoBsRdhqtz1cede","_version":1,"result":"created","_shards":{"total":2,"successful":1,"failed":0},"_seq_no":2496,"_primary_term":1,"status":201}}]}'
+    headers:
+      Warning:
+      - 299 Elasticsearch-7.10.2-SNAPSHOT-unknown "[types removal] Specifying types
+        in bulk requests is deprecated."
+      content-length:
+      - '960'
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Authorization:
+      - Bearer 4kzliojbH87KTGeZHsPFx05Xb79G5kM0
+      User-Agent:
+      - DroneCI Butler v0.1.0
+    method: GET
+    uri: https://drone-ci-server.ngrok.io/api/repos/drone-ci-monitor/drone-api-tests/builds/4
+  response:
+    body:
+      string: "{\"id\":12,\"repo_id\":2408,\"trigger\":\"@hook\",\"number\":4,\"status\":\"failure\",\"event\":\"push\",\"action\":\"\",\"link\":\"https://github.com/drone-ci-monitor/drone-api-tests/compare/fbe514519c33...0c044a1eb11b\",\"timestamp\":0,\"message\":\"run
+        webhooks after all pipelines\",\"before\":\"fbe514519c336e7a66a01788e16bc2fb57d8bd35\",\"after\":\"0c044a1eb11bb8c6b0d20f2bc1493bd985e1c496\",\"ref\":\"refs/heads/main\",\"source_repo\":\"\",\"source\":\"main\",\"target\":\"main\",\"author_login\":\"gabrielfalcao\",\"author_name\":\"Gabriel
+        Falc\xE3o (he/him/his)\",\"author_email\":\"gabriel.falcao@nytimes.com\",\"author_avatar\":\"https://avatars.githubusercontent.com/u/85517645?v=4\",\"sender\":\"drone-ci-monitor\",\"started\":1624380492,\"finished\":1624380595,\"created\":1624380490,\"updated\":1624380492,\"version\":3,\"stages\":[{\"id\":29,\"repo_id\":2408,\"build_id\":12,\"number\":1,\"name\":\"success\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"success\",\"errignore\":false,\"exit_code\":0,\"machine\":\"c1b22df4dd9c\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624380492,\"stopped\":1624380595,\"created\":1624380490,\"updated\":1624380595,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":135,\"step_id\":29,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380501,\"stopped\":1624380505,\"version\":4},{\"id\":136,\"step_id\":29,\"number\":2,\"name\":\"build\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380505,\"stopped\":1624380516,\"version\":4},{\"id\":137,\"step_id\":29,\"number\":3,\"name\":\"unit
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380516,\"stopped\":1624380522,\"version\":4},{\"id\":138,\"step_id\":29,\"number\":4,\"name\":\"integration
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380522,\"stopped\":1624380530,\"version\":4},{\"id\":139,\"step_id\":29,\"number\":5,\"name\":\"component
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380531,\"stopped\":1624380544,\"version\":4},{\"id\":140,\"step_id\":29,\"number\":6,\"name\":\"functional
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380544,\"stopped\":1624380562,\"version\":4},{\"id\":141,\"step_id\":29,\"number\":7,\"name\":\"e2e
+        tests\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380562,\"stopped\":1624380595,\"version\":4}]},{\"id\":30,\"repo_id\":2408,\"build_id\":12,\"number\":2,\"name\":\"errors\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"failure\",\"errignore\":false,\"exit_code\":0,\"machine\":\"c1b22df4dd9c\",\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624380492,\"stopped\":1624380520,\"created\":1624380490,\"updated\":1624380520,\"version\":4,\"on_success\":true,\"on_failure\":false,\"steps\":[{\"id\":142,\"step_id\":30,\"number\":1,\"name\":\"clone\",\"status\":\"success\",\"exit_code\":0,\"started\":1624380497,\"stopped\":1624380502,\"version\":4},{\"id\":143,\"step_id\":30,\"number\":2,\"name\":\"slack
+        server error\",\"status\":\"failure\",\"errignore\":true,\"exit_code\":1,\"started\":1624380502,\"stopped\":1624380506,\"version\":4},{\"id\":144,\"step_id\":30,\"number\":3,\"name\":\"verify
+        docs\",\"status\":\"failure\",\"errignore\":true,\"exit_code\":1,\"started\":1624380506,\"stopped\":1624380509,\"version\":4},{\"id\":145,\"step_id\":30,\"number\":4,\"name\":\"connection
+        refused\",\"status\":\"failure\",\"errignore\":true,\"exit_code\":1,\"started\":1624380509,\"stopped\":1624380512,\"version\":4},{\"id\":146,\"step_id\":30,\"number\":5,\"name\":\"merge
+        conflict\",\"status\":\"failure\",\"errignore\":true,\"exit_code\":1,\"started\":1624380512,\"stopped\":1624380516,\"version\":4},{\"id\":147,\"step_id\":30,\"number\":6,\"name\":\"yarn
+        dependencies\",\"status\":\"failure\",\"exit_code\":1,\"started\":1624380516,\"stopped\":1624380520,\"version\":4}]},{\"id\":31,\"repo_id\":2408,\"build_id\":12,\"number\":3,\"name\":\"webhooks\",\"kind\":\"pipeline\",\"type\":\"docker\",\"status\":\"skipped\",\"errignore\":false,\"exit_code\":0,\"os\":\"linux\",\"arch\":\"amd64\",\"started\":1624380595,\"stopped\":1624380595,\"created\":1624380490,\"updated\":1624380490,\"version\":2,\"on_success\":true,\"on_failure\":false,\"depends_on\":[\"success\",\"errors\"]}]}\n"
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate, private, max-age=0
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Jun 2021 19:28:56 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      X-Accel-Expires:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

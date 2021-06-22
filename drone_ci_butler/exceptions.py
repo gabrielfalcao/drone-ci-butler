@@ -4,10 +4,10 @@ class UserFriendlyException(Exception):
 
 
 class ConfigMissing(UserFriendlyException):
-    def __init__(self, key, filename, fallback_env: str = None):
+    def __init__(self, key, filename, env: str = None):
         env = ""
-        if fallback_env:
-            env = f" or from env var {fallback_env}"
+        if env:
+            env = f" or from env var {env}"
 
         msg = f"Config key {key} missing from {filename}{env}"
         super().__init__(msg)

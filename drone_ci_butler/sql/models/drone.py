@@ -180,7 +180,7 @@ class DroneStep(Model):
             "output_drone_api_data": json.dumps(output.to_dict()),
         }
         build = stored_build.to_drone_api_model()
-        step = build.get_step_by_number(step_number)
+        step = build.get_step_by_number(stage_number, step_number)
         if step.exit_code:
             data["exit_code"] = step.exit_code
         if step.status:

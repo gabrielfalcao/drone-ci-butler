@@ -34,7 +34,7 @@ from drone_ci_butler.config import config
 from drone_ci_butler.sql.models.slack import SlackMessage
 from drone_ci_butler.sql.models.drone import DroneBuild
 from drone_ci_butler.workers import GetBuildInfoWorker
-from drone_ci_butler.workers import QueueServer, QueueClient
+from drone_ci_butler.workers import QueueServer, QueueClient, ClientSocketType
 from drone_ci_butler.exceptions import ConfigMissing
 from drone_ci_butler.es import connect_to_elasticsearch
 
@@ -73,8 +73,12 @@ def print_error(message):
 @click.option("-r", "--repo", default=config.drone_github_repo)
 @click.pass_context
 def main(ctx, drone_url, drone_access_token, owner, repo):
-    if sys.stdout.isatty():
-        print(f"\033[2;32mDroneCI Butler \033[1mv{version}\033[0m")
+    # if sys.stdout.isatty():
+    args = " ".join(sys.argv[1:])
+    sys.stderr.write(
+        f"\033[0;1;32mDroneCI Butler \033[0;1mv{version}\033[0;1;36m {args}\033[0m\n"
+    )
+    sys.stderr.flush()
     ctx.obj = {
         "drone_url": drone_url,
         "access_token": drone_access_token,
@@ -141,10 +145,11 @@ def web(ctx, host, port, debug):
 
 
 @main.command("workers")
-@click.option("-s", "--queue-address", default=config.worker_queue_address)
+@click.option("-r", "--queue-rep-address", default=config.worker_queue_rep_address)
+@click.option("-p", "--queue-pull-address", default=config.worker_queue_pull_address)
 @click.option("-m", "--max-workers", default=config.max_workers_per_process, type=int)
 @click.pass_context
-def workers(ctx, queue_address, max_workers):
+def workers(ctx, queue_rep_address, queue_pull_address, max_workers):
     sql.setup_db()
     if max_workers < 2:
         logger.error(f"{' '.join(sys.argv)}")
@@ -152,13 +157,16 @@ def workers(ctx, queue_address, max_workers):
         raise SystemExit(1)
 
     pool_size = max_workers
+
     pool = Pool(pool_size)
-    queue_server = QueueServer(queue_address, "inproc://build-info")
+    queue_server = QueueServer(
+        queue_rep_address, queue_pull_address, "inproc://build-info"
+    )
 
-    # the +1 from pool_size
     pool.spawn(queue_server.run)
+    pool.join(1, raise_error=True)
 
-    for worker_id in range(pool_size - 1):
+    for worker_id in range(pool_size - 1):  # the +1 from pool_size
         build_info_worker = GetBuildInfoWorker(
             "inproc://build-info",
             worker_id,
@@ -167,7 +175,7 @@ def workers(ctx, queue_address, max_workers):
 
     while True:
         try:
-            pool.join(1)
+            pool.join(1, raise_error=True)
         except KeyboardInterrupt:
             pool.kill()
             raise SystemExit(1)
@@ -206,9 +214,9 @@ def worker_queue(
 @click.option("-p", "--initial-page", default=config.drone_api_initial_page, type=int)
 @click.option("-P", "--max-pages", default=config.drone_api_max_pages, type=int)
 @click.option("-m", "--max-builds", default=config.drone_api_max_builds, type=int)
-@click.option("-c", "--rep-connect-address", default=config.worker_queue_address)
+@click.option("-c", "--connect-address", default=config.worker_queue_pull_address)
 @click.pass_context
-def get_builds(ctx, initial_page, rep_connect_address, max_builds, max_pages):
+def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
     sql.setup_db()
     client = DroneAPIClient(
         ctx.obj["drone_url"],
@@ -217,11 +225,11 @@ def get_builds(ctx, initial_page, rep_connect_address, max_builds, max_pages):
         max_pages=max_pages,
     )
 
-    worker = QueueClient(rep_connect_address)
+    worker = QueueClient(connect_address, socket_type=ClientSocketType.PUSH)
     worker.connect()
 
     for builds, page, total_pages in client.iter_builds_by_page(
-        ctx.obj["github_owner"], ctx.obj["github_repo"], page=initial_page
+        owner=ctx.obj["github_owner"], repo=ctx.obj["github_repo"], page=initial_page
     ):
         try:
             count = len(builds)
@@ -312,45 +320,6 @@ def migrate_db(ctx, target, alembic_ini):
     alembic_command.upgrade(alembic_cfg, target)
 
 
-@main.command("purge")
-@click.option("--elasticsearch", is_flag=True)
-@click.option("--http-cache", is_flag=True)
-def purge_elasticsearch(elasticsearch, http_cache):
-    sql.setup_db()
-    es_indexes = ["drone*", "*-webhooks"]
-    result = []
-    if elasticsearch:
-        print(f"deleting elasticsearch indexes: {es_indexes}")
-        es = connect_to_elasticsearch()
-        get_logger("elasticsearch").setLevel(logging.INFO)
-        for index in es_indexes:
-            try:
-                es.indices.delete(index=index, ignore=[400, 404])
-            except Exception as e:
-                logger.warning(f'failed to purge index "{index}": {e}')
-
-        result.append("elasticsearch")
-        get_logger("elasticsearch").setLevel(logging.WARNING)
-
-    else:
-        logger.warning(
-            f"provide --elasticsearch if you want to delete the indexes: {es_indexes}"
-        )
-
-    http_cache_count = HttpCache.count()
-    if http_cache and http_cache_count > 0:
-        print("deleting http cache")
-        HttpCache.purge()
-        result.append("http-cache")
-
-    else:
-        logger.warning(f"provide --http-cache if you want to delete ")
-
-    if not result:
-        print_error(f"you must provide either --elasticsearch or --http-cache")
-        raise SystemExit(1)
-
-
 @main.command("index")
 def index_builds_elasticsearch():
     sql.setup_db()
@@ -362,3 +331,41 @@ def index_builds_elasticsearch():
         es.index(
             f"drone_builds_{owner}_{repo}", id=build.number, body=build.to_document()
         )
+
+
+@main.command("purge")
+@click.option("--elasticsearch", is_flag=True)
+@click.option("--http-cache", is_flag=True)
+def purge_es_and_cache(elasticsearch, http_cache):
+    es_indexes = ["drone*", "*-webhooks"]
+
+    if not elasticsearch and not http_cache:
+        print_error(f"you must provide either --elasticsearch or --http-cache")
+        raise SystemExit(1)
+
+    if elasticsearch:
+        print(f"deleting elasticsearch indexes: {es_indexes}")
+        es = connect_to_elasticsearch()
+        get_logger("elasticsearch").setLevel(logging.INFO)
+        for index in es_indexes:
+            try:
+                es.indices.delete(index=index, ignore=[400, 404])
+            except Exception as e:
+                logger.warning(f'failed to purge index "{index}": {e}')
+
+        get_logger("elasticsearch").setLevel(logging.WARNING)
+
+    else:
+        logger.warning(
+            f"provide --elasticsearch if you want to delete the indexes: {es_indexes}"
+        )
+
+    if http_cache:
+        sql.setup_db()
+        http_cache_count = HttpCache.count()
+        if http_cache_count > 0:
+            print("deleting http cache")
+            HttpCache.purge()
+
+    else:
+        logger.warning(f"provide --http-cache if you want to delete ")

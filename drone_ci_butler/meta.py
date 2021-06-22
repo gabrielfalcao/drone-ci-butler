@@ -9,13 +9,13 @@ from drone_ci_butler.exceptions import ConfigMissing
 class ConfigProperty(UserFriendlyObject):
     name: str
     path: List[str]
-    fallback_env: str
+    env: str
     default_value: Any
     deserialize: callable
 
     def __init__(self, *path: List[str], **kw):
         name = kw.pop("name", None)
-        fallback_env = kw.pop("fallback_env", None)
+        env = kw.pop("env", None)
         default_value = kw.pop("default_value", None)
 
         deserialize = kw.pop("deserialize", None)
@@ -24,26 +24,26 @@ class ConfigProperty(UserFriendlyObject):
         else:
             self.deserialize = lambda x: x
 
-        if not path and not fallback_env:
+        if not path and not env:
             raise SyntaxError(
-                f"ConfigProperty requires at least one path name, or a fallback_env keyword-arg"
+                f"ConfigProperty requires at least one path name, or a env keyword-arg"
             )
         for k, v in dict(
-            name=name or fallback_env,
+            name=name or env,
             path=list(path),
-            fallback_env=fallback_env,
+            env=env,
             default_value=default_value,
             **kw,
         ).items():
             setattr(self, k, v)
 
     def resolve(self, config: DataBag, file_path: Optional[Path]):
-        name = self.name or self.fallback_env
+        name = self.name or self.env
         attr = ".".join(self.path)
         value = None
 
-        if not value and self.fallback_env:
-            value = os.getenv(self.fallback_env)
+        if not value and self.env:
+            value = os.getenv(self.env)
 
         if not value and self.path:
             value = config.traverse(*self.path)
@@ -55,7 +55,7 @@ class ConfigProperty(UserFriendlyObject):
             raise ConfigMissing(
                 attr,
                 file_path,
-                self.fallback_env,
+                self.env,
             )
 
         try:
