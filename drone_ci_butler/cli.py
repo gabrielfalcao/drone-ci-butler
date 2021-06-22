@@ -238,9 +238,6 @@ def get_builds(ctx, initial_page, connect_address, max_builds, max_pages):
             )
 
             for i, build in enumerate(builds, start=1):
-                if "/pull/" not in build.link:
-                    continue
-
                 logger.debug(
                     f"enqueing {build.link} (#{build.number} by {build.author_login})"
                 )
