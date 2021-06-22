@@ -144,7 +144,11 @@ docker-base:
 	docker build -t gabrielfalcao/drone-ci-butler-base -f Dockerfile.base .
 
 docker-k8s:
-	docker build -t gabrielfalcao/drone-ci-butler:1 -f Dockerfile .
+	docker build -t gabrielfalcao/drone-ci-butler:latest -f Dockerfile .
+
+docker-push:
+	docker push gabrielfalcao/drone-ci-butler:latest
+
 
 # creates virtual env if necessary and installs pip and setuptools
 $(VENV): | $(REQUIREMENTS_PATH)  # creates $(VENV) folder if does not exist
