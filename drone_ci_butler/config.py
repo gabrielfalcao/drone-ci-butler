@@ -69,11 +69,12 @@ class Config(DataBag, metaclass=MetaConfig):
             if fail:
                 raise
             value = field.default_value
-        if name:
-            container[name] = value
 
         if field.env:
             container[field.env] = value
+
+        if name:
+            container[name] = value
 
         # resolve nested value
         for attr in field.path[:-1]:
