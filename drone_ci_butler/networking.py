@@ -17,12 +17,12 @@ def get_redis_hostname():
     return resolve_hostname(config.redis_host)
 
 
-def resolve_hostname(hostname, default="localhost") -> str:
+def resolve_hostname(hostname) -> str:
     try:
         return socket.gethostbyname(hostname)
     except Exception:
-        logger.error(f"could not resolve hostname {hostname}. Defaulting to {default}")
-        return default
+        logger.warning(f"could not resolve hostname {repr(hostname)}")
+        return hostname
 
 
 def resolve_zmq_address(address) -> str:
@@ -37,7 +37,7 @@ def resolve_zmq_address(address) -> str:
         hostname = parsed.netloc
 
     if port:
-        host = resolve_hostname(hostname, hostname)
+        host = resolve_hostname(hostname)
     else:
         host = hostname
 

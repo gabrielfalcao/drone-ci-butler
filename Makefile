@@ -35,8 +35,8 @@ all: | $(MAIN_CLI_PATH)
 
 env-docker: | $(DOCKER_ENV)
 
-compose:
-	docker-compose up --abort-on-container-exit --force-recreate --build
+compose: env-docker
+	docker-compose up --force-recreate --build #  --abort-on-container-exit
 
 db-create:
 	@./tools/recreate-db drone_ci_butler

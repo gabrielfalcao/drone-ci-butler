@@ -347,8 +347,8 @@ class Config(DataBag, metaclass=MetaConfig):
     )
     elasticsearch_host = ConfigProperty(
         "elasticsearch",
-        "hostname",
-        env="DRONE_CI_BUTLER_ELASTICSEARCH_HOSTNAME",
+        "host",
+        env="DRONE_CI_BUTLER_ELASTICSEARCH_HOST",
         default_value="localhost",
     )
     elasticsearch_port = ConfigProperty(
