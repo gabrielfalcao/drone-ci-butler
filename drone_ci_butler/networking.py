@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_elasticsearch_hostname():
-    return resolve_hostname(config.elasticsearch_host)
+    return config.elasticsearch_host
 
 
 def get_redis_hostname():

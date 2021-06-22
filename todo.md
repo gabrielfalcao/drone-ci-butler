@@ -1,3 +1,6 @@
+- deploy to kubernetes
+  - analyse all builds
+
 - index in elasticsearch:
   - total failed steps per build
   - total virtual failures per build
