@@ -185,9 +185,9 @@ def workers(ctx, queue_rep_address, queue_pull_address, max_workers, migrate):
 
     while True:
         try:
-            pool.join(1, raise_error=True)
+            pool.join(10, raise_error=True)
         except KeyboardInterrupt:
-            pool.kill()
+            pool.kill(block=False)
             raise SystemExit(1)
 
 

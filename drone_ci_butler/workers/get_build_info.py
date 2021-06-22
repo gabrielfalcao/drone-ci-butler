@@ -190,14 +190,20 @@ class GetBuildInfoWorker(PullerWorker):
                     step=step,
                 )
                 self.logger.debug(
-                    f"processing ruleset {wf_project_vi} against {context}",
+                    f"processing {wf_project_vi} against {context}",
                     extra=dict(logmeta),
                 )
 
                 matches = wf_project_vi.apply(context)
                 described_matches = [m.to_description() for m in matches]
                 logmeta.update({"matched_rules": described_matches})
-                if matches and user:
+                if matches:
+                    message = "\n".join(described_matches)
+                    self.logger.info(
+                        f"found {len(matches)} matches for {wf_project_vi} against {context}",
+                        extra=dict(logmeta),
+                    )
+
                     stored.update_matches(matches)
                     self.logger.info(
                         f"ruleset matches for step {step}",
@@ -221,8 +227,9 @@ class GetBuildInfoWorker(PullerWorker):
                                 extra=dict(logmeta),
                             )
 
-                    user.notify_ruleset_matches(context, matches)
-                    print(message, stage, step, step.to_markdown())
+                    if user:
+                        user.notify_ruleset_matches(context, matches)
+                        print(message, stage, step, step.to_markdown())
 
                 elif (
                     user

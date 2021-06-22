@@ -1,5 +1,6 @@
 import gevent
 import zmq.green as zmq
+from greenlet import GreenletExit
 from collections import defaultdict
 from drone_ci_butler.config import Config, config
 from drone_ci_butler.logs import get_logger
