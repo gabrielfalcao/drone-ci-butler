@@ -6,6 +6,7 @@ from sure import scenario
 from uiclasses import DataBag
 from drone_ci_butler.drone_api import DroneAPIClient
 from drone_ci_butler import sql
+from drone_ci_butler.logs import reset_level
 from drone_ci_butler.config import config
 from drone_ci_butler.drone_api.models import Build, OutputLine, Step, Stage, Output
 
@@ -18,6 +19,7 @@ vcr = VCR(
 
 
 def prepare_context():
+    reset_level("WARNING")
     metadata = sql.setup_db(config)
     client = DroneAPIClient.from_config(config)
     return dict(
