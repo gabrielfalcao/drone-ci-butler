@@ -57,12 +57,8 @@ spec:
             ephemeral-storage: "40Gi"
 
         env:
-          - name: node.name
-            value: es01
           - name: discovery.type
             value: single-node
-          - name: bootstrap.memory_lock
-            value: 'true'
 
 ---
 apiVersion: v1
