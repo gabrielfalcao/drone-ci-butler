@@ -45,7 +45,7 @@ spec:
       - image: "gabrielfalcao/drone-ci-butler:latest"
         imagePullPolicy: Always
         name: web-application-server
-        command: ['/venv/bin/drone-ci-butler', 'web']
+        command: ['/venv/bin/drone-ci-butler', 'web', '--wait', '10']
         livenessProbe:
           httpGet:
             path: /health

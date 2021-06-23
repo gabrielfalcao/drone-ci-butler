@@ -46,8 +46,7 @@ spec:
       - image: "gabrielfalcao/drone-ci-butler:latest"
         imagePullPolicy: Always
         name: workers
-        command: ['/venv/bin/drone-ci-butler', 'workers']
-
+        command: ['/venv/bin/drone-ci-butler', 'workers', '--wait', '20']
         envFrom:
           - configMapRef:
               name: env

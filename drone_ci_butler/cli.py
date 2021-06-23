@@ -142,9 +142,13 @@ def slack_test():
 @click.option("-P", "--port", default=config.web_port, type=int)
 @click.option("-D", "--debug", is_flag=True)
 @click.option("--migrate", is_flag=True)
+@click.option("-w", "--wait", default=0, type=int)
 @click.pass_context
-def web(ctx, host, port, debug, migrate):
+def web(ctx, host, port, debug, migrate, wait):
     sql.setup_db(config)
+    if wait:
+        logger.warning(f"waiting {wait} seconds because the option --wait was provided")
+        time.sleep(wait)
     if migrate:
         sql.migrate_db(config)
 
@@ -155,10 +159,14 @@ def web(ctx, host, port, debug, migrate):
 @click.option("-r", "--queue-rep-address", default=config.worker_queue_rep_address)
 @click.option("-p", "--queue-pull-address", default=config.worker_queue_pull_address)
 @click.option("-m", "--max-workers", default=config.max_workers_per_process, type=int)
+@click.option("-w", "--wait", default=0, type=int)
 @click.option("--migrate", is_flag=True)
 @click.pass_context
-def workers(ctx, queue_rep_address, queue_pull_address, max_workers, migrate):
+def workers(ctx, queue_rep_address, queue_pull_address, max_workers, migrate, wait):
     sql.setup_db(config)
+    if wait:
+        logger.warning(f"waiting {wait} seconds because the option --wait was provided")
+        time.sleep(wait)
     if migrate:
         sql.migrate_db(config)
     if max_workers < 2:
