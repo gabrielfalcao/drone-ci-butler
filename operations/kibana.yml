@@ -48,6 +48,8 @@ spec:
         env:
           - name: discovery.type
             value: single-node
+          - name: ELASTICSEARCH_HOSTS
+            value: http://drone-ci-butler-elasticsearch.ci-butler.svc.cluster.local:9200
 
 ---
 apiVersion: v1
