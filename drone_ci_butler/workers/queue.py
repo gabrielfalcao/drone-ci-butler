@@ -97,9 +97,9 @@ class QueueServer(object):
     ):
         self.logger = get_logger(f"{__name__}.{self.__class__.__name__}")
         self.log_level = log_level
-        self.rep_bind_address = resolve_zmq_address(rep_bind_address)
-        self.pull_bind_address = resolve_zmq_address(pull_bind_address)
-        self.push_bind_address = resolve_zmq_address(push_bind_address)
+        self.rep_bind_address = resolve_zmq_address(rep_bind_address, listen=True)
+        self.pull_bind_address = resolve_zmq_address(pull_bind_address, listen=True)
+        self.push_bind_address = resolve_zmq_address(push_bind_address, listen=True)
         self.should_run = True
         self.sleep_timeout = sleep_timeout
         self.poller = zmq.Poller()

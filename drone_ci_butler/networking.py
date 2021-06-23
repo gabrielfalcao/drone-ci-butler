@@ -25,7 +25,7 @@ def resolve_hostname(hostname) -> str:
         return hostname
 
 
-def resolve_zmq_address(address) -> str:
+def resolve_zmq_address(address, listen=False) -> str:
     default = address
 
     parsed = urlparse(address)
@@ -36,7 +36,9 @@ def resolve_zmq_address(address) -> str:
     else:
         hostname = parsed.netloc
 
-    if port:
+    if listen:
+        host = "0.0.0.0"
+    elif port:
         host = resolve_hostname(hostname)
     else:
         host = hostname

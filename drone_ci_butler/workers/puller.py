@@ -28,7 +28,9 @@ class PullerWorker(object):
 
         self.config = config
         self.postmortem_sleep_seconds = postmortem_sleep_seconds
-        self.pull_connect_address = resolve_zmq_address(pull_connect_address)
+        self.pull_connect_address = resolve_zmq_address(
+            pull_connect_address, listen=True
+        )
         self.should_run = True
         self.poller = zmq.Poller()
         self.queue = context.socket(zmq.PULL)
