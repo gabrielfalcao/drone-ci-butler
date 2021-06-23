@@ -37,7 +37,7 @@ spec:
       #               storage: 100Gi
       containers:
       - image: "elasticsearch:7.13.2"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: elasticsearch
         # volumeMounts:
         #   - name: elasticsearch-volume

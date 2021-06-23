@@ -27,7 +27,7 @@ spec:
     spec:
       initContainers:
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: check-installation
         command: ['/venv/bin/drone-ci-butler', 'check']
         envFrom:
@@ -35,7 +35,7 @@ spec:
               name: env
 
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: check-db-connection
         command: ['/venv/bin/drone-ci-butler', 'check-db']
         envFrom:
@@ -44,7 +44,7 @@ spec:
 
       containers:
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: workers
         command: ['/venv/bin/drone-ci-butler', 'workers', '--wait', '20']
         envFrom:

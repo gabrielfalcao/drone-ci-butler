@@ -18,7 +18,7 @@ spec:
     spec:
       initContainers:
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: check-installation
         command: ['/venv/bin/drone-ci-butler', 'check']
         envFrom:
@@ -26,7 +26,7 @@ spec:
               name: env
 
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: check-db-connection
         command: ['/venv/bin/drone-ci-butler', 'check-db']
         envFrom:
@@ -34,7 +34,7 @@ spec:
               name: env
 
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: run-database-migrations
         command: ['/venv/bin/drone-ci-butler', 'migrate-db']
         envFrom:
@@ -43,7 +43,7 @@ spec:
 
       containers:
       - image: "gabrielfalcao/drone-ci-butler:latest"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: web-application-server
         command: ['/venv/bin/drone-ci-butler', 'web', '--wait', '10']
         livenessProbe:
@@ -112,7 +112,7 @@ spec:
     spec:
       containers:
       - image: wernight/ngrok:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: ngrok
         envFrom:
           - configMapRef:

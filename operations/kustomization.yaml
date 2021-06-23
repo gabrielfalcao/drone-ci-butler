@@ -10,27 +10,34 @@ namePrefix: drone-ci-butler-
 commonLabels:
   app-name: drone-ci-butler
   app-runtime: python3.7
-  git-revision: fadee85f037537c2d13c9dc7e66ba9f97d364bcb
-  app.kubernetes.io/name: drone-ci-butler
   app.kubernetes.io/instance: fadee85f037537c2d13c9dc7e66ba9f97d364bcb
+  app.kubernetes.io/name: drone-ci-butler
+  git-revision: fadee85f037537c2d13c9dc7e66ba9f97d364bcb
 
 
 # kustomization.yaml
 configMapGenerator:
-- name: env
-  env: kube.env
-- name: ngrok
-  env: kube.env
-- name: config
-  files:
+- envs:
+  - kube.env
+  name: env
+- envs:
+  - kube.env
+  name: ngrok
+- files:
   - drone-ci-butler.yml
+  name: config
 
 
 resources:
-  - postgres.yml
-  - elasticsearch.yml
-  - kibana.yml
-  - redis.yml
-  - web.yml
-  - workers.yml
-  - dns.yml
+- postgres.yml
+- elasticsearch.yml
+- kibana.yml
+- redis.yml
+- web.yml
+- workers.yml
+# - dns.yml
+
+images:
+- name: gabrielfalcao/drone-ci-butler
+  newName: gabrielfalcao/drone-ci-butler
+  newTag: 02a4d31bac3b647385cfd3792a9cbc7440b89c8e

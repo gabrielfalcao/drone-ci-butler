@@ -37,7 +37,7 @@ spec:
 
       containers:
       - image: "postgres:13"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: postgres
         resources:
           requests:
@@ -48,6 +48,7 @@ spec:
         # volumeMounts:
         #   - name: postgres-volume
         #     mountPath: /var/lib/postgresql
+
 
         ports:
         - containerPort: 5432

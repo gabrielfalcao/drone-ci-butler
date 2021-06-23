@@ -17,6 +17,7 @@ STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.js
 DOCKER_ENV		:= $(GIT_ROOT)/tools/docker.env
 KUBE_ENV		:= $(GIT_ROOT)/operations/kube.env
 BUILD_PATHS		:= build docs/build frontend/build
+DOCKER_IMAGE_TAG	:= $(shell git rev-parse HEAD)
 ######################################################################
 # webpack env vars
 export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
@@ -25,7 +26,7 @@ export NODE_ENV		:= production
 ######################################################################
 # tool env vars
 export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
-
+export DOCKER_IMAGE_TAG
 ######################################################################
 # Phony targets (only exist for typing convenience and don't represent
 #                real paths as Makefile expects)
@@ -49,8 +50,9 @@ redeploy:
 	$(MAKE) deploy
 
 deploy: kube
-	-kubectl create ns ci-butler
-	kustomize build operations  | kubectl -n ci-butler apply -f -
+	kubectl get ns ci-butler || kubectl create ns ci-butler
+	(cd operations && kustomize edit set image gabrielfalcao/drone-ci-butler=gabrielfalcao/drone-ci-butler:$(DOCKER_IMAGE_TAG))
+	(cd operations && kustomize build  | kubectl -n ci-butler apply -f -)
 
 env-docker: | $(DOCKER_ENV)
 
