@@ -34,8 +34,8 @@ spec:
         #   - name: kibana-volume
         #     mountPath: /usr/share/kibana/data
         ports:
-        - containerPort: 5604
-          name: kibana
+        - containerPort: 5601
+          name: http
         envFrom:
           - configMapRef:
               name: env
@@ -60,10 +60,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 5604
-      targetPort: 5604
+    - port: 5601
+      targetPort: 5601
       protocol: TCP
-      name: kibana
+      name: http
 
   selector:
     app.kubernetes.io/name: kibana
