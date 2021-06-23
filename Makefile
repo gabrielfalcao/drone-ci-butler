@@ -38,10 +38,11 @@ kube: $(KUBE_ENV)
 	kustomize build operations > /dev/null
 
 redeploy:
-	kubectl delete ns ci-butler;kubectl create ns ci-butler
+	kubectl delete ns ci-butler
 	$(MAKE) deploy
 
 deploy: kube
+	-kubectl create ns ci-butler
 	kustomize build operations  | kubectl -n ci-butler apply -f -
 
 env-docker: | $(DOCKER_ENV)
