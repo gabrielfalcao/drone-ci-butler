@@ -37,8 +37,12 @@ all: | $(MAIN_CLI_PATH)
 kube: $(KUBE_ENV)
 	kustomize build operations > /dev/null
 
-redeploy:
+undeploy:
 	kubectl delete ns ci-butler
+	kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl -n ci-butler get --show-kind --ignore-not-found -n ci-butler > /dev/null
+
+redeploy:
+	$(MAKE) undeploy
 	$(MAKE) deploy
 
 deploy: kube
