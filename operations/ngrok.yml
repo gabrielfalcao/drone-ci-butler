@@ -52,4 +52,4 @@ spec:
             value: "drone-ci-butler.ngrok.io"
 
           - name: NGROK_PORT
-            value: drone-ci-butler-kibana.ci-butler.svc.cluster.local:5604
+            value: drone-ci-butler-kibana.ci-butler.svc.cluster.local:5601
