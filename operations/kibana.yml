@@ -9,7 +9,8 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/name: kibana
+      app.kubernetes.io/name: drone-ci-butler
+      app.kubernetes.io/svc: kibana
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,13 +19,32 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: kibana
+        app.kubernetes.io/svc: kibana
 
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - drone-ci-butler
+            topologyKey: "kubernetes.io/hostname"
       # volumes:
       #   - name: kibana-volume
-      #     persistentVolumeClaim:
-      #       claimName: pvc
+      #     ephemeral:
+      #       volumeClaimTemplate:
+      #         metadata:
+      #           labels:
+      #             type: kibana-volume
+      #         spec:
+      #           accessModes: [ "ReadWriteOnce" ]
+      #           storageClassName: "do-storage-class"
+      #           resources:
+      #             requests:
+      #               storage: 20Gi
 
       containers:
       - image: "kibana:7.13.2"
@@ -47,7 +67,7 @@ spec:
 
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: http://drone-ci-butler-elasticsearch.ci-butler.svc.cluster.local:9200
+            value: http://drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local:9200
 
 ---
 apiVersion: v1
@@ -80,7 +100,8 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/name: ngrok-kibana
+      app.kubernetes.io/name: drone-ci-butler
+      app.kubernetes.io/svc: ngrok-kibana
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -89,7 +110,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: ngrok-kibana
+        app.kubernetes.io/svc: ngrok-kibana
 
     spec:
       containers:
@@ -114,4 +135,4 @@ spec:
             value: "kibana-ci-butler.ngrok.io"
 
           - name: NGROK_PORT
-            value: drone-ci-butler-kibana.ci-butler.svc.cluster.local:5601
+            value: drone-ci-butler-kibana.ci-butler-ns.svc.cluster.local:5601

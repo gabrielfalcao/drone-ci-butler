@@ -3,7 +3,7 @@ kind: Kustomization
 metadata:
   name: drone-ci-butler
 
-namespace: ci-butler
+namespace: ci-butler-ns
 namePrefix: drone-ci-butler-
 # Example configuration for the webserver
 # at https://github.com/monopole/hello
@@ -28,16 +28,16 @@ configMapGenerator:
   name: config
 
 
+# - postgres.yml
 resources:
-- postgres.yml
 - elasticsearch.yml
 - kibana.yml
-- redis.yml
-- web.yml
-- workers.yml
+# - redis.yml
+# - web.yml
+# - workers.yml
 # - dns.yml
 
 images:
 - name: gabrielfalcao/drone-ci-butler
   newName: gabrielfalcao/drone-ci-butler
-  newTag: 02a4d31bac3b647385cfd3792a9cbc7440b89c8e
+  newTag: 3a6f4a14f4fd95587c63d49e88764b1c110fedc2

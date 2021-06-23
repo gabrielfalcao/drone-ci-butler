@@ -18,6 +18,7 @@ DOCKER_ENV		:= $(GIT_ROOT)/tools/docker.env
 KUBE_ENV		:= $(GIT_ROOT)/operations/kube.env
 BUILD_PATHS		:= build docs/build frontend/build
 DOCKER_IMAGE_TAG	:= $(shell git rev-parse HEAD)
+export K8S_NAMESPACE	:= ci-butler-ns
 ######################################################################
 # webpack env vars
 export BUILD_PATH	:= $(GIT_ROOT)/drone_ci_butler/web/public
@@ -39,21 +40,24 @@ kube: $(KUBE_ENV)
 	kustomize build operations > /dev/null
 
 undeploy:
-	kubectl delete ns ci-butler
+	kubectl delete ns $(K8S_NAMESPACE)
 	$(MAKE) k8s-resources
 
 k8s-resources:
-	kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl -n ci-butler get --show-kind --ignore-not-found -n ci-butler
+	kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl -n $(K8S_NAMESPACE) get --show-kind --ignore-not-found -n $(K8S_NAMESPACE)
 
 redeploy:
 	$(MAKE) undeploy
 	$(MAKE) deploy
 
 deploy: kube
-	kubectl get ns ci-butler || kubectl create ns ci-butler
-	(cd operations && kustomize edit set image gabrielfalcao/drone-ci-butler=gabrielfalcao/drone-ci-butler:$(DOCKER_IMAGE_TAG))
-	(cd operations && kustomize build  | kubectl -n ci-butler apply -f -)
+	@(cd operations && kustomize edit set namespace $(K8S_NAMESPACE))
+	@(cd operations && kustomize edit set image gabrielfalcao/drone-ci-butler=gabrielfalcao/drone-ci-butler:$(DOCKER_IMAGE_TAG))
+	@kubectl get ns $(K8S_NAMESPACE) || kubectl create ns $(K8S_NAMESPACE)
+	@(cd operations && kustomize build | kubectl -n $(K8S_NAMESPACE) apply -f -)
 
+k9s:
+	k9s -n $(K8S_NAMESPACE)
 env-docker: | $(DOCKER_ENV)
 
 compose: env-docker

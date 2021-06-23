@@ -9,7 +9,8 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/name: elasticsearch
+      app.kubernetes.io/name: drone-ci-butler
+      app.kubernetes.io/svc: elasticsearch
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: elasticsearch
+        app.kubernetes.io/svc: elasticsearch
 
     spec:
       # volumes:
@@ -31,10 +32,10 @@ spec:
       #             type: elasticsearch-volume
       #         spec:
       #           accessModes: [ "ReadWriteOnce" ]
-      #           storageClassName: "scratch-storage-class"
+      #           storageClassName: "do-storage-class"
       #           resources:
       #             requests:
-      #               storage: 100Gi
+      #               storage: 40Gi
       containers:
       - image: "elasticsearch:7.13.2"
         imagePullPolicy: IfNotPresent
@@ -66,7 +67,7 @@ kind: Service
 metadata:
   name: elasticsearch
   labels:
-    app.kubernetes.io/name: elasticsearch
+    app.kubernetes.io/svc: elasticsearch
 
 spec:
   type: NodePort
@@ -81,4 +82,4 @@ spec:
       protocol: TCP
       name: esbinary
   selector:
-    app.kubernetes.io/name: elasticsearch
+    app.kubernetes.io/svc: elasticsearch
