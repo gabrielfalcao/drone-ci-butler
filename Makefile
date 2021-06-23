@@ -39,7 +39,10 @@ kube: $(KUBE_ENV)
 
 undeploy:
 	kubectl delete ns ci-butler
-	kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl -n ci-butler get --show-kind --ignore-not-found -n ci-butler > /dev/null
+	$(MAKE) k8s-resources
+
+k8s-resources:
+	kubectl api-resources --verbs=list --namespaced -o name | xargs -n 1 kubectl -n ci-butler get --show-kind --ignore-not-found -n ci-butler
 
 redeploy:
 	$(MAKE) undeploy
@@ -205,28 +208,29 @@ $(DOCKER_ENV) $(KUBE_ENV): clean
 .PHONY: \
 	all \
 	black \
-	release-build \
+	builds \
 	clean \
 	compose \
 	dependencies \
 	deploy \
-	redeploy \
 	develop \
-	release-push \
-	release \
-	setup \
-	run \
-	tests \
-	unit \
-	functional \
-	workers \
-	builds \
-	public \
-	react-app \
-	tunnel \
-	tdd \
-	purge \
-	web \
-	env-docker \
 	docker-base \
-	docker-k8s
+	docker-k8s \
+	env-docker \
+	functional \
+	k8s-resources \
+	public \
+	purge \
+	react-app \
+	redeploy \
+	release \
+	release-build \
+	release-push \
+	run \
+	setup \
+	tdd \
+	tests \
+	tunnel \
+	unit \
+	web \
+	workers
