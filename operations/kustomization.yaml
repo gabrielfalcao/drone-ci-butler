@@ -33,5 +33,4 @@ resources:
   - redis.yml
   - web.yml
   - workers.yml
-  - ngrok.yml
   - dns.yml

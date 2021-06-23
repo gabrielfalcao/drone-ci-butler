@@ -35,7 +35,7 @@ spec:
         #     mountPath: /usr/share/kibana/data
         ports:
         - containerPort: 5601
-          name: http
+          name: kibana
         envFrom:
           - configMapRef:
               name: env
@@ -46,8 +46,6 @@ spec:
             ephemeral-storage: "20Gi"
 
         env:
-          - name: discovery.type
-            value: single-node
           - name: ELASTICSEARCH_HOSTS
             value: http://drone-ci-butler-elasticsearch.ci-butler.svc.cluster.local:9200
 
@@ -65,7 +63,55 @@ spec:
     - port: 5601
       targetPort: 5601
       protocol: TCP
-      name: http
+      name: kibana
 
   selector:
     app.kubernetes.io/name: kibana
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngrok-kibana
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ngrok-kibana
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ngrok-kibana
+
+    spec:
+      containers:
+      - image: wernight/ngrok:latest
+        imagePullPolicy: Always
+        name: ngrok
+        envFrom:
+          - configMapRef:
+              name: ngrok
+
+        env:
+          - name: NGROK_SUBDOMAIN
+            value: kibana-ci-butler
+
+          - name: NGROK_DEBUG
+            value: "true"
+
+          - name: NGROK_BINDTLS
+            value: "both"
+
+          - name: NGROK_HOSTNAME
+            value: "kibana-ci-butler.ngrok.io"
+
+          - name: NGROK_PORT
+            value: drone-ci-butler-kibana.ci-butler.svc.cluster.local:5601
