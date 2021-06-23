@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-13
+  name: postgres
 spec:
   minReadySeconds: 5
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/name: postgres-13
+      app.kubernetes.io/name: postgres
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,21 +18,36 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: postgres-13
+        app.kubernetes.io/name: postgres
 
     spec:
-      volumes:
-        - name: postgres-volume
-          persistentVolumeClaim:
-            claimName: pvc
+      # volumes:
+      #   - name: postgres-volume
+      #     ephemeral:
+      #       volumeClaimTemplate:
+      #         metadata:
+      #           labels:
+      #             type: postgres-volume
+      #         spec:
+      #           accessModes: [ "ReadWriteOnce" ]
+      #           storageClassName: "scratch-storage-class"
+      #           resources:
+      #             requests:
+      #               storage: 100Gi
 
       containers:
       - image: "postgres:13"
         imagePullPolicy: Always
         name: postgres
-        volumeMounts:
-          - name: postgres-volume
-            mountPath: /var/lib/postgresql
+        resources:
+          requests:
+            ephemeral-storage: "1Gi"
+          limits:
+            ephemeral-storage: "2Gi"
+
+        # volumeMounts:
+        #   - name: postgres-volume
+        #     mountPath: /var/lib/postgresql
 
         ports:
         - containerPort: 5432
@@ -48,9 +63,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-13
+  name: postgres
   labels:
-    app.kubernetes.io/name: postgres-13
+    app.kubernetes.io/name: postgres
 
 spec:
   type: NodePort
@@ -60,4 +75,4 @@ spec:
       protocol: TCP
       name: postgres
   selector:
-    app.kubernetes.io/name: postgres-13
+    app.kubernetes.io/name: postgres

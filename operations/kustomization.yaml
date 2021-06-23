@@ -10,9 +10,9 @@ namePrefix: drone-ci-butler-
 commonLabels:
   app-name: drone-ci-butler
   app-runtime: python3.7
-  git-revision: 1b60b0ed855e39d8739947746ceb2946d72bd3bb
+  git-revision: fadee85f037537c2d13c9dc7e66ba9f97d364bcb
   app.kubernetes.io/name: drone-ci-butler
-  app.kubernetes.io/instance: 1b60b0ed855e39d8739947746ceb2946d72bd3bb
+  app.kubernetes.io/instance: fadee85f037537c2d13c9dc7e66ba9f97d364bcb
 
 
 # kustomization.yaml
@@ -27,9 +27,9 @@ configMapGenerator:
 
 
 resources:
-  - volumes.yml
   - postgres.yml
   - elasticsearch.yml
+  - kibana.yml
   - redis.yml
   - web.yml
   - workers.yml

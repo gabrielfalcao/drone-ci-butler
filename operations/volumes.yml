@@ -1,4 +1,15 @@
 ---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  name: do-retained-block-storage
+provisioner: dobs.csi.digitalocean.com
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -32,7 +43,7 @@ spec:
   csi:
     driver: dobs.csi.digitalocean.com
     fsType: ext4
-    volumeHandle: e6413dbc-a90a-11ea-9aea-0a58ac14d0a1  # run command "doctl compute volume list" to get hande
+    volumeHandle: 6fb3169a-d3c1-11eb-8ebd-0a58ac14d1ce  # run command "doctl compute volume list" to get handle
     volumeAttributes:
       com.digitalocean.csi/noformat: "true"
 

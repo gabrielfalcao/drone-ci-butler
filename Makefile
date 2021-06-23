@@ -35,7 +35,11 @@ export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
 all: | $(MAIN_CLI_PATH)
 
 kube: $(KUBE_ENV)
-	kustomize build operations > .kube.yml
+	kustomize build operations > /dev/null
+
+redeploy:
+	kubectl delete ns ci-butler;kubectl create ns ci-butler
+	$(MAKE) deploy
 
 deploy: kube
 	kustomize build operations  | kubectl -n ci-butler apply -f -
@@ -200,6 +204,8 @@ $(DOCKER_ENV) $(KUBE_ENV): clean
 	clean \
 	compose \
 	dependencies \
+	deploy \
+	redeploy \
 	develop \
 	release-push \
 	release \

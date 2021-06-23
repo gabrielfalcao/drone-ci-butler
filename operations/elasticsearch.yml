@@ -2,37 +2,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elasticsearch-7-13-2
+  name: elasticsearch
 spec:
   minReadySeconds: 5
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app.kubernetes.io/name: elasticsearch-7-13-2
+      app.kubernetes.io/name: elasticsearch
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
+
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: elasticsearch-7-13-2
+        app.kubernetes.io/name: elasticsearch
 
     spec:
-      volumes:
-        - name: elasticsearch-volume
-          persistentVolumeClaim:
-            claimName: pvc
-
+      # volumes:
+      #   - name: elasticsearch-volume
+      #     ephemeral:
+      #       volumeClaimTemplate:
+      #         metadata:
+      #           labels:
+      #             type: elasticsearch-volume
+      #         spec:
+      #           accessModes: [ "ReadWriteOnce" ]
+      #           storageClassName: "scratch-storage-class"
+      #           resources:
+      #             requests:
+      #               storage: 100Gi
       containers:
       - image: "elasticsearch:7.13.2"
         imagePullPolicy: Always
         name: elasticsearch
-        volumeMounts:
-          - name: elasticsearch-volume
-            mountPath: /usr/share/elasticsearch/data
+        # volumeMounts:
+        #   - name: elasticsearch-volume
+        #     mountPath: /usr/share/elasticsearch/data
         ports:
         - containerPort: 9200
           name: elasticsearch
@@ -41,6 +50,11 @@ spec:
         envFrom:
           - configMapRef:
               name: env
+        resources:
+          requests:
+            ephemeral-storage: "20Gi"
+          limits:
+            ephemeral-storage: "40Gi"
 
         env:
           - name: node.name
@@ -54,9 +68,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: elasticsearch-7-13-2
+  name: elasticsearch
   labels:
-    app.kubernetes.io/name: elasticsearch-7-13-2
+    app.kubernetes.io/name: elasticsearch
 
 spec:
   type: NodePort
@@ -71,4 +85,4 @@ spec:
       protocol: TCP
       name: esbinary
   selector:
-    app.kubernetes.io/name: elasticsearch-7-13-2
+    app.kubernetes.io/name: elasticsearch
