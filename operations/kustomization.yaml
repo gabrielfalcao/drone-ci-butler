@@ -34,3 +34,4 @@ resources:
   - web.yml
   - workers.yml
   - ngrok.yml
+  - dns.yml
