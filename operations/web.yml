@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  # serviceAccountName: user
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: web
+    spec:
+      initContainers:
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: check-installation
+        command: ['/venv/bin/drone-ci-butler', 'check']
+        envFrom:
+          - configMapRef:
+              name: env
+
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: check-db-connection
+        command: ['/venv/bin/drone-ci-butler', 'check-db']
+        envFrom:
+          - configMapRef:
+              name: env
+
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: run-database-migrations
+        command: ['/venv/bin/drone-ci-butler', 'migrate-db']
+        envFrom:
+          - configMapRef:
+              name: env
+
+      containers:
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: web-application-server
+        command: ['/venv/bin/drone-ci-butler', 'web']
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: api
+          initialDelaySeconds: 60
+          periodSeconds: 600
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: api
+          initialDelaySeconds: 1
+
+        env:
+          - name: UPLOAD_FOLDER
+            value: /ci-butler-volume/file-uploads
+
+        envFrom:
+          - configMapRef:
+              name: env
+
+        ports:
+        - containerPort: 5000
+          name: api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    app.kubernetes.io/name: web
+
+spec:
+  type: NodePort
+  ports:
+    - port: 4000
+      targetPort: 4000
+      protocol: TCP
+      name: api
+  selector:
+    app.kubernetes.io/name: web

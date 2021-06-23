@@ -1,0 +1,115 @@
+# ---
+# apiVersion: v1
+# automountServiceAccountToken: false
+# kind: ServiceAccount
+# metadata:
+#   name: user
+# secrets:
+#   - name: postgresql-password
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workers
+spec:
+  # serviceAccountName: user
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: workers
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: workers
+    spec:
+      initContainers:
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: check-installation
+        command: ['/venv/bin/drone-ci-butler', 'check']
+        envFrom:
+          - configMapRef:
+              name: env
+
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: check-db-connection
+        command: ['/venv/bin/drone-ci-butler', 'check-db']
+        envFrom:
+          - configMapRef:
+              name: env
+
+      containers:
+      - image: "gabrielfalcao/drone-ci-butler:latest"
+        imagePullPolicy: Always
+        name: workers
+        command: ['/venv/bin/drone-ci-butler', 'workers']
+
+        envFrom:
+          - configMapRef:
+              name: env
+
+        ports:
+        - containerPort: 5555
+          name: queuerepaddr
+
+        - containerPort: 5556
+          name: queuepulladdr
+
+        - containerPort: 6666
+          name: pushaddr
+
+        - containerPort: 7777
+          name: pulladdr
+
+        - containerPort: 5001
+          name: monitoraddr
+
+        - containerPort: 5002
+          name: controladdr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workers
+  labels:
+    app.kubernetes.io/name: workers
+
+spec:
+  type: NodePort
+  ports:
+    - port: 5555
+      targetPort: 5555
+      protocol: TCP
+      name: queuerepaddr
+
+    - port: 5556
+      targetPort: 5556
+      protocol: TCP
+      name: queuepulladdr
+
+    - port: 6666
+      targetPort: 6666
+      protocol: TCP
+      name: pushaddr
+
+    - port: 7777
+      targetPort: 7777
+      protocol: TCP
+      name: pulladdr
+
+    - port: 5001
+      targetPort: 5001
+      protocol: TCP
+      name: monitoraddr
+
+    - port: 5002
+      targetPort: 5002
+      protocol: TCP
+      name: controladdr
+
+  selector:
+    app.kubernetes.io/name: workers

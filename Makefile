@@ -15,6 +15,7 @@ WEB_PORT		:= 4000
 WEB_HOST		:= 0.0.0.0
 STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.json favicon.ico index.html robots.txt static)
 DOCKER_ENV		:= $(GIT_ROOT)/tools/docker.env
+KUBE_ENV		:= $(GIT_ROOT)/operations/kube.env
 BUILD_PATHS		:= build docs/build frontend/build
 ######################################################################
 # webpack env vars
@@ -32,6 +33,12 @@ export DRONE_CI_BUTLER_CONFIG_PATH := ~/.drone-ci-butler.yml
 
 # default target when running `make` without arguments
 all: | $(MAIN_CLI_PATH)
+
+kube: $(KUBE_ENV)
+	kustomize build operations > .kube.yml
+
+deploy: kube
+	kustomize build operations  | kubectl -n ci-butler apply -f -
 
 env-docker: | $(DOCKER_ENV)
 
@@ -178,7 +185,7 @@ $(REQUIREMENTS_PATH):
 	@echo ""
 	@exit 1
 
-$(DOCKER_ENV): clean
+$(DOCKER_ENV) $(KUBE_ENV): clean
 	@$(MAIN_CLI_PATH) env > $@
 	@echo CREATED $@
 ###############################################################

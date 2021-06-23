@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-7-13-2
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: elasticsearch-7-13-2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: elasticsearch-7-13-2
+
+    spec:
+      volumes:
+        - name: elasticsearch-volume
+          persistentVolumeClaim:
+            claimName: pvc
+
+      containers:
+      - image: "elasticsearch:7.13.2"
+        imagePullPolicy: Always
+        name: elasticsearch
+        volumeMounts:
+          - name: elasticsearch-volume
+            mountPath: /usr/share/elasticsearch/data
+        ports:
+        - containerPort: 9200
+          name: elasticsearch
+        - containerPort: 9300
+          name: esbinary
+        envFrom:
+          - configMapRef:
+              name: env
+
+        env:
+          - name: node.name
+            value: es01
+          - name: discovery.type
+            value: single-node
+          - name: bootstrap.memory_lock
+            value: 'true'
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-7-13-2
+  labels:
+    app.kubernetes.io/name: elasticsearch-7-13-2
+
+spec:
+  type: NodePort
+  ports:
+    - port: 9200
+      targetPort: 9200
+      protocol: TCP
+      name: elasticsearch
+
+    - port: 9300
+      targetPort: 9300
+      protocol: TCP
+      name: esbinary
+  selector:
+    app.kubernetes.io/name: elasticsearch-7-13-2

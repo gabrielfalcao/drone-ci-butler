@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-6-2-4-alpine
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis-6-2-4-alpine
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis-6-2-4-alpine
+
+    spec:
+      volumes:
+        - name: redis-volume
+          persistentVolumeClaim:
+            claimName: pvc
+
+      containers:
+      - image: "redis:6.2.4-alpine"
+        imagePullPolicy: Always
+        name: redis
+        volumeMounts:
+          - name: redis-volume
+            mountPath: /data
+
+        ports:
+        - containerPort: 6379
+          name: redis
+
+        envFrom:
+          - configMapRef:
+              name: env
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-6-2-4-alpine
+  labels:
+    app.kubernetes.io/name: redis-6-2-4-alpine
+
+spec:
+  type: NodePort
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: redis
+  selector:
+    app.kubernetes.io/name: redis-6-2-4-alpine

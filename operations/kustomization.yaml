@@ -3,15 +3,34 @@ kind: Kustomization
 metadata:
   name: drone-ci-butler
 
+namespace: ci-butler
+namePrefix: drone-ci-butler-
 # Example configuration for the webserver
 # at https://github.com/monopole/hello
 commonLabels:
   app-name: drone-ci-butler
   app-runtime: python3.7
-  project-page: https://github.com/gabrielfalcao/drone-ci-butler
-  git-revision: '{{printf "%.7s" .COMMIT}}'
+  git-revision: 1b60b0ed855e39d8739947746ceb2946d72bd3bb
+  app.kubernetes.io/name: drone-ci-butler
+  app.kubernetes.io/instance: 1b60b0ed855e39d8739947746ceb2946d72bd3bb
+
+
+# kustomization.yaml
+configMapGenerator:
+- name: env
+  env: kube.env
+- name: ngrok
+  env: kube.env
+- name: config
+  files:
+  - drone-ci-butler.yml
+
 
 resources:
-- deployment.yaml
-- service.yaml
-- configMap.yaml
+  - volumes.yml
+  - postgres.yml
+  - elasticsearch.yml
+  - redis.yml
+  - web.yml
+  - workers.yml
+  - ngrok.yml

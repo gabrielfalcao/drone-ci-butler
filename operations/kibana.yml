@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-7.13.2
+spec:
+  minReadySeconds: 5
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kibana-7.13.2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kibana-7.13.2
+
+    spec:
+      volumes:
+        - name: kibana-volume
+          persistentVolumeClaim:
+            claimName: pvc
+
+      containers:
+      - image: "kibana:7.13.2"
+        imagePullPolicy: Always
+        name: kibana
+        volumeMounts:
+          - name: kibana-volume
+            mountPath: /usr/share/kibana/data
+        ports:
+        - containerPort: 5604
+          name: kibana
+        envFrom:
+          - configMapRef:
+              name: env
+
+        env:
+          - name: node.name
+            value: es01
+          - name: discovery.type
+            value: single-node
+          - name: bootstrap.memory_lock
+            value: true
+          - name: ES_JAVA_OPTS
+            value: "-Xms512m -Xmx512m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-7.13.2
+  labels:
+    app.kubernetes.io/name: kibana-7.13.2
+
+spec:
+  type: NodePort
+  ports:
+    - port: 5604
+      targetPort: 5604
+      protocol: TCP
+      name: kibana
+
+  selector:
+    app.kubernetes.io/name: kibana-7.13.2

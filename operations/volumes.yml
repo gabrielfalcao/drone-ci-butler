@@ -1,0 +1,46 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: do-block-storage
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: volume-drone-ci-butler
+  annotations:
+    # fake it by indicating this is provisioned dynamically, so the system
+    # works properly
+    pv.kubernetes.io/provisioned-by: dobs.csi.digitalocean.com
+spec:
+  storageClassName: do-block-storage
+  # by default, the volume will be not deleted if you delete the PVC, change to
+  # "Delete" if you wish the volume to be deleted automatically with the PVC
+  persistentVolumeReclaimPolicy: Retain
+
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  csi:
+    driver: dobs.csi.digitalocean.com
+    fsType: ext4
+    volumeHandle: e6413dbc-a90a-11ea-9aea-0a58ac14d0a1  # run command "doctl compute volume list" to get hande
+    volumeAttributes:
+      com.digitalocean.csi/noformat: "true"
+
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - pool-cognodes-361bk

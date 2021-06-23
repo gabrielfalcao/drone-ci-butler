@@ -4,16 +4,14 @@ kind: Service
 metadata:
   name: drone-ci-butler
   labels:
-    app.kubernetes.io/name: drone-ci-butler-web
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: web
 
 spec:
-  type: {{ .Values.service.type }}
+  type: NodePort
   ports:
     - port: 4000
       targetPort: 4000
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: drone-ci-butler-web
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: web

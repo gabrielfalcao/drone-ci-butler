@@ -70,3 +70,6 @@ postgres-data
 elasticsearch-data
 redis-data
 .drone-butler-slack
+operations/kube.env
+operations/ngrok.env
+tools/docker.env
