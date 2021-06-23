@@ -39,7 +39,7 @@ from drone_ci_butler.workers import QueueServer, QueueClient, ClientSocketType
 from drone_ci_butler.exceptions import ConfigMissing
 from drone_ci_butler.networking import connect_to_elasticsearch
 
-# from drone_ci_butler.networking import check_database_dns, check_db_connection
+from drone_ci_butler.networking import check_database_dns, check_db_connection
 
 
 alembic_ini_path = Path(__file__).parent.joinpath("alembic.ini").absolute()
@@ -291,6 +291,20 @@ def migrate_db(ctx, target, alembic_ini):
     "runs the migrations"
 
     sql.migrate_db(config, target=target)
+
+
+@main.command("check-db")
+@click.pass_context
+def check_db(ctx):
+    "checks if the application can connect to the configured db"
+
+    error = check_database_dns()
+    if error:
+        logger.error(f"could not resolve {dbconfig.host!r}: {error}")
+        raise SystemExit(1)
+
+    engine = sql.setup_db(config)
+    check_db_connection(engine)
 
 
 @main.command("index")

@@ -387,6 +387,12 @@ class Config(DataBag, metaclass=MetaConfig):
         deserialize=bool,
     )
 
+    ngrok_auth_token = ConfigProperty(
+        "ngrok",
+        "auth_token",
+        env="NGROK_AUTH",
+    )
+
     @property
     def sqlalchemy_uri(self) -> str:
         return f"postgresql://{self.database_user}:{self.database_password}@{self.database_hostname}:{self.database_port}/{self.database_name}"

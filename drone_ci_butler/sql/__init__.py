@@ -4,7 +4,7 @@ from pathlib import Path
 from alembic import command as alembic_command
 from alembic.config import Config as AlembicConfig
 from sqlalchemy.sql.schema import MetaData
-
+from sqlalchemy.engine.base import Engine
 from drone_ci_butler.config import Config
 from drone_ci_butler.config import config
 from drone_ci_butler.exceptions import UserFriendlyException
@@ -29,11 +29,12 @@ def check_dns():
         )
 
 
-def setup_db(config: Config) -> MetaData:
+def setup_db(config: Config) -> Engine:
     check_dns()
     uri = config.sqlalchemy_uri
     logger.info(f"using sqlalchemy uri: {uri}")
-    return context.set_default_uri(uri)
+    context.set_default_uri(uri)
+    return context.get_default_engine()
 
 
 def migrate_db(config: Config, target: str = "head"):
