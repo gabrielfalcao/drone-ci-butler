@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  elasticsearch:
+  drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local:
     container_name: elasticsearch-butler
     image: elasticsearch:7.13.2
     env_file:
@@ -16,7 +16,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  kibana:
+  drone-ci-butler-kibana.ci-butler-ns.svc.cluster.local:
     container_name: kibana-butler
     image: kibana:7.13.2
     env_file:
@@ -27,8 +27,8 @@ services:
       discovery.type: single-node
       ELASTICSEARCH_HOSTS: 'http://elasticsearch:9200'
     depends_on:
-      - elasticsearch
-  redis:
+      - drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local
+  drone-ci-butler-redis.ci-butler-ns.svc.cluster.local:
     container_name: redis-butler
     image: redis:6.2.4-alpine
     env_file:
@@ -37,7 +37,7 @@ services:
       - ./redis-data:/data
     command: redis-server --appendonly yes
 
-  postgres:
+  drone-ci-butler-postgres.ci-butler-ns.svc.cluster.local:
     container_name: postgres-butler
     image: postgres:13
     env_file:
@@ -46,14 +46,14 @@ services:
       - ./postgres-data:/var/lib/postgresql
 
 
-  butler_workers:
+  drone-ci-butler-workers.ci-butler-ns.svc.cluster.local:
     container_name: butler-workers
     build: .
     image: gabrielfalcao/drone-ci-butler:latest
     depends_on:
-      - postgres
-      - elasticsearch
-      - redis
+      - drone-ci-butler-postgres.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-redis.ci-butler-ns.svc.cluster.local
     ports:
       - 0.0.0.0:5001:5001
       - 0.0.0.0:5002:5002
@@ -66,7 +66,6 @@ services:
       - ./:/app
       - ~/.drone-ci-butler.yml:/drone-ci-butler.yml
 
-
     restart: always
     env_file:
       - ./tools/docker.env
@@ -75,16 +74,15 @@ services:
 
     command: drone-ci-butler workers --migrate
 
-
-  butler_builds:
+  docker-ci-butler-builds.ci-butler-ns.svc.cluster.local:
     container_name: butler-builds
     build: .
     image: gabrielfalcao/drone-ci-butler:latest
     depends_on:
-      - postgres
-      - elasticsearch
-      - redis
-      - butler_workers
+      - drone-ci-butler-postgres.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-redis.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-workers.ci-butler-ns.svc.cluster.local
 
     volumes:
       - ./:/app
@@ -99,14 +97,14 @@ services:
 
     command: sh -c 'sleep 10 && drone-ci-butler builds'
 
-  butler_web:
+  drone-ci-butler-web.ci-butler-ns.svc.cluster.local:
     container_name: butler-web
     depends_on:
-      - postgres
-      - elasticsearch
-      # - kibana
-      - redis
-      - butler_workers
+      - drone-ci-butler-postgres.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-elasticsearch.ci-butler-ns.svc.cluster.local
+      # - drone-ci-butler-kibana.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-redis.ci-butler-ns.svc.cluster.local
+      - drone-ci-butler-workers.ci-butler-ns.svc.cluster.local
 
     build: .
     image: gabrielfalcao/drone-ci-butler:latest

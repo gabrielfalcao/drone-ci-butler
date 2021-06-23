@@ -16,6 +16,7 @@ WEB_HOST		:= 0.0.0.0
 STATIC_PATHS		:= $(patsubst %,frontend/public/%, manifest.json asset-manifest.json favicon.ico index.html robots.txt static)
 DOCKER_ENV		:= $(GIT_ROOT)/tools/docker.env
 KUBE_ENV		:= $(GIT_ROOT)/operations/kube.env
+KUBE_BUTLER_YML	:= $(GIT_ROOT)/operations/drone-ci-butler.yml
 BUILD_PATHS		:= build docs/build frontend/build
 DOCKER_IMAGE_TAG	:= $(shell git rev-parse HEAD)
 export K8S_NAMESPACE	:= ci-butler-ns
@@ -36,7 +37,7 @@ export DOCKER_IMAGE_TAG
 # default target when running `make` without arguments
 all: | $(MAIN_CLI_PATH)
 
-kube: $(KUBE_ENV)
+kube: $(KUBE_ENV) $(KUBE_BUTLER_YML)
 	kustomize build operations > /dev/null
 
 undeploy:
@@ -206,6 +207,9 @@ $(REQUIREMENTS_PATH):
 $(DOCKER_ENV) $(KUBE_ENV): clean
 	@$(MAIN_CLI_PATH) env > $@
 	@echo CREATED $@
+
+$(KUBE_BUTLER_YML):
+	@cp -v ~/.drone-ci-butler.yml $@
 ###############################################################
 # Declare all target names that exist for convenience and don't
 # represent real paths, which is what Make expects by default:
